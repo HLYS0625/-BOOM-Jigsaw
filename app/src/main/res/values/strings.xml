@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">モザイク</string>
+    <string name="akunohana">惡の華</string>
+    <string name="bikyutu">この美術部</string>
+    <string name="bleach">ブリーチ</string>
+    <string name="demichan">デミちゃん</string>
+    <string name="gaburiiru">ガヴリールドロップ</string>
+    <string name="hibike">響けユーフォニアム</string>
+    <string name="easy">イージー</string>
+    <string name="normal">ノーマル</string>
+    <string name="hard">ハード</string>
+</resources>
