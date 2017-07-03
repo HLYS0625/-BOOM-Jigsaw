@@ -9,4 +9,7 @@
     <string name="easy">イージー</string>
     <string name="normal">ノーマル</string>
     <string name="hard">ハード</string>
+    <string name="help">ヘルプ</string>
+    <string name="sml_pic">ターゲットピクチャー</string>
+    <style name="big_pic_pic">マインピクチャー</style>
 </resources>

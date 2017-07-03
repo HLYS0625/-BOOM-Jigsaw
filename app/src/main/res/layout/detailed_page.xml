@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -16,23 +12,26 @@
                 android:id="@+id/easy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/easy"/>
+                android:text="@string/easy"
+                style="?android:attr/buttonBarButtonStyle"/>
             <Button
                 android:id="@+id/noomaru"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/normal"/>
+                android:text="@string/normal"
+                style="?android:attr/buttonBarButtonStyle"/>
             <Button
                 android:id="@+id/hard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/hard"
-                />
+                style="?android:attr/buttonBarButtonStyle"/>
             <Button
-                android:id="@+id/back"
+                android:id="@+id/help"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Back"/>
+                android:text="@string/help"
+                style="?android:attr/buttonBarButtonStyle"/>
 
 
         </LinearLayout>
@@ -41,19 +40,16 @@
             android:id="@+id/rei"
             android:layout_width="60dp"
             android:layout_height="90dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:contentDescription="@string/sml_pic"/>
 
         <ImageView
             android:id="@+id/main_pic"
             android:layout_width="336dp"
             android:layout_height="448dp"
             android:layout_gravity="center"
-            android:paddingTop="10dp"/>
-
-
-
-    </LinearLayout>
-
+            android:paddingTop="10dp"
+            android:contentDescription="@string/sml_pic"/>
 
 
 </LinearLayout>

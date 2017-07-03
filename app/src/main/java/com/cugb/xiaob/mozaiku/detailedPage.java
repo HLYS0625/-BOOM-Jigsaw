@@ -34,7 +34,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         Button besy = (Button)findViewById(R.id.easy);
         Button bnml = (Button)findViewById(R.id.noomaru);
         Button bhrd = (Button)findViewById(R.id.hard);
-        Button bbck = (Button)findViewById(R.id.back);
+        Button bbck = (Button)findViewById(R.id.help);
         bbck.setOnClickListener(this);
         bhrd.setOnClickListener(this);
         bnml.setOnClickListener(this);
@@ -62,15 +62,16 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.back:
-                Intent i = new Intent(detailedPage.this,MainActivity.class);
-                startActivity(i);
-                finish();
+            case R.id.help:
+                Toast.makeText(detailedPage.this,"敬请期待QwQ",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.easy:
                 Toast.makeText(detailedPage.this,"敬请期待QwQ",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.noomaru:
+                Toast.makeText(detailedPage.this,"敬请期待QwQ",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.hard:
                 Toast.makeText(detailedPage.this,"敬请期待QwQ",Toast.LENGTH_SHORT).show();
                 break;
             default:
