@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -21,15 +20,23 @@ public class MainActivity extends AppCompatActivity {
         mContext = MainActivity.this;
         gridPhoto = (GridView)findViewById(R.id.grid_photo);
 
-        mData = new ArrayList<Icon>();
-        mData.add(new Icon(R.drawable.akunohana_08,"惡の華"));
-        mData.add(new Icon(R.drawable.bijyutubu_11,"この美術部"));
-        mData.add(new Icon(R.drawable.bleach_h_23,"ブリーチ"));
-        mData.add(new Icon(R.drawable.demichan_08,"デミちゃん"));
-        mData.add(new Icon(R.drawable.gaburiiru_vina_13,"ガヴリールドロップ"));
-        mData.add(new Icon(R.drawable.hibike_nakayoshi_17,"響けユーフォニアム"));
+        ArrayList<Icon> mData = new ArrayList<>();
+        mData.add(new Icon(R.drawable.overwatch_04,"オーバーウォッチ"));
+        mData.add(new Icon(R.drawable.girls_panzer_rsa_05,"ガールズ＆パンツァー"));
         mData.add(new Icon(R.drawable.typemoon_shiki_15,"空の境界"));
+        mData.add(new Icon(R.drawable.akunohana_08,"惡の華"));
+        mData.add(new Icon(R.drawable.deathnote_08,"デスノート"));
+        mData.add(new Icon(R.drawable.bleach_h_23,"ブリーチ"));
+        mData.add(new Icon(R.drawable.psycho_pass_03,"パスコード"));
+        mData.add(new Icon(R.drawable.aido_06,"アイドルマスター"));
+        mData.add(new Icon(R.drawable.hibike_nakayoshi_17,"響けユーフォニアム"));
         mData.add(new Icon(R.drawable.touhou_hakugyokurou_youmu_h_34,"東方妖々夢"));
+        mData.add(new Icon(R.drawable.suzumiya_05,"ハルヒの憂鬱"));
+        mData.add(new Icon(R.drawable.gaburiiru_vina_13,"ガヴリールドロップ"));
+        mData.add(new Icon(R.drawable.demichan_08,"デミちゃん"));
+        mData.add(new Icon(R.drawable.bijyutubu_11,"この美術部"));
+
+
 
 
 

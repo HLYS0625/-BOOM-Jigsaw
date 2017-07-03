@@ -1,24 +1,30 @@
 package com.cugb.xiaob.mozaiku;
 
-import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 public class detailedPage extends AppCompatActivity implements View.OnClickListener{
 
-    private int[] pic_list = {R.drawable.akunohana_08,R.drawable.bijyutubu_11,R.drawable.bleach_h_23, R.drawable.demichan_08,
-            R.drawable.gaburiiru_vina_13,R.drawable.hibike_nakayoshi_17,R.drawable.typemoon_shiki_15,R.drawable.touhou_hakugyokurou_youmu_h_34};
+    private int[] pic_list = {
+            R.drawable.overwatch_04,
+            R.drawable.girls_panzer_rsa_05,
+            R.drawable.typemoon_shiki_15,
+            R.drawable.akunohana_08,
+            R.drawable.deathnote_08,
+            R.drawable.bleach_h_23,
+            R.drawable.psycho_pass_03,
+            R.drawable.aido_06,
+            R.drawable.hibike_nakayoshi_17,
+            R.drawable.touhou_hakugyokurou_youmu_h_34,
+            R.drawable.suzumiya_05,
+            R.drawable.gaburiiru_vina_13,
+            R.drawable.demichan_08,
+            R.drawable.bijyutubu_11};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
