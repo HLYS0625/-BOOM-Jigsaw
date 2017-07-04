@@ -26,9 +26,12 @@ public class MainActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+        //常用变量
         mContext = MainActivity.this;
+        //grid声明
         gridPhoto = (GridView)findViewById(R.id.grid_photo);
 
+        //将图片作为ArrayList存储，以便于Grid使用
         ArrayList<Icon> mData = new ArrayList<>();
         mData.add(new Icon(R.drawable.overwatch_04,"オーバーウォッチ"));
         mData.add(new Icon(R.drawable.girls_panzer_rsa_05,"ガールズ＆パンツァー"));
@@ -44,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
         mData.add(new Icon(R.drawable.gaburiiru_vina_13,"ガヴリールドロップ"));
         mData.add(new Icon(R.drawable.demichan_08,"デミちゃん"));
         mData.add(new Icon(R.drawable.bijyutubu_11,"この美術部"));
-
-
 
 
 
@@ -83,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }).create();
                 alt.show();
-
             }
         });
 
