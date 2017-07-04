@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //设置无标题栏且全屏、位置必须处于调用资源文件前，onCreate函数后
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog alt = null;
+                AlertDialog alt ;
                 AlertDialog.Builder alb = new AlertDialog.Builder(mContext);
                 alt = alb.setIcon(R.drawable.konosuba_h_01)
                         .setTitle("ヘルプ")

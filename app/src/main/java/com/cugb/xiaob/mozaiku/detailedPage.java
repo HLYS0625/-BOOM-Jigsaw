@@ -16,10 +16,19 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Random;
 
 public class detailedPage extends AppCompatActivity implements View.OnClickListener {
 
+    //从页面一传入i的值，用以确定调取哪张图片
     private int i;
+    //图片数组，用来保存分割后的小拼图
+    private ArrayList<Block> mData = new ArrayList<>();
+    //随机数组，用以打乱拼图的顺序
+    int[] r = new int[25];
+    //图片数组，用于调取图片
     private int[] pic_list = {
             R.drawable.overwatch_04,
             R.drawable.girls_panzer_rsa_05,
@@ -39,11 +48,10 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.detailed_page);
+
         setPic();
         Button besy = (Button) findViewById(R.id.easy);
         Button bnml = (Button) findViewById(R.id.noomaru);
@@ -53,13 +61,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         bhrd.setOnClickListener(this);
         bnml.setOnClickListener(this);
         besy.setOnClickListener(this);
-
-
-        TableLayout tb = (TableLayout)findViewById(R.id.tbl);
-
-
     }
-
     private void setPic() {
         Intent it = getIntent();
         i = it.getIntExtra("msg", 404);
@@ -73,8 +75,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             rei_pic.setImageResource(pic_list[i]);
         }
     }
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -95,7 +95,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
     private Bitmap zoomBitmap(Bitmap Bm, int w, int h) {
         //得到原始位图和要得到的宽高
         int width = Bm.getWidth();
@@ -104,17 +103,15 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         float hb = ((float) h / height);
         Matrix mx = new Matrix();
         mx.postScale(wb, hb);
-        Bitmap newBm = Bitmap.createBitmap(Bm,0,0,width,height,mx,true);
-        return newBm;
+        return Bitmap.createBitmap(Bm,0,0,width,height,mx,true);
     }
-
     private Bitmap cutBitmap(Bitmap Bm,int x,int y,int w,int h){
-        Bitmap nbm = Bitmap.createBitmap(Bm,x,y,w,h);
-        return nbm;
+        return Bitmap.createBitmap(Bm,x,y,w,h);
     }
     private  void chooseLevel(int rows,int cols,int x){
         Bitmap bm = BitmapFactory.decodeResource(getResources(), pic_list[x]);
         bm=zoomBitmap(bm,355*3,450*3);
+        Rdm(rows,cols);
         TableLayout tl = (TableLayout)findViewById(R.id.tbl);
         tl.removeAllViewsInLayout();
         TableRow.LayoutParams lpBlock = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT);
@@ -131,13 +128,24 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 ImageView curiv = new ImageView(this);
                 curiv.setLayoutParams(lpBlock);
                 curiv.setScaleType(ImageView.ScaleType.FIT_XY);
-                curiv.setImageBitmap(cutBitmap(bm,j*blockw,i*blockh,blockw,blockh));
+                Bitmap b = cutBitmap(bm,j*blockw,i*blockh,blockw,blockh);
+                curiv.setImageBitmap(b);
+                mData.add(new Block(b,i*j+i+j));
+                curiv.setId((i+1)*(j+1));
                 curRow.addView(curiv);
-
             }
         }
     }
-
-
-
+    private void Rdm(int rows,int cols){
+        for(int i=0;i<rows*cols;i++){
+            HashSet<Integer> intHS = new HashSet<>();
+            Random random = new Random();
+            r[i] = random.nextInt(25);
+            if(!intHS.contains(r[i])){
+                intHS.add(r[i]);
+            }
+        }
+    }
+    private void refresh(int rows,int cols) {
+    }
 }
