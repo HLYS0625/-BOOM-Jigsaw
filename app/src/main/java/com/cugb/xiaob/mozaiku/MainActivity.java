@@ -1,12 +1,18 @@
 package com.cugb.xiaob.mozaiku;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AlertDialogLayout;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -16,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         mContext = MainActivity.this;
         gridPhoto = (GridView)findViewById(R.id.grid_photo);
@@ -55,6 +63,26 @@ public class MainActivity extends AppCompatActivity {
                 Intent it = new Intent(MainActivity.this,detailedPage.class);
                 it.putExtra("msg",position);
                 startActivity(it);
+            }
+        });
+
+        Button b = (Button)findViewById(R.id.help);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog alt = null;
+                AlertDialog.Builder alb = new AlertDialog.Builder(mContext);
+                alt = alb.setIcon(R.drawable.konosuba_h_01)
+                        .setTitle("ヘルプ")
+                        .setMessage("一つのピクチャーを選びなさい。そして難易度を選択して 、ゲームを始めましょう。\n\n開発者：理子")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).create();
+                alt.show();
+
             }
         });
 

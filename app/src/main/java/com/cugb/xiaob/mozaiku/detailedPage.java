@@ -40,7 +40,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.detailed_page);
@@ -114,11 +114,11 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     }
     private  void chooseLevel(int rows,int cols,int x){
         Bitmap bm = BitmapFactory.decodeResource(getResources(), pic_list[x]);
-        bm=zoomBitmap(bm,360*3,445*3);
+        bm=zoomBitmap(bm,355*3,450*3);
         TableLayout tl = (TableLayout)findViewById(R.id.tbl);
         tl.removeAllViewsInLayout();
         TableRow.LayoutParams lpBlock = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT);
-        lpBlock.setMargins(3,3,0,0);
+        lpBlock.setMargins(5,5,0,0);
         int blockw = bm.getWidth()/cols;
         int blockh = bm.getHeight()/rows;
         for(int i=0;i<rows;i++){
