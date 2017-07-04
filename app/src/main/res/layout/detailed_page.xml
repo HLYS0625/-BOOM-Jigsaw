@@ -43,13 +43,11 @@
             android:layout_gravity="center"
             android:contentDescription="@string/sml_pic"/>
 
-        <ImageView
-            android:id="@+id/main_pic"
-            android:layout_width="336dp"
-            android:layout_height="448dp"
-            android:layout_gravity="center"
-            android:paddingTop="10dp"
-            android:contentDescription="@string/sml_pic"/>
+        <TableLayout
+            android:id="@+id/tbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
 
 
 </LinearLayout>
