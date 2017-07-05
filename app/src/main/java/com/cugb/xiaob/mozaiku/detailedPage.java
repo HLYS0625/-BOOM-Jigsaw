@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.Random;
 
 public class detailedPage extends AppCompatActivity implements View.OnClickListener {
-
     //从页面一传入i的值，用以确定调取哪张图片
     private int i;
     //状态值：0=初始状态，1=已选择难度，游戏中，2=游戏胜利
@@ -49,7 +48,10 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             R.drawable.suzumiya_05,
             R.drawable.gaburiiru_vina_13,
             R.drawable.demichan_08,
-            R.drawable.bijyutubu_11};
+            R.drawable.bijyutubu_11
+    };
+    //存放所有的零碎图片
+    private ImageView[] picBlock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,8 +160,9 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         }
         r[rows*cols-1]=0;
     }
-    //刷新中间的TableLayout
-    private void refresh(int rows,int cols) {
+    //初始化中间的TableLayout（也就是拼图）
+    private void initPic(int rows,int cols) {
+        picBlock = new ImageView[rows*cols];
         TableLayout tl = (TableLayout) findViewById(R.id.tbl);
         tl.removeAllViewsInLayout();
         TableRow.LayoutParams lpBlock = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
@@ -176,10 +179,13 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 curiv.setScaleType(ImageView.ScaleType.FIT_XY);
                 int no = i * cols + j;
                 curiv.setImageBitmap(mData.get(r[no]).getiBm());
-                curiv.setId((i + 1) * (j + 1));
+                curiv.setId(no);
+                curiv.setTag(no+"_"+mData.get(r[no]).getIno());
+                picBlock[no]=curiv;
+                curiv.setOnClickListener(this);
                 curRow.addView(curiv);
-                Log.d("de", no + "(refresh)");
-                Log.d("de", r[no] + "(refreshR[no])");
+                Log.d("de", no + "(initPic)");
+                Log.d("de", r[no] + "(initPicR[no])");
             }
         }
     }
@@ -229,7 +235,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             alt.show();
         }else if(state==0){
             chooseLevel(rows, cols, i);
-            refresh(rows, cols);
+            initPic(rows, cols);
             state = 1;
         }
     }
@@ -243,8 +249,24 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         TableLayout t1 = (TableLayout)findViewById(R.id.tbl);
         t1.removeAllViewsInLayout();
         chooseLevel(rows, cols, i);
-        refresh(rows, cols);
-        state = 1;
+        initPic(rows, cols);
     }
+    private void judge(ImageView V){
+        if(state==0){
+            Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.black);
+            int w = V.getWidth();
+            int h = V.getHeight();
+            bm = zoomBitmap(bm,w,h);
+            V.setImageBitmap(bm);
+            V.setId(R.id.nblock);
+            state=1;
+        }else if(state==2){
+            Toast.makeText(detailedPage.this,"已经完成游戏了哟",Toast.LENGTH_SHORT).show();
+        }else if(state==1){
+                int x = V.getId();
+            if(x+1==R.id.nblock){
 
+            }
+        }
+    }
 }

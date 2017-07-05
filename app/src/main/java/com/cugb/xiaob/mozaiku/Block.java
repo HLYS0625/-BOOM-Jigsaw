@@ -22,7 +22,7 @@ public class Block {
         return iBm;
     }
 
-    public int getiName() {
+    public int getIno() {
         return ino;
     }
 
