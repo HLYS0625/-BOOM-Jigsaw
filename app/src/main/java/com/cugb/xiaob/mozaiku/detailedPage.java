@@ -40,6 +40,9 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Block> mData = new ArrayList<>();
     //随机数组，用以打乱拼图的顺序
     int[] r;
+    //fst为玩家点击的图片，sec始终为黑色图片（空白区块）
+    private ImageView Fst;
+    private ImageView Sec;
     //图片数组，用于调取图片
     private final  static int[] pic_list = {
             R.drawable.overwatch_04,
@@ -166,6 +169,9 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             else i-=1;
         }
         r[rows*cols-1]=0;
+        if(!cansolve(r)){
+            Rdm(rows,cols);
+        }
     }
     //初始化中间的TableLayout（也就是拼图）
     private void initPic(int rows,int cols) {
@@ -252,20 +258,19 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     //按照所选难度开始一盘新游戏。
     private void newgame(int rows,int cols){
         state=0;
+        blbl=404;
         mData.clear();
-        
         for(int i=0;i<r.length;i++){
             r[i]=0;
         }
         TableLayout t1 = (TableLayout)findViewById(R.id.tbl);
         t1.removeAllViewsInLayout();
         chooseLevel(rows, cols, i);
+        setBlack(rows,cols);
         initPic(rows, cols);
         state=1;
     }
-
-    private ImageView Fst;
-    private ImageView Sec;
+    //点击图片后执行此函数
     public void click(View v) {
         Fst = (ImageView) v;
         Sec = (ImageView)findViewById(R.id.nblock);
@@ -276,6 +281,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(detailedPage.this, "Can't move", Toast.LENGTH_SHORT).show();
         }
     }
+    //交换两个图片
     private void exchange(){
         String firstTag = (String) Fst.getTag();
         String secondTag = (String) Sec.getTag();
@@ -294,6 +300,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         Fst = null;
         judge();
     }
+    //debug用，输出一些信息，完成后删除
     private void debug(int x){
         switch (x){
             case 0:
@@ -321,6 +328,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 debug(3);
         }
     }
+    //判断游戏是否胜利
     private void judge(){
         boolean isSuccess = true;
         for (int i = 0; i < picBlock.length; i++)
@@ -356,10 +364,12 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             alt.show();
         }
     }
+    //返回图片正确的序号，供judge()函数和cansolve函数使用
     private int getIndexByTag(String tag){
         String[] split = tag.split("_");
         return Integer.parseInt(split[1]);
     }
+    //判断图片能否移动
     private boolean moveable(){
         String firstTag = (String) Fst.getTag();
         String secondTag = (String) Sec.getTag();
@@ -382,6 +392,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             }else return false;
         }else return false;
     }
+    //将最后一张图片设置为空白（黑色方块）
     private void setBlack(int rows,int cols){
         int no=rows*cols-1;
         int w=mData.get(no).getiBm().getWidth();
@@ -390,5 +401,16 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         bm = zoomBitmap(bm,w,h);
         mData.get(no).setiBm(bm);
         blbl = mData.get(no).getIno();
+    }
+    //判断游戏是否有解
+    private boolean cansolve(int[] r){
+        boolean s=true;
+        for(int i =0;i<r.length;i++){
+            for(int j = i+1;j<r.length;j++)
+                if(i>j){
+                    s = !s;
+                }
+        }
+        return s;
     }
 }
