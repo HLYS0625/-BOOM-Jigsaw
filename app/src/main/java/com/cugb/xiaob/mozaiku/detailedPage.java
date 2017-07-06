@@ -186,7 +186,11 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 curiv.setScaleType(ImageView.ScaleType.FIT_XY);
                 int no = i * cols + j;
                 curiv.setImageBitmap(mData.get(r[no]).getiBm());
-                curiv.setId(no);
+                if(r[no]==blbl){
+                    curiv.setId(R.id.nblock);
+                }else {
+                    curiv.setId(no);
+                }
                 curiv.setTag(no+"_"+mData.get(r[no]).getIno()+"_"+i+"_"+j);
                 picBlock[no]=curiv;
                 curiv.setOnClickListener(this);
@@ -262,25 +266,17 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
 
     private ImageView Fst;
     private ImageView Sec;
-    public void click(View v){
-        if (Fst == null)
-        {
-            Fst = (ImageView) v;
-            Fst.setColorFilter(Color.parseColor("#55FF0000"));
-        } else//点击第二个Item
-        {
-            Sec = (ImageView) v;
-            if(moveable()) {
-                exchange();
-            }else {
-                Fst.setColorFilter(null);
-                Fst = Sec = null;
-                Toast.makeText(detailedPage.this,"Can't move",Toast.LENGTH_SHORT).show();
-            }
+    public void click(View v) {
+        Fst = (ImageView) v;
+        Sec = (ImageView)findViewById(R.id.nblock);
+        if (moveable()) {
+            exchange();
+        } else {
+            Fst = null;
+            Toast.makeText(detailedPage.this, "Can't move", Toast.LENGTH_SHORT).show();
         }
     }
     private void exchange(){
-        Fst.setColorFilter(null);
         String firstTag = (String) Fst.getTag();
         String secondTag = (String) Sec.getTag();
         //得到在list中索引位置  
@@ -292,7 +288,10 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 .parseInt(firstImageIndex[1])).getiBm());
         Fst.setTag(secondImageIndex[0]+"_"+secondImageIndex[1]+"_"+firstImageIndex[2]+"_"+firstImageIndex[3]);
         Sec.setTag(firstImageIndex[0]+"_"+firstImageIndex[1]+"_"+secondImageIndex[2]+"_"+secondImageIndex[3]);
-        Fst = Sec = null;
+        Sec.setId(Fst.getId());
+        Fst.setId(R.id.nblock);
+        Sec = Fst;
+        Fst = null;
         judge();
     }
     private void debug(int x){
