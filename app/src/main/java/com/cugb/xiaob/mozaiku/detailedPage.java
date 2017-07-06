@@ -4,7 +4,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.PorterDuff;
+import android.media.Image;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +28,8 @@ import java.util.HashSet;
 import java.util.Random;
 
 public class detailedPage extends AppCompatActivity implements View.OnClickListener {
+    //debug函数用参数
+    int blockd=1,rd=0,stater=2,piclist=3;
     //从页面一传入i的值，用以确定调取哪张图片
     private int i;
     //状态值：0=初始状态，1=已选择难度，游戏中，2=游戏胜利
@@ -32,7 +37,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     //图片数组，用来保存分割后的小拼图
     private ArrayList<Block> mData = new ArrayList<>();
     //随机数组，用以打乱拼图的顺序
-    int[] r = new int[25];
+    int[] r;
     //图片数组，用于调取图片
     private final  static int[] pic_list = {
             R.drawable.overwatch_04,
@@ -89,19 +94,19 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.help:
-                Toast.makeText(detailedPage.this, "敬请期待QwQ", Toast.LENGTH_SHORT).show();
+                if(state==1) debug(5);
                 break;
             case R.id.easy:
                 hint(state,3,3);
-                    break;
+                break;
             case R.id.noomaru:
                 hint(state,4,4);
-                    break;
+                break;
             case R.id.hard:
                 hint(state,5,5);
-                    break;
+                break;
             default:
-                Toast.makeText(detailedPage.this, "敬请期待QwQ", Toast.LENGTH_SHORT).show();
+                click(v);
                 break;
         }
     }
@@ -149,12 +154,12 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     //生成1-9/16/25的随机数列（作为拼图随机顺序的依据）
     private void Rdm(int rows,int cols){
         int a;
+        r = new int[rows*cols];
         for(int i=0;i<rows*cols-1;i++){
             Random random = new Random();
             a=random.nextInt(rows*cols);
             if(NExist(r,a)){
                 r[i] = a;
-                Log.d("De0","a:"+a);
             }
             else i-=1;
         }
@@ -184,8 +189,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 picBlock[no]=curiv;
                 curiv.setOnClickListener(this);
                 curRow.addView(curiv);
-                Log.d("de", no + "(initPic)");
-                Log.d("de", r[no] + "(initPicR[no])");
             }
         }
     }
@@ -243,30 +246,110 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private void newgame(int rows,int cols){
         state=0;
         mData.clear();
-        for(int i=0;i<25;i++){
+        
+        for(int i=0;i<r.length;i++){
             r[i]=0;
         }
         TableLayout t1 = (TableLayout)findViewById(R.id.tbl);
         t1.removeAllViewsInLayout();
         chooseLevel(rows, cols, i);
         initPic(rows, cols);
+        state=1;
     }
-    private void judge(ImageView V){
-        if(state==0){
-            Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.black);
-            int w = V.getWidth();
-            int h = V.getHeight();
-            bm = zoomBitmap(bm,w,h);
-            V.setImageBitmap(bm);
-            V.setId(R.id.nblock);
-            state=1;
-        }else if(state==2){
-            Toast.makeText(detailedPage.this,"已经完成游戏了哟",Toast.LENGTH_SHORT).show();
-        }else if(state==1){
-                int x = V.getId();
-            if(x+1==R.id.nblock){
 
+    private ImageView Fst;
+    private ImageView Sec;
+    public void click(View v){
+        if (Fst == null)
+        {
+            Fst = (ImageView) v;
+            Fst.setColorFilter(Color.parseColor("#55FF0000"));
+        } else//点击第二个Item
+        {
+            Sec = (ImageView) v;
+            exchange();
+        }
+    }
+    private void exchange(){
+        Fst.setColorFilter(null);
+        String firstTag = (String) Fst.getTag();
+        String secondTag = (String) Sec.getTag();
+        //得到在list中索引位置  
+        String[] firstImageIndex = firstTag.split("_");
+        String[] secondImageIndex = secondTag.split("_");
+        Fst.setImageBitmap(mData.get(Integer
+                .parseInt(secondImageIndex[1])).getiBm());
+        Sec.setImageBitmap(mData.get(Integer
+                .parseInt(firstImageIndex[1])).getiBm());
+        Fst.setTag(secondTag);
+        Sec.setTag(firstTag);
+        Fst = Sec = null;
+        judge();
+    }
+    private void debug(int x){
+        switch (x){
+            case 0:
+                for(int i =0;i<r.length;i++){
+                    Log.d("De","r"+i+":"+r[i]);
+                }
+                break;
+            case 1:
+                for(int i=0;i<mData.size();i++) {
+                    Log.d("Help/", "Arraylist<Block>" + i + ":" + mData.get(i).getiBm());
+                    Log.d("Help/", "Arraylist<Block>" + i + ":" + mData.get(i).getIno());
+                }
+                break;
+            case 2:
+                Log.d("Help/","state:"+state);
+                break;
+            case 3:
+                for(int i=0;i<picBlock.length;i++){
+                    Log.d("Help/","picBlock[]" + i + ":" + picBlock[i].getTag());
+                }
+                break;
+            default:
+                debug(1);
+                debug(2);
+                debug(3);
+        }
+    }
+    private void judge(){
+        boolean isSuccess = true;
+        for (int i = 0; i < picBlock.length; i++)
+        {
+            ImageView first = picBlock[i];
+            Log.v("TAG", getIndexByTag((String) first.getTag()) + "");
+            if (getIndexByTag((String) first.getTag()) != i)
+            {
+                isSuccess = false;
             }
         }
+        if (isSuccess)
+        {
+            state=2;
+            AlertDialog alt ;
+            AlertDialog.Builder alb = new AlertDialog.Builder(detailedPage.this);
+            alt = alb.setIcon(R.drawable.konosuba_h_01)
+                    .setTitle("コングラチュレーション")
+                    .setMessage("おめでとうございます\n\n開発者：理子")
+                    .setPositiveButton("もう一度プレーしたい", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(detailedPage.this,"じゃ、改めて難易度を選択してください",Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("他のピクチャー", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .create();
+            alt.show();
+        }
+    }
+    private int getIndexByTag(String tag){
+        String[] split = tag.split("_");
+        return Integer.parseInt(split[1]);
     }
 }
