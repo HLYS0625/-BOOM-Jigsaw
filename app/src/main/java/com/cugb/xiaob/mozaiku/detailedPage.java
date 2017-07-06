@@ -30,6 +30,8 @@ import java.util.Random;
 public class detailedPage extends AppCompatActivity implements View.OnClickListener {
     //debug函数用参数
     int blockd=1,rd=0,stater=2,piclist=3;
+    //黑色方块
+    int blbl =404;
     //从页面一传入i的值，用以确定调取哪张图片
     private int i;
     //状态值：0=初始状态，1=已选择难度，游戏中，2=游戏胜利
@@ -138,8 +140,8 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         for(int i=0;i<rows;i++){
             for(int j =0;j<cols;j++,no++){
                 Bitmap b = cutBitmap(bm,j*blockw,i*blockh,blockw,blockh);
-                mData.add(new Block(b,no));
-                Log.d("de",no+"(chooseLevel)");
+                mData.add(new Block(b,no,i,j));
+                Log.d("de","b"+b+"no"+no);
             }
         }
     }
@@ -185,7 +187,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 int no = i * cols + j;
                 curiv.setImageBitmap(mData.get(r[no]).getiBm());
                 curiv.setId(no);
-                curiv.setTag(no+"_"+mData.get(r[no]).getIno());
+                curiv.setTag(no+"_"+mData.get(r[no]).getIno()+"_"+i+"_"+j);
                 picBlock[no]=curiv;
                 curiv.setOnClickListener(this);
                 curRow.addView(curiv);
@@ -238,6 +240,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             alt.show();
         }else if(state==0){
             chooseLevel(rows, cols, i);
+            setBlack(rows,cols);
             initPic(rows, cols);
             state = 1;
         }
@@ -267,7 +270,13 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         } else//点击第二个Item
         {
             Sec = (ImageView) v;
-            exchange();
+            if(moveable()) {
+                exchange();
+            }else {
+                Fst.setColorFilter(null);
+                Fst = Sec = null;
+                Toast.makeText(detailedPage.this,"Can't move",Toast.LENGTH_SHORT).show();
+            }
         }
     }
     private void exchange(){
@@ -281,8 +290,8 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 .parseInt(secondImageIndex[1])).getiBm());
         Sec.setImageBitmap(mData.get(Integer
                 .parseInt(firstImageIndex[1])).getiBm());
-        Fst.setTag(secondTag);
-        Sec.setTag(firstTag);
+        Fst.setTag(secondImageIndex[0]+"_"+secondImageIndex[1]+"_"+firstImageIndex[2]+"_"+firstImageIndex[3]);
+        Sec.setTag(firstImageIndex[0]+"_"+firstImageIndex[1]+"_"+secondImageIndex[2]+"_"+secondImageIndex[3]);
         Fst = Sec = null;
         judge();
     }
@@ -351,5 +360,36 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private int getIndexByTag(String tag){
         String[] split = tag.split("_");
         return Integer.parseInt(split[1]);
+    }
+    private boolean moveable(){
+        String firstTag = (String) Fst.getTag();
+        String secondTag = (String) Sec.getTag();
+        //得到在list中索引位置
+        String[] fIndex = firstTag.split("_");
+        String[] sIndex = secondTag.split("_");
+        int i1,j1,i2,j2,b1,b2;
+        b1=Integer.parseInt(fIndex[1]);
+        i1=Integer.parseInt(fIndex[2]);
+        j1=Integer.parseInt(fIndex[3]);
+        b2=Integer.parseInt(sIndex[1]);
+        i2=Integer.parseInt(sIndex[2]);
+        j2=Integer.parseInt(sIndex[3]);
+
+        if(b1==blbl||b2==blbl) {
+            if ((i1 == i2) && (Math.abs(j1 - j2) == 1)) {
+                return true;
+            } else if ((j1 == j2) && (Math.abs(i1 - i2) == 1)) {
+                return true;
+            }else return false;
+        }else return false;
+    }
+    private void setBlack(int rows,int cols){
+        int no=rows*cols-1;
+        int w=mData.get(no).getiBm().getWidth();
+        int h=mData.get(no).getiBm().getHeight();
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.black);
+        bm = zoomBitmap(bm,w,h);
+        mData.get(no).setiBm(bm);
+        blbl = mData.get(no).getIno();
     }
 }
