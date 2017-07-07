@@ -27,6 +27,7 @@ import android.widget.Toast;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -70,9 +71,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     //背景音乐
     MediaPlayer player = null;
     //游戏开始时间
-    int recLen = 0;
-    //计时器
-
+    int costTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +130,15 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 click(v);
                 break;
         }
+    }
+    //计时函数
+    private int getTime(){
+        int Hour,minute,second;
+        Calendar c = Calendar.getInstance();
+        Hour = c.get(Calendar.HOUR_OF_DAY);
+        minute = c.get(Calendar.MINUTE);
+        second = c.get(Calendar.SECOND);
+        return Hour*3600+minute*60+second;
     }
     //播放或暂停音乐
     private void music(){
@@ -276,21 +284,19 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                     .create();
             alt.show();
         }else if(state==0){
-            chooseLevel(rows, cols, i);
-            setBlack(rows,cols);
-            initPic(rows, cols);
-            while(!cansolve(rows)) {
-                newgame(rows,cols);
-            }state = 1;
+            newgame(rows,cols);
         }
     }
     //按照所选难度开始一盘新游戏。
     private void newgame(int rows,int cols){
         state=0;
         blbl=404;
+        costTime=0;
         mData.clear();
-        for(int i=0;i<r.length;i++){
-            r[i]=0;
+        if(r!=null) {
+            for (int i = 0; i < r.length; i++) {
+                r[i] = 0;
+            }
         }
         TableLayout t1 = (TableLayout)findViewById(R.id.tbl);
         t1.removeAllViewsInLayout();
@@ -301,6 +307,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             newgame(rows,cols);
         }
         state = 1;
+        costTime = getTime();
     }
     //点击图片后执行此函数
     public void click(View v) {
@@ -379,12 +386,16 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         if (isSuccess())
         {
             state=2;
+            costTime = getTime()-costTime;
+            int minute,second;
+            minute = costTime/60;
+            second = costTime%60;
             Sec.setImageBitmap(bitmap);
             AlertDialog alt ;
             AlertDialog.Builder alb = new AlertDialog.Builder(detailedPage.this);
             alt = alb.setIcon(R.drawable.konosuba_h_01)
                     .setTitle("コングラチュレーション")
-                    .setMessage("おめでとうございます\n\n開発者：理子")
+                    .setMessage("おめでとうございます\n時間は"+minute+"分"+second+"秒です"+"\n\n開発者：理子")
                     .setPositiveButton("もう一度プレーしたい", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
