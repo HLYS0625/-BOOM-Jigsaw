@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
         mData.add(new Icon(R.drawable.gaburiiru_vina_13,"ガヴリールドロップ"));
         mData.add(new Icon(R.drawable.demichan_08,"デミちゃん"));
         mData.add(new Icon(R.drawable.bijyutubu_11,"この美術部"));
+        mData.add(new Icon(R.drawable.original_17,"オリジナル"));
+        mData.add(new Icon(R.drawable.album,"アルバムから選ぶ"));
 
 
 

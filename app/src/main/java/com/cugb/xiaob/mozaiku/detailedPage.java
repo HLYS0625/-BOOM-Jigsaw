@@ -1,5 +1,7 @@
 package com.cugb.xiaob.mozaiku;
 
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +12,9 @@ import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.media.Image;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +29,9 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.InputStream;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +56,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private ImageView Fst;
     private ImageView Sec;
     //图片数组，用于调取图片
-    private final  static int[] pic_list = {
+    private int[] pic_list = {
             R.drawable.overwatch_04,
             R.drawable.girls_panzer_rsa_05,
             R.drawable.typemoon_shiki_15,
@@ -62,16 +70,25 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             R.drawable.suzumiya_05,
             R.drawable.gaburiiru_vina_13,
             R.drawable.demichan_08,
-            R.drawable.bijyutubu_11
+            R.drawable.bijyutubu_11,
+            R.drawable.original_17
     };
     //存放所有的零碎图片
     private ImageView[] picBlock;
-    //被黑色替代的图片
-    private Bitmap bitmap;
+    //被黑色替代的图片以及从相册中传入的原图
+    private Bitmap bitmap,originBm;
     //背景音乐
     MediaPlayer player = null;
     //游戏开始时间
     int costTime;
+
+
+    private static final int SELECT_PHOTO=0;//调用相册照片
+    private static final int TAKE_PHOTO=1;//调用相机拍照
+    private static final int CROP_PHOTO=2;//裁剪照片
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +119,8 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                     Toast.LENGTH_SHORT).show();
             it.setClass(detailedPage.this, MainActivity.class);
             startActivity(it);
+        } else if(i==15){
+            pickImageFromAlbum();
         } else {
             ImageView rei_pic = (ImageView) findViewById(R.id.rei);
             rei_pic.setImageResource(pic_list[i]);
@@ -140,6 +159,55 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         second = c.get(Calendar.SECOND);
         return Hour*3600+minute*60+second;
     }
+    //从相册调取图片并返回给picList
+    private void pickImageFromAlbum(){
+        Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent,SELECT_PHOTO);
+    }
+    //接收从相册返回的图片
+    public void onActivityResult(int requestCode,int resultCode,Intent data){
+        super.onActivityResult(requestCode, resultCode,data);
+        if(requestCode==SELECT_PHOTO){
+            ContentResolver resolver = getContentResolver();
+            //获取图片原始地址
+            Uri imguri = data.getData();
+            try {
+                startImageZoom(imguri);
+                originBm = MediaStore.Images.Media.getBitmap(resolver, imguri);
+                //setrei();
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+        }else if(requestCode==CROP_PHOTO){
+            ContentResolver resolver = getContentResolver();
+            Uri imguri = data.getData();
+            try {
+                originBm = data.getParcelableExtra("data");
+                setrei();
+            }catch (Exception e){
+                // TODO: handle exception
+            }
+        }
+    }
+    //从相册调取图片时打开系统的裁剪功能
+    public void startImageZoom(Uri uri) {
+        int aspectX=350;
+        int aspectY=450;
+        int outputX=700;
+        int outputY=900;
+        Intent intent = new Intent("com.android.camera.action.CROP");//调用Android系统自带的一个图片剪裁页面
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");//进行修剪
+        intent.putExtra("aspectX", aspectX);
+        intent.putExtra("aspectY", aspectY);
+        intent.putExtra("outputX",outputX);
+        intent.putExtra("outputY",outputY);
+        intent.putExtra("return-data", true);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+       startActivityForResult(intent, CROP_PHOTO);
+    }
+
     //播放或暂停音乐
     private void music(){
         if(!player.isPlaying()){
@@ -170,7 +238,12 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     //按照所选难度分割图片，并将分割好的图片储存在ArrayList<Block>中。
     private  void chooseLevel(int rows,int cols,int x){
         int no =0;
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), pic_list[x]);
+        Bitmap bm;
+        if(i!=15) {
+            bm = BitmapFactory.decodeResource(getResources(), pic_list[x]);
+        }else {
+            bm = originBm;
+        }
         WindowManager wm = (WindowManager) this
                 .getSystemService(Context.WINDOW_SERVICE);
         int width = wm.getDefaultDisplay().getWidth()-20;
@@ -308,6 +381,13 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         }
         state = 1;
         costTime = getTime();
+    }
+    //设置示例图，我也不知道为什么写在setpic（）里面会抢在调用相册图片前执行
+    private void setrei(){
+        if(i==15){
+            ImageView rei_pic = (ImageView)findViewById(R.id.rei);
+            rei_pic.setImageBitmap(originBm);
+        }
     }
     //点击图片后执行此函数
     public void click(View v) {
