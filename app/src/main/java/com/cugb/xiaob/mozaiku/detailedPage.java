@@ -1,5 +1,6 @@
 package com.cugb.xiaob.mozaiku;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.media.Image;
+import android.media.MediaPlayer;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -62,6 +64,8 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     };
     //存放所有的零碎图片
     private ImageView[] picBlock;
+    //被黑色替代的图片
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +103,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.help:
-                if(state==1) debug(5);
+                Toast.makeText(detailedPage.this,"敬请期待",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.easy:
                 hint(state,3,3);
@@ -109,6 +113,8 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.hard:
                 hint(state,5,5);
+                break;
+            case R.id.music:
                 break;
             default:
                 click(v);
@@ -136,7 +142,10 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private  void chooseLevel(int rows,int cols,int x){
         int no =0;
         Bitmap bm = BitmapFactory.decodeResource(getResources(), pic_list[x]);
-        bm=zoomBitmap(bm,355*3,450*3);
+        WindowManager wm = (WindowManager) this
+                .getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth()-20;
+        bm=zoomBitmap(bm,width,width/7*9);
         Rdm(rows,cols);
         int blockw = bm.getWidth()/cols;
         int blockh = bm.getHeight()/rows;
@@ -169,9 +178,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             else i-=1;
         }
         r[rows*cols-1]=0;
-        if(!cansolve(r)){
-            Rdm(rows,cols);
-        }
     }
     //初始化中间的TableLayout（也就是拼图）
     private void initPic(int rows,int cols) {
@@ -252,7 +258,9 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             chooseLevel(rows, cols, i);
             setBlack(rows,cols);
             initPic(rows, cols);
-            state = 1;
+            while(!cansolve(rows)) {
+                newgame(rows,cols);
+            }state = 1;
         }
     }
     //按照所选难度开始一盘新游戏。
@@ -268,7 +276,10 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         chooseLevel(rows, cols, i);
         setBlack(rows,cols);
         initPic(rows, cols);
-        state=1;
+        while(!cansolve(rows)) {
+            newgame(rows,cols);
+        }
+        state = 1;
     }
     //点击图片后执行此函数
     public void click(View v) {
@@ -329,7 +340,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         }
     }
     //判断游戏是否胜利
-    private void judge(){
+    private boolean isSuccess(){
         boolean isSuccess = true;
         for (int i = 0; i < picBlock.length; i++)
         {
@@ -340,9 +351,14 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 isSuccess = false;
             }
         }
-        if (isSuccess)
+        return isSuccess;
+    }
+    //胜利后弹框
+    private void judge(){
+        if (isSuccess())
         {
             state=2;
+            Sec.setImageBitmap(bitmap);
             AlertDialog alt ;
             AlertDialog.Builder alb = new AlertDialog.Builder(detailedPage.this);
             alt = alb.setIcon(R.drawable.konosuba_h_01)
@@ -399,18 +415,58 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         int h=mData.get(no).getiBm().getHeight();
         Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.black);
         bm = zoomBitmap(bm,w,h);
+        bitmap = zoomBitmap(mData.get(no).getiBm(),w,h);
         mData.get(no).setiBm(bm);
         blbl = mData.get(no).getIno();
     }
     //判断游戏是否有解
-    private boolean cansolve(int[] r){
-        boolean s=true;
-        for(int i =0;i<r.length;i++){
-            for(int j = i+1;j<r.length;j++)
-                if(i>j){
-                    s = !s;
-                }
+    private boolean cansolve(int h) {
+        int[][] state = new int[h][h];
+        for(int i=0,k=0;i<h;i++)
+            for(int j =0;j<h;j++,k++)
+            {
+                state[i][j]=r[k];
+            }
+        if(h % 2 == 1) { //問題寬度為奇數
+            return (getInversions(state) % 2 == 0);
+        } else { //問題寬度為偶數
+            ImageView iv = (ImageView)findViewById(R.id.nblock);
+            String s = (String)iv.getTag();
+            String[] str = s.split("_");
+            if((h - Integer.decode(str[2])) % 2 == 1) { //從底往上數,空格位于奇數行
+                return (getInversions(state) % 2 == 0);
+            } else { //從底往上數,空位位于偶數行
+                return (getInversions(state) % 2 == 1);
+            }
         }
-        return s;
     }
+    //计算序列中的逆序数，作为判断拼图是否有解的根据
+    private int getInversions(int[][] state) {
+        int inversion = 0;
+        int temp = 0;
+        for(int i=0;i<state.length;i++) {
+            for(int j=0;j<state[i].length;j++) {
+                int index = i* state.length + j + 1;
+                while(index < (state.length * state.length)) {
+                    if(state[index/state.length][index%state.length] != 0
+                            && state[index/state.length]
+                            [index%state.length] < state[i][j]) {
+                        temp ++;
+                    }
+                    index ++;
+                }
+                inversion = temp + inversion;
+                temp = 0;
+            }
+        }
+        return inversion;
+    }
+
+
+
+
 }
+
+
+
+

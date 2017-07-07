@@ -12,4 +12,5 @@
     <string name="help">ヘルプ</string>
     <string name="sml_pic">ターゲットピクチャー</string>
     <style name="big_pic_pic">マインピクチャー</style>
+    <style name="music">ミュージック：オン</style>
 </resources>
