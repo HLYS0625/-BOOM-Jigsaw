@@ -29,8 +29,13 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
-
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -207,7 +212,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
        startActivityForResult(intent, CROP_PHOTO);
     }
-
     //播放或暂停音乐
     private void music(){
         if(!player.isPlaying()){
@@ -382,7 +386,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         state = 1;
         costTime = getTime();
     }
-    //设置示例图，我也不知道为什么写在setpic（）里面会抢在调用相册图片前执行
+    //设置示例图，我也不知道为什么写在setPic()里面会抢在调用相册图片前执行
     private void setrei(){
         if(i==15){
             ImageView rei_pic = (ImageView)findViewById(R.id.rei);
@@ -574,7 +578,42 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         return inversion;
     }
 
-
+    public void saveuser(String username) {
+        try {
+            FileOutputStream outStream=this.openFileOutput("user.txt",Context.MODE_APPEND);
+            username+=",";
+            outStream.write(username.getBytes());
+            outStream.close();
+            Toast.makeText(detailedPage.this,"User Info Saved",Toast.LENGTH_SHORT).show();
+        } catch (IOException e){
+            //TODO:handle exception
+        }
+    }
+    public Boolean finduser(String username){
+        try{
+            boolean arimasu =false;
+            FileInputStream inStream = this.openFileInput("user.txt");
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length =-1;
+            while ((length=inStream.read(buffer))!=-1){
+                stream.write(buffer,0,length);
+            }
+            stream.close();
+            inStream.close();
+            String text = stream.toString();
+            String[] users = text.split(",");
+            for (int i=0;i<users.length;i++){
+                if(users[i].equals(username))
+                    arimasu =  true;
+            }
+            return arimasu;
+        }catch (FileNotFoundException e){
+            return false;
+        }catch (IOException e){
+            return false;
+        }
+    }
 
 
 }

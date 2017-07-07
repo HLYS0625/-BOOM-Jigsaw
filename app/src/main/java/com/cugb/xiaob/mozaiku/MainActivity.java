@@ -10,7 +10,9 @@ import android.content.Context;
         import android.view.View;
         import android.view.Window;
         import android.view.WindowManager;
-        import android.widget.AdapterView;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
         import android.widget.BaseAdapter;
         import android.widget.Button;
         import android.widget.GridView;
@@ -82,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                Animation anime = AnimationUtils.loadAnimation(mContext,R.anim.rotate);
+                                gridPhoto.startAnimation(anime);
                             }
                         }).create();
                 alt.show();
