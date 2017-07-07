@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -66,6 +67,12 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private ImageView[] picBlock;
     //被黑色替代的图片
     private Bitmap bitmap;
+    //背景音乐
+    MediaPlayer player = null;
+    //游戏开始时间
+    int recLen = 0;
+    //计时器
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,16 +80,19 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.detailed_page);
-
         setPic();
+        player = MediaPlayer.create(this,R.raw.hatukoi);
+        player.setLooping(true);
         Button besy = (Button) findViewById(R.id.easy);
         Button bnml = (Button) findViewById(R.id.noomaru);
         Button bhrd = (Button) findViewById(R.id.hard);
         Button bbck = (Button) findViewById(R.id.help);
+        Button bmsc = (Button) findViewById(R.id.music);
         bbck.setOnClickListener(this);
         bhrd.setOnClickListener(this);
         bnml.setOnClickListener(this);
         besy.setOnClickListener(this);
+        bmsc.setOnClickListener(this);
     }
     //根据主菜单传入的数值，决定使用的图片
     private void setPic() {
@@ -115,10 +125,21 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 hint(state,5,5);
                 break;
             case R.id.music:
+                music();
                 break;
             default:
                 click(v);
                 break;
+        }
+    }
+    //播放或暂停音乐
+    private void music(){
+        if(!player.isPlaying()){
+            player.start();
+            Toast.makeText(detailedPage.this,"ミュージック：オン",Toast.LENGTH_SHORT).show();
+        }else {
+            player.pause();
+            Toast.makeText(detailedPage.this,"ミュージック：オフ",Toast.LENGTH_SHORT).show();
         }
     }
     //放大/缩小所给的位图

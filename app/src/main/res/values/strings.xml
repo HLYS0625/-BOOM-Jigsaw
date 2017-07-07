@@ -11,6 +11,6 @@
     <string name="hard">ハード</string>
     <string name="help">ヘルプ</string>
     <string name="sml_pic">ターゲットピクチャー</string>
-    <style name="big_pic_pic">マインピクチャー</style>
-    <style name="music">ミュージック：オン</style>
+    <string name="big_pic_pic">マインピクチャー</string>
+    <string name="music">ミュージック</string>
 </resources>
