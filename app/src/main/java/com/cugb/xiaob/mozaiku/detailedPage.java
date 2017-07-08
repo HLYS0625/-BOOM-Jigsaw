@@ -120,7 +120,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         Intent it = getIntent();
         i = it.getIntExtra("msg", 404);
         if (i == 404) {
-            Toast.makeText(detailedPage.this, "Something Wrong,Can't finding the picture",
+            Toast.makeText(detailedPage.this, R.string.getPic_wrong,
                     Toast.LENGTH_SHORT).show();
             it.setClass(detailedPage.this, MainActivity.class);
             startActivity(it);
@@ -136,7 +136,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.help:
-                Toast.makeText(detailedPage.this,"敬请期待",Toast.LENGTH_SHORT).show();
+                Toast.makeText(detailedPage.this,R.string.unComplete,Toast.LENGTH_SHORT).show();
                 break;
             case R.id.easy:
                 hint(state,3,3);
@@ -192,7 +192,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 }
             }
         }else {
-            Toast.makeText(detailedPage.this,"ピクチャーを選びませんです",Toast.LENGTH_SHORT).show();
+            Toast.makeText(detailedPage.this,R.string.weixuantupian,Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -217,10 +217,10 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private void music(){
         if(!player.isPlaying()){
             player.start();
-            Toast.makeText(detailedPage.this,"ミュージック：オン",Toast.LENGTH_SHORT).show();
+            Toast.makeText(detailedPage.this,getString(R.string.music)+getString(R.string.on),Toast.LENGTH_SHORT).show();
         }else {
             player.pause();
-            Toast.makeText(detailedPage.this,"ミュージック：オフ",Toast.LENGTH_SHORT).show();
+            Toast.makeText(detailedPage.this,getString(R.string.music)+getString(R.string.off),Toast.LENGTH_SHORT).show();
         }
     }
     //放大/缩小所给的位图
@@ -323,18 +323,18 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             AlertDialog alt ;
             AlertDialog.Builder alb = new AlertDialog.Builder(detailedPage.this);
             alt = alb.setIcon(R.drawable.konosuba_h_01)
-                    .setTitle("ヒント")
-                    .setMessage("おっど、きみはもう難易度を選択したよ\n\n開発者：理子")
-                    .setPositiveButton("新しいゲーム", new DialogInterface.OnClickListener() {
+                    .setTitle(R.string.hint)
+                    .setMessage(getString(R.string.chosedDiffcult)+getString(R.string.coder))
+                    .setPositiveButton(R.string.newGame, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             newgame(rows,cols);
                         }
                     })
-                    .setNegativeButton("続く", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.conti, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(detailedPage.this,"もう少し頑張ってください、成功は目の前です",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(detailedPage.this,R.string.nuli,Toast.LENGTH_SHORT).show();
                         }
                     })
                     .create();
@@ -343,15 +343,15 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             AlertDialog alt ;
             AlertDialog.Builder alb = new AlertDialog.Builder(detailedPage.this);
             alt = alb.setIcon(R.drawable.konosuba_h_01)
-                    .setTitle("ヒント")
-                    .setMessage("おめでとうございます\n\n開発者：理子")
-                    .setPositiveButton("もう一度プレーしたい", new DialogInterface.OnClickListener() {
+                    .setTitle(R.string.congra_title)
+                    .setMessage(getString(R.string.congratulation)+getString(R.string.coder))
+                    .setPositiveButton(R.string.replay, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             newgame(rows,cols);
                         }
                     })
-                    .setNegativeButton("他のピクチャー", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.other_pic, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Intent i = new Intent(detailedPage.this,MainActivity.class);
@@ -402,7 +402,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             exchange();
         } else {
             Fst = null;
-            Toast.makeText(detailedPage.this, "Can't move", Toast.LENGTH_SHORT).show();
+            Toast.makeText(detailedPage.this, R.string.cant_move, Toast.LENGTH_SHORT).show();
         }
     }
     //交换两个图片
@@ -479,15 +479,15 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             AlertDialog alt ;
             AlertDialog.Builder alb = new AlertDialog.Builder(detailedPage.this);
             alt = alb.setIcon(R.drawable.konosuba_h_01)
-                    .setTitle("コングラチュレーション")
-                    .setMessage("おめでとうございます\n時間は"+minute+"分"+second+"秒です"+"\n\n開発者：理子")
-                    .setPositiveButton("もう一度プレーしたい", new DialogInterface.OnClickListener() {
+                    .setTitle(R.string.congra_title)
+                    .setMessage(getString(R.string.congratulation)+"\n時間は"+minute+"分"+second+"秒です"+getString(R.string.coder))
+                    .setPositiveButton(R.string.replay, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(detailedPage.this,"じゃ、改めて難易度を選択してください",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(detailedPage.this,R.string.chooseDiffcult,Toast.LENGTH_SHORT).show();
                         }
                     })
-                    .setNegativeButton("他のピクチャー", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.other_pic, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             finish();

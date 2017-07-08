@@ -1,11 +1,21 @@
 <resources>
     <string name="app_name">モザイク</string>
+    <string name="aido">アイドルマスター</string>
     <string name="akunohana">惡の華</string>
-    <string name="bikyutu">この美術部</string>
+    <string name="album">アルバムから選ぶ</string>
+    <string name="bijyutu">この美術部</string>
     <string name="bleach">ブリーチ</string>
+    <string name="deathNote">デスノート</string>
     <string name="demichan">デミちゃん</string>
     <string name="gaburiiru">ガヴリールドロップ</string>
+    <string name="girls_panzer">ガールズ＆パンツァー</string>
     <string name="hibike">響けユーフォニアム</string>
+    <string name="original">オリジナル</string>
+    <string name="overWatch">オーバーウォッチ</string>
+    <string name="pcychoPass">サイコパス</string>
+    <string name="suzumiya">ハルヒの憂鬱</string>
+    <string name="touhou">東方妖々夢</string>
+    <string name="karaKyokai">空の境界</string>
     <string name="easy">イージー</string>
     <string name="normal">ノーマル</string>
     <string name="hard">ハード</string>
@@ -13,4 +23,28 @@
     <string name="sml_pic">ターゲットピクチャー</string>
     <string name="big_pic_pic">マインピクチャー</string>
     <string name="music">ミュージック</string>
+    <string name="weixuantupian">ピクチャーを選びませんです</string>
+    <string name="on">:オン</string>
+    <string name="off">:オフ</string>
+    <string name="hint">ヒント</string>
+    <string name="coder">\n\n開発者：理子</string>
+    <string name="chooseDiffcult">じゃ、改めて難易度を選択してください</string>
+    <string name="chosedDiffcult">おっど、きみはもう難易度を選択したよ</string>
+    <string name="newGame">新しいゲーム</string>
+    <string name="conti">続く</string>
+    <string name="nuli">もう少し頑張ってください、成功は目の前です</string>
+    <string name="congratulation">おめでとうございます</string>
+    <string name="congra_title">コングラチュレーション</string>
+    <string name="replay">もう一度プレーしたい</string>
+    <string name="other_pic">他のピクチャー</string>
+    <string name="cant_move">Cannot move</string>
+    <string name="getPic_wrong">Something Wrong,Cannot finding the picture</string>
+    <string name="unComplete">敬请期待</string>
+    <string name="helpMsg">一つのピクチャーを選びなさい。そして難易度を選択して 、ゲームを始めましょう。</string>
+    <string name="OK">OK</string>
+
+
+
+
+
 </resources>
