@@ -173,26 +173,27 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     //接收从相册返回的图片
     public void onActivityResult(int requestCode,int resultCode,Intent data){
         super.onActivityResult(requestCode, resultCode,data);
-        if(requestCode==SELECT_PHOTO){
-            ContentResolver resolver = getContentResolver();
-            //获取图片原始地址
-            Uri imguri = data.getData();
-            try {
-                startImageZoom(imguri);
-                originBm = MediaStore.Images.Media.getBitmap(resolver, imguri);
-                //setrei();
-            } catch (Exception e) {
-                // TODO: handle exception
+        if(resultCode==RESULT_OK) {
+            if (requestCode == SELECT_PHOTO) {
+                ContentResolver resolver = getContentResolver();
+                //获取图片原始地址
+                Uri imguri = data.getData();
+                try {
+                    startImageZoom(imguri);
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
+            } else if (requestCode == CROP_PHOTO) {
+                try {
+                    originBm = data.getParcelableExtra("data");
+                    setrei();
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
             }
-        }else if(requestCode==CROP_PHOTO){
-            ContentResolver resolver = getContentResolver();
-            Uri imguri = data.getData();
-            try {
-                originBm = data.getParcelableExtra("data");
-                setrei();
-            }catch (Exception e){
-                // TODO: handle exception
-            }
+        }else {
+            Toast.makeText(detailedPage.this,"ピクチャーを選びませんです",Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
     //从相册调取图片时打开系统的裁剪功能
