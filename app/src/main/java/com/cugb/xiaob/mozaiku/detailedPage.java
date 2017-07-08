@@ -478,9 +478,11 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             Sec.setImageBitmap(bitmap);
             AlertDialog alt ;
             AlertDialog.Builder alb = new AlertDialog.Builder(detailedPage.this);
+            String tmMsg = getResources().getString(R.string.costTime);
+            tmMsg = String.format(tmMsg,minute,second);
             alt = alb.setIcon(R.drawable.konosuba_h_01)
                     .setTitle(R.string.congra_title)
-                    .setMessage(getString(R.string.congratulation)+"\n時間は"+minute+"分"+second+"秒です"+getString(R.string.coder))
+                    .setMessage(getString(R.string.congratulation)+tmMsg+getString(R.string.coder))
                     .setPositiveButton(R.string.replay, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

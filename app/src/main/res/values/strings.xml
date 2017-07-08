@@ -42,6 +42,7 @@
     <string name="unComplete">敬请期待</string>
     <string name="helpMsg">一つのピクチャーを選びなさい。そして難易度を選択して 、ゲームを始めましょう。</string>
     <string name="OK">OK</string>
+    <string name="costTime">\n\n時間は %1$d 分 %2$d 秒です</string>
 
 
 
