@@ -29,6 +29,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    private Context mContext;
+    private GridView gridPhoto;
+    private BaseAdapter mAdapter =null;
+    private ArrayList<Icon> mData = null;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +44,12 @@ public class MainActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-        //常用变量
+        //常用变量,需写在onCreate函数中
         mContext = MainActivity.this;
         //grid声明
         gridPhoto = (GridView)findViewById(R.id.grid_photo);
-
         //将图片作为ArrayList存储，以便于Grid使用
         ArrayList<Icon> mData = new ArrayList<>();
-
         mData.add(new Icon(R.drawable.overwatch_04,getStr(R.string.overWatch)));
         mData.add(new Icon(R.drawable.girls_panzer_rsa_05,getStr(R.string.girls_panzer)));
         mData.add(new Icon(R.drawable.typemoon_shiki_15, getStr(R.string.karaKyokai)));
@@ -71,7 +76,69 @@ public class MainActivity extends AppCompatActivity {
                 holder.setText(R.id.txt_icon,obj.getiName());
             }
         };
+        //弹出自定义对话框（登录界面）
+        tankuang();
+        //为gird建立监听器
+        gridPhoto.setAdapter(mAdapter);
+        gridPhoto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent it = new Intent(MainActivity.this,detailedPage.class);
+                it.putExtra("msg",position);
+                startActivity(it);
+            }
+        });
+        //监听help按钮
+        help();
+    }
 
+    //获取存储在string资源文件中的字符串
+    private String getStr(int i){
+        return getResources().getString(i);
+    }
+    //在文件中存储用户名及密码
+    public void saveuser(String username,String password) {
+        try {
+            String userinfo = username + ":" + password + ",";
+            FileOutputStream outStream=this.openFileOutput("user.txt",Context.MODE_APPEND);
+            outStream.write(userinfo.getBytes());
+            outStream.close();
+            Toast.makeText(MainActivity.this,"User Info Saved",Toast.LENGTH_SHORT).show();
+        } catch (IOException e){
+            //TODO:handle exception
+        }
+    }
+    //在文件中搜索用户名，未找到返回0，找到用户名但密码不正确返回2，用户名和密码匹配返回1
+    public int finduser(String username,String password){
+        try{
+            FileInputStream inStream = this.openFileInput("user.txt");
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length =-1;
+            while ((length=inStream.read(buffer))!=-1){
+                stream.write(buffer,0,length);
+            }
+            stream.close();
+            inStream.close();
+            String text = stream.toString();
+            String[] users = text.split(",");
+            String[] user;
+            for (int i=0;i<users.length;i++){
+                user = users[i].split(":");
+                if(user[0].equals(username)) {
+                    if (user[1].equals(password)) {
+                        return 1;
+                    } else return 2;
+                }
+            }return 0;
+        }catch (FileNotFoundException e){
+            return 0;
+        }catch (IOException e){
+            return 0;
+        }
+    }
+    //自定义弹出框（登录界面）
+    private void tankuang(){
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         final LayoutInflater inflater = MainActivity.this.getLayoutInflater();
         final View view_custom = inflater.inflate(R.layout.custom_dialog,null,false);
@@ -126,22 +193,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         alert.show();
-
-
-
-
-
-
-        gridPhoto.setAdapter(mAdapter);
-        gridPhoto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent it = new Intent(MainActivity.this,detailedPage.class);
-                it.putExtra("msg",position);
-                startActivity(it);
-            }
-        });
-
+    }
+    private void help(){
         Button b = (Button)findViewById(R.id.help);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,59 +214,6 @@ public class MainActivity extends AppCompatActivity {
                 alt.show();
             }
         });
-
-
-    }
-
-    private Context mContext;
-    private GridView gridPhoto;
-    private BaseAdapter mAdapter =null;
-    private ArrayList<Icon> mData = null;
-    private String getStr(int i){
-        return getResources().getString(i);
-    }
-
-
-    //在文件中存储用户名及密码
-    public void saveuser(String username,String password) {
-        try {
-            String userinfo = username + ":" + password + ",";
-            FileOutputStream outStream=this.openFileOutput("user.txt",Context.MODE_APPEND);
-            outStream.write(userinfo.getBytes());
-            outStream.close();
-            Toast.makeText(MainActivity.this,"User Info Saved",Toast.LENGTH_SHORT).show();
-        } catch (IOException e){
-            //TODO:handle exception
-        }
-    }
-    //在文件中搜索用户名，未找到返回0，找到用户名但密码不正确返回2，用户名和密码匹配返回1
-    public int finduser(String username,String password){
-        try{
-            FileInputStream inStream = this.openFileInput("user.txt");
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int length =-1;
-            while ((length=inStream.read(buffer))!=-1){
-                stream.write(buffer,0,length);
-            }
-            stream.close();
-            inStream.close();
-            String text = stream.toString();
-            String[] users = text.split(",");
-            String[] user;
-            for (int i=0;i<users.length;i++){
-                user = users[i].split(":");
-                if(user[0].equals(username)) {
-                    if (user[1].equals(password)) {
-                        return 1;
-                    } else return 2;
-                }
-            }return 0;
-        }catch (FileNotFoundException e){
-            return 0;
-        }catch (IOException e){
-            return 0;
-        }
     }
 }
 

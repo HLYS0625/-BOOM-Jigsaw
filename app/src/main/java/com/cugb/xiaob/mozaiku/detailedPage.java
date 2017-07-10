@@ -96,24 +96,19 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     MediaPlayer player = null;
     //游戏开始时间
     int costTime;
-
-    //自动完成的步骤
-    int[] zidong;
-    //分别代表左、上、右、下四个移动方向的操作数
-    private final int UP = 0;
-    private final int DOWN = 2;
-    private final int LEFT = 1;
-    private final int RIGHT = 3;
-
-
     private static final int SELECT_PHOTO=0;//调用相册照片
     private static final int TAKE_PHOTO=1;//调用相机拍照
     private static final int CROP_PHOTO=2;//裁剪照片
 
 
 
+    //____________________________以上为变量部分，以下为函数部分______________________________________
+
+
+
 
     @Override
+    //页面初始化
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -132,22 +127,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         bnml.setOnClickListener(this);
         besy.setOnClickListener(this);
         bmsc.setOnClickListener(this);
-    }
-    //根据主菜单传入的数值，决定使用的图片
-    private void setPic() {
-        Intent it = getIntent();
-        i = it.getIntExtra("msg", 404);
-        if (i == 404) {
-            Toast.makeText(detailedPage.this, R.string.getPic_wrong,
-                    Toast.LENGTH_SHORT).show();
-            it.setClass(detailedPage.this, MainActivity.class);
-            startActivity(it);
-        } else if(i==15){
-            pickImageFromAlbum();
-        } else {
-            ImageView rei_pic = (ImageView) findViewById(R.id.rei);
-            rei_pic.setImageResource(pic_list[i]);
-        }
     }
     @Override
     //按钮监测器
@@ -192,14 +171,66 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-    //计时函数
-    private int getTime(){
-        int Hour,minute,second;
-        Calendar c = Calendar.getInstance();
-        Hour = c.get(Calendar.HOUR_OF_DAY);
-        minute = c.get(Calendar.MINUTE);
-        second = c.get(Calendar.SECOND);
-        return Hour*3600+minute*60+second;
+    //debug用，输出一些信息，完成后删除
+    private void debug(int x){
+        switch (x){
+            case 0:
+                for(int i =0;i<r.length;i++){
+                    Log.d("De","r"+i+":"+r[i]);
+                }
+                break;
+            case 1:
+                for(int i=0;i<mData.size();i++) {
+                    Log.d("Help/", "Arraylist<Block>" + i + ":" + mData.get(i).getiBm());
+                    Log.d("Help/", "Arraylist<Block>" + i + ":" + mData.get(i).getIno());
+                }
+                break;
+            case 2:
+                Log.d("Help/","state:"+state);
+                break;
+            case 3:
+                for(int i=0;i<picBlock.length;i++){
+                    Log.d("Help/","picBlock[]" + i + ":" + picBlock[i].getTag());
+                }
+                break;
+            case 4:
+                int width = (int)Math.sqrt(r.length);
+                int[][] L = getNumber(width);
+                for(int i=0;i<width;i++){
+                    for(int j=0;j<width;j++){
+                        Log.d("Help/","L["+i+"]["+j+"]:"+L[i][j]);
+                    }
+                }
+                break;
+            case 5:
+                Toast.makeText(detailedPage.this,R.string.unComplete,Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                debug(0);
+                debug(1);
+                debug(2);
+                debug(3);
+                debug(4);
+        }
+    }
+
+
+//页面初始化相关
+    //根据主菜单传入的数值，决定使用的图片
+    private void setPic() {
+        Intent it = getIntent();
+        i = it.getIntExtra("msg", 404);
+        if (i == 404) {
+            Toast.makeText(detailedPage.this, R.string.getPic_wrong,
+                    Toast.LENGTH_SHORT).show();
+            it.setClass(detailedPage.this, MainActivity.class);
+            startActivity(it);
+        } else if(i==15){
+            pickImageFromAlbum();
+        } else {
+            ImageView rei_pic = (ImageView) findViewById(R.id.rei);
+            rei_pic.setImageResource(pic_list[i]);
+        }
     }
     //从相册调取图片并返回给picList
     private void pickImageFromAlbum(){
@@ -207,6 +238,9 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         intent.setType("image/*");
         startActivityForResult(intent,SELECT_PHOTO);
     }
+
+
+//从相册调取图片相关
     //接收从相册返回的图片
     public void onActivityResult(int requestCode,int resultCode,Intent data){
         super.onActivityResult(requestCode, resultCode,data);
@@ -248,17 +282,19 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         intent.putExtra("outputY",outputY);
         intent.putExtra("return-data", true);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-       startActivityForResult(intent, CROP_PHOTO);
+        startActivityForResult(intent, CROP_PHOTO);
     }
-    //播放或暂停音乐
-    private void music(){
-        if(!player.isPlaying()){
-            player.start();
-            Toast.makeText(detailedPage.this,getString(R.string.music)+getString(R.string.on),Toast.LENGTH_SHORT).show();
-        }else {
-            player.pause();
-            Toast.makeText(detailedPage.this,getString(R.string.music)+getString(R.string.off),Toast.LENGTH_SHORT).show();
-        }
+
+
+//工具函数
+    //计时函数
+    private int getTime(){
+        int Hour,minute,second;
+        Calendar c = Calendar.getInstance();
+        Hour = c.get(Calendar.HOUR_OF_DAY);
+        minute = c.get(Calendar.MINUTE);
+        second = c.get(Calendar.SECOND);
+        return Hour*3600+minute*60+second;
     }
     //放大/缩小所给的位图
     private Bitmap zoomBitmap(Bitmap Bm, int w, int h) {
@@ -276,6 +312,93 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     //切割位图……话说这就一行代码真的要弄个函数出来嘛=。=
     private Bitmap cutBitmap(Bitmap Bm,int x,int y,int w,int h){
         return Bitmap.createBitmap(Bm,x,y,w,h);
+    }
+    //播放或暂停音乐
+    private void music(){
+        if(!player.isPlaying()){
+            player.start();
+            Toast.makeText(detailedPage.this,getString(R.string.music)+getString(R.string.on),Toast.LENGTH_SHORT).show();
+        }else {
+            player.pause();
+            Toast.makeText(detailedPage.this,getString(R.string.music)+getString(R.string.off),Toast.LENGTH_SHORT).show();
+        }
+    }
+    //判断游戏是否有解，没有解的话重新生成数组，直到有解为止
+    private boolean cansolve(int h) {
+        int[][] state = getNumber(h);
+        if(h % 2 == 1) { //問題寬度為奇數
+            return (getInversions(state) % 2 == 0);
+        } else { //問題寬度為偶數
+            ImageView iv = (ImageView)findViewById(R.id.nblock);
+            String s = (String)iv.getTag();
+            String[] str = s.split("_");
+            if((h - Integer.decode(str[2])) % 2 == 1) { //從底往上數,空格位于奇數行
+                return (getInversions(state) % 2 == 0);
+            } else { //從底往上數,空位位于偶數行
+                return (getInversions(state) % 2 == 1);
+            }
+        }
+    }
+    //计算序列中的逆序数，作为判断拼图是否有解的根据
+    private int getInversions(int[][] state) {
+        int inversion = 0;
+        int temp = 0;
+        for(int i=0;i<state.length;i++) {
+            for(int j=0;j<state[i].length;j++) {
+                int index = i* state.length + j + 1;
+                while(index < (state.length * state.length)) {
+                    if(state[index/state.length][index%state.length] != 0
+                            && state[index/state.length]
+                            [index%state.length] < state[i][j]) {
+                        temp ++;
+                    }
+                    index ++;
+                }
+                inversion = temp + inversion;
+                temp = 0;
+            }
+        }
+        return inversion;
+    }
+    //将图片碎片转化为数组。
+    private int[][] getNumber(int wideth) {
+        int[][] state = new int[wideth][wideth];
+        for (int i = 0, k = 0; i < wideth; i++)
+            for (int j = 0; j < wideth; j++, k++) {
+                if (r[k] == blbl) {
+                    state[i][j] = 0;
+                } else state[i][j] = r[k] + 1;
+            }
+        return state;
+    }
+    //返回图片正确的序号，供judge()函数和cansolve函数使用
+    private int getIndexByTag(String tag){
+        String[] split = tag.split("_");
+        return Integer.parseInt(split[1]);
+    }
+
+
+//游戏初始化相关的
+    //生成1-9/16/25的随机数列（作为拼图随机顺序的依据）
+    private void Rdm(int rows,int cols) {
+        int a;
+        r = new int[rows * cols];
+        for (int i = 0; i < rows * cols - 1; i++) {
+            Random random = new Random();
+            a = random.nextInt(rows * cols);
+            if (NExist(r, a)) {
+                r[i] = a;
+            } else i -= 1;
+        }
+        r[rows * cols - 1] = 0;
+    }
+    //判断在数列中有无所给元素，保证上面的Rdm（）函数生成的数列没有重复数字
+    public static boolean NExist(int[] arr, int targetValue) {
+        for(int a: arr){
+            if(a==targetValue)
+                return false;
+        }
+        return true;
     }
     //按照所选难度分割图片，并将分割好的图片储存在ArrayList<Block>中。
     private  void chooseLevel(int rows,int cols,int x){
@@ -301,29 +424,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-    //判断在数列中有无所给元素
-    public static boolean NExist(int[] arr, int targetValue) {
-        for(int a: arr){
-            if(a==targetValue)
-                return false;
-        }
-        return true;
-    }
-    //生成1-9/16/25的随机数列（作为拼图随机顺序的依据）
-    private void Rdm(int rows,int cols){
-        int a;
-        r = new int[rows*cols];
-        for(int i=0;i<rows*cols-1;i++){
-            Random random = new Random();
-            a=random.nextInt(rows*cols);
-            if(NExist(r,a)){
-                r[i] = a;
-            }
-            else i-=1;
-        }
-        r[rows*cols-1]=0;
-    }
-    //初始化中间的TableLayout（也就是拼图）
+    //初始化中间的TableLayout（也就是拼图）。按照Rdm生成数组的顺序放入ArrayList<Block>中的图片（达成乱序）
     private void initPic(int rows,int cols) {
         picBlock = new ImageView[rows*cols];
         TableLayout tl = (TableLayout) findViewById(R.id.tbl);
@@ -354,6 +455,29 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+    //设置示例图，我也不知道为什么写在setPic()里面会抢在调用相册图片前执行
+    private void setrei(){
+        if(i==15){
+            ImageView rei_pic = (ImageView)findViewById(R.id.rei);
+            rei_pic.setImageBitmap(originBm);
+        }
+    }
+    //将最后一张图片设置为空白（黑色方块）
+    private void setBlack(int rows,int cols){
+        int no=rows*cols-1;
+        int w=mData.get(no).getiBm().getWidth();
+        int h=mData.get(no).getiBm().getHeight();
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.black);
+        bm = zoomBitmap(bm,w,h);
+        bitmap = zoomBitmap(mData.get(no).getiBm(),w,h);
+        mData.get(no).setiBm(bm);
+        blbl = mData.get(no).getIno();
+    }
+
+
+
+//游戏过程相关
+    //按照state的状态决定选择难度后执行的操作
     //state=0，开始一盘新游戏；state=1，选择重新开始游戏或继续游戏；state=3，返回主选单或重新开始游戏。
     private void hint(int s, final int rows, final int cols){
         if(s==1){
@@ -402,7 +526,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             newgame(rows,cols);
         }
     }
-    //按照所选难度开始一盘新游戏。
+    //按照所选难度开始一盘新游戏，初始化全局变量，然后调用一遍初始化相关的全部函数
     private void newgame(int rows,int cols){
         state=0;
         blbl=404;
@@ -424,14 +548,10 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         state = 1;
         costTime = getTime();
     }
-    //设置示例图，我也不知道为什么写在setPic()里面会抢在调用相册图片前执行
-    private void setrei(){
-        if(i==15){
-            ImageView rei_pic = (ImageView)findViewById(R.id.rei);
-            rei_pic.setImageBitmap(originBm);
-        }
-    }
-    //点击图片后执行此函数
+
+
+//游戏过程相关的操作
+    //点击图片后执行此函数，按顺序调用moveable函数、exchange函数，isSuccess函数
     public void click(View v) {
         Fst = (ImageView) v;
         Sec = (ImageView)findViewById(R.id.nblock);
@@ -441,6 +561,29 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             Fst = null;
             Toast.makeText(detailedPage.this, R.string.cant_move, Toast.LENGTH_SHORT).show();
         }
+    }
+    //判断图片能否移动，若能移动，则通过exchange移动图片到空白位置
+    private boolean moveable(){
+        String firstTag = (String) Fst.getTag();
+        String secondTag = (String) Sec.getTag();
+        //得到在list中索引位置
+        String[] fIndex = firstTag.split("_");
+        String[] sIndex = secondTag.split("_");
+        int i1,j1,i2,j2,b1,b2;
+        b1=Integer.parseInt(fIndex[1]);
+        i1=Integer.parseInt(fIndex[2]);
+        j1=Integer.parseInt(fIndex[3]);
+        b2=Integer.parseInt(sIndex[1]);
+        i2=Integer.parseInt(sIndex[2]);
+        j2=Integer.parseInt(sIndex[3]);
+
+        if(b1==blbl||b2==blbl) {
+            if ((i1 == i2) && (Math.abs(j1 - j2) == 1)) {
+                return true;
+            } else if ((j1 == j2) && (Math.abs(i1 - i2) == 1)) {
+                return true;
+            }else return false;
+        }else return false;
     }
     //交换两个图片
     private void exchange(){
@@ -461,58 +604,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         Fst = null;
         judge();
     }
-    //debug用，输出一些信息，完成后删除
-    private void debug(int x){
-        switch (x){
-            case 0:
-                for(int i =0;i<r.length;i++){
-                    Log.d("De","r"+i+":"+r[i]);
-                }
-                break;
-            case 1:
-                for(int i=0;i<mData.size();i++) {
-                    Log.d("Help/", "Arraylist<Block>" + i + ":" + mData.get(i).getiBm());
-                    Log.d("Help/", "Arraylist<Block>" + i + ":" + mData.get(i).getIno());
-                }
-                break;
-            case 2:
-                Log.d("Help/","state:"+state);
-                break;
-            case 3:
-                for(int i=0;i<picBlock.length;i++){
-                    Log.d("Help/","picBlock[]" + i + ":" + picBlock[i].getTag());
-                }
-                break;
-            case 4:
-                int width = (int)Math.sqrt(r.length);
-                int[][] L = getNumber(width);
-                for(int i=0;i<width;i++){
-                    for(int j=0;j<width;j++){
-                        Log.d("Help/","L["+i+"]["+j+"]:"+L[i][j]);
-                    }
-                }
-                break;
-            case 5:
-                int rows= (int)Math.sqrt(r.length);
-                IDAStarAlgorithm idas = new IDAStarAlgorithm(getNumber(rows),rows);
-                idas.getState(getNumber(rows));
-                idas.main();
-                zidong = idas.returnMoves();
-                for(int i=0;i<zidong.length;i++){
-                    autoExchange(zidong[i]);
-                    if(isSuccess()) break;
-                }
-                break;
-
-            default:
-                debug(0);
-                debug(1);
-                debug(2);
-                debug(3);
-                debug(4);
-        }
-    }
-    //判断游戏是否胜利
+    //判断游戏是否胜利，每次移动后都会进行检测
     private boolean isSuccess(){
         boolean isSuccess = true;
         for (int i = 0; i < picBlock.length; i++)
@@ -526,7 +618,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         }
         return isSuccess;
     }
-    //胜利后弹框
+    //若isSuccess返回true，则进行弹框
     private void judge(){
         if (isSuccess())
         {
@@ -559,123 +651,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             alt.show();
         }
     }
-    //返回图片正确的序号，供judge()函数和cansolve函数使用
-    private int getIndexByTag(String tag){
-        String[] split = tag.split("_");
-        return Integer.parseInt(split[1]);
-    }
-    //判断图片能否移动
-    private boolean moveable(){
-        String firstTag = (String) Fst.getTag();
-        String secondTag = (String) Sec.getTag();
-        //得到在list中索引位置
-        String[] fIndex = firstTag.split("_");
-        String[] sIndex = secondTag.split("_");
-        int i1,j1,i2,j2,b1,b2;
-        b1=Integer.parseInt(fIndex[1]);
-        i1=Integer.parseInt(fIndex[2]);
-        j1=Integer.parseInt(fIndex[3]);
-        b2=Integer.parseInt(sIndex[1]);
-        i2=Integer.parseInt(sIndex[2]);
-        j2=Integer.parseInt(sIndex[3]);
-
-        if(b1==blbl||b2==blbl) {
-            if ((i1 == i2) && (Math.abs(j1 - j2) == 1)) {
-                return true;
-            } else if ((j1 == j2) && (Math.abs(i1 - i2) == 1)) {
-                return true;
-            }else return false;
-        }else return false;
-    }
-    //将最后一张图片设置为空白（黑色方块）
-    private void setBlack(int rows,int cols){
-        int no=rows*cols-1;
-        int w=mData.get(no).getiBm().getWidth();
-        int h=mData.get(no).getiBm().getHeight();
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.black);
-        bm = zoomBitmap(bm,w,h);
-        bitmap = zoomBitmap(mData.get(no).getiBm(),w,h);
-        mData.get(no).setiBm(bm);
-        blbl = mData.get(no).getIno();
-    }
-    //判断游戏是否有解
-    private boolean cansolve(int h) {
-        int[][] state = getNumber(h);
-        if(h % 2 == 1) { //問題寬度為奇數
-            return (getInversions(state) % 2 == 0);
-        } else { //問題寬度為偶數
-            ImageView iv = (ImageView)findViewById(R.id.nblock);
-            String s = (String)iv.getTag();
-            String[] str = s.split("_");
-            if((h - Integer.decode(str[2])) % 2 == 1) { //從底往上數,空格位于奇數行
-                return (getInversions(state) % 2 == 0);
-            } else { //從底往上數,空位位于偶數行
-                return (getInversions(state) % 2 == 1);
-            }
-        }
-    }
-    //计算序列中的逆序数，作为判断拼图是否有解的根据
-    private int getInversions(int[][] state) {
-        int inversion = 0;
-        int temp = 0;
-        for(int i=0;i<state.length;i++) {
-            for(int j=0;j<state[i].length;j++) {
-                int index = i* state.length + j + 1;
-                while(index < (state.length * state.length)) {
-                    if(state[index/state.length][index%state.length] != 0
-                            && state[index/state.length]
-                            [index%state.length] < state[i][j]) {
-                        temp ++;
-                    }
-                    index ++;
-                }
-                inversion = temp + inversion;
-                temp = 0;
-            }
-        }
-        return inversion;
-    }
-    //将图片碎片转化为数组，便于AI算法计算。
-    private int[][] getNumber(int wideth) {
-        int[][] state = new int[wideth][wideth];
-        for (int i = 0, k = 0; i < wideth; i++)
-            for (int j = 0; j < wideth; j++, k++) {
-                if (r[k] == blbl) {
-                    state[i][j] = 0;
-                } else state[i][j] = r[k] + 1;
-            }
-        return state;
-    }
-    public void autoExchange(int x){
-        int i,j,width;
-            Sec = (ImageView)findViewById(R.id.nblock);
-            String tag = (String)Sec.getTag();
-            String[] str = tag.split("_");
-            i = Integer.decode(str[2]);
-            j = Integer.decode(str[3]);
-            width = (int)Math.sqrt(picBlock.length);
-            switch (x){
-            case UP:
-                Fst = (ImageView)findViewById(i*(width-1)+j);
-                exchange();
-                break;
-            case DOWN:
-                Fst = (ImageView)findViewById(i*(width+1)+j);
-                exchange();
-                break;
-            case LEFT:
-                Fst = (ImageView)findViewById(i*(width)+j-1);
-                exchange();
-                break;
-            case RIGHT:
-                Fst = (ImageView)findViewById(i*(width)+j+1);
-                exchange();
-                break;
-        }
-    }
-
-
-
 }
 
 
