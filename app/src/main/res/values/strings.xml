@@ -42,8 +42,13 @@
     <string name="unComplete">敬请期待</string>
     <string name="helpMsg">一つのピクチャーを選びなさい。そして難易度を選択して 、ゲームを始めましょう。</string>
     <string name="OK">OK</string>
+    <string name="cancel">cancel</string>
     <string name="costTime">\n\n時間は %1$d 分 %2$d 秒です</string>
-    <string name="name_hint">请在此输入用户名</string>
+    <string name="name_hint">ユーザー名を入力</string>
+    <string name="pw_hint">パスワードを入力</string>
+    <string name="username">ユーザー名</string>
+    <string name="password">パスワード</string>
+    <string name="wrong_nm">このユーザー名はありません…\n新しいのインフォをセーフして、必要ですか？</string>
 
 
 

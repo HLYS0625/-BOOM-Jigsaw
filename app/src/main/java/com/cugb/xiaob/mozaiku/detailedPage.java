@@ -96,9 +96,9 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     MediaPlayer player = null;
     //游戏开始时间
     int costTime;
+
     //自动完成的步骤
     int[] zidong;
-
     //分别代表左、上、右、下四个移动方向的操作数
     private final int UP = 0;
     private final int DOWN = 2;

@@ -6,19 +6,53 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/nameText"
-            android:layout_width="260dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="80dp"
-            android:hint="@string/name_hint"
-            android:textColorHint="@color/gray"
-            android:gravity="center"/>
+            android:layout_marginTop="30dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/username"
+                android:gravity="right"
+                android:layout_gravity="center"
+                android:layout_weight="1"/>
+            <EditText
+                android:id="@+id/nameText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginRight="60dp"
+                android:gravity="center"
+                android:layout_weight="2"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/password"
+                android:gravity="right"
+                android:layout_gravity="center"
+                android:layout_weight="1"/>
+            <EditText
+                android:id="@+id/passwordText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginRight="60dp"
+                android:gravity="center"
+                android:layout_weight="2"
+                android:inputType="textPassword"
+                />
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="fill_parent"

@@ -88,18 +88,39 @@ public class MainActivity extends AppCompatActivity {
         view_custom.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText editText = (EditText)view_custom.findViewById(R.id.nameText);
-                String userName = editText.getText().toString();
-                if(userName != null){
-                    if(!finduser(userName)) {
-                        saveuser(userName);
-                        Toast.makeText(mContext,"未找到此用户，已新建用户名",Toast.LENGTH_SHORT).show();
-                        alert.dismiss();
-                    }else{
+                EditText editText_name = (EditText)view_custom.findViewById(R.id.nameText);
+                final String userName = editText_name.getText().toString();
+                EditText editText_password = (EditText)view_custom.findViewById(R.id.passwordText);
+                final String password = editText_password.getText().toString();
+                if(!userName.matches("")&&!password.matches("")){
+                    int state = finduser(userName,password);
+                    if(state==0) {
+                        AlertDialog alt ;
+                        AlertDialog.Builder alb = new AlertDialog.Builder(mContext);
+                        alt = alb.setIcon(R.drawable.konosuba_h_01)
+                                .setTitle(R.string.help)
+                                .setMessage(getStr(R.string.wrong_nm)+getStr(R.string.coder))
+                                .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        saveuser(userName,password);
+                                        alert.dismiss();
+                                    }
+                                })
+                                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                })
+                                .create();
+                        alt.show();
+                    }else if(state==1){
                         Toast.makeText(mContext,"欢迎回来，"+userName,Toast.LENGTH_SHORT).show();
                         alert.dismiss();
+                    }else if(state==2){
+                        Toast.makeText(mContext,"密码错误",Toast.LENGTH_SHORT).show();
                     }
-                }
+                }else Toast.makeText(mContext,"用户名为空",Toast.LENGTH_SHORT).show();
             }
         });
         alert.show();
@@ -151,22 +172,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //在文件中存储用户名
-    public void saveuser(String username) {
+    //在文件中存储用户名及密码
+    public void saveuser(String username,String password) {
         try {
+            String userinfo = username + ":" + password + ",";
             FileOutputStream outStream=this.openFileOutput("user.txt",Context.MODE_APPEND);
-            username+=",";
-            outStream.write(username.getBytes());
+            outStream.write(userinfo.getBytes());
             outStream.close();
             Toast.makeText(MainActivity.this,"User Info Saved",Toast.LENGTH_SHORT).show();
         } catch (IOException e){
             //TODO:handle exception
         }
     }
-    //在文件中搜索用户名，找到返回true
-    public Boolean finduser(String username){
+    //在文件中搜索用户名，未找到返回0，找到用户名但密码不正确返回2，用户名和密码匹配返回1
+    public int finduser(String username,String password){
         try{
-            boolean arimasu =false;
             FileInputStream inStream = this.openFileInput("user.txt");
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
@@ -178,15 +198,19 @@ public class MainActivity extends AppCompatActivity {
             inStream.close();
             String text = stream.toString();
             String[] users = text.split(",");
+            String[] user;
             for (int i=0;i<users.length;i++){
-                if(users[i].equals(username))
-                    arimasu =  true;
-            }
-            return arimasu;
+                user = users[i].split(":");
+                if(user[0].equals(username)) {
+                    if (user[1].equals(password)) {
+                        return 1;
+                    } else return 2;
+                }
+            }return 0;
         }catch (FileNotFoundException e){
-            return false;
+            return 0;
         }catch (IOException e){
-            return false;
+            return 0;
         }
     }
 }
