@@ -53,7 +53,11 @@
     <string name="null_nm">ユーザー名とパスワードを入力してください</string>
     <string name="welcome">お帰りなさい、%1$s</string>
     <string name="wrong_pw">入力したパスワードは違います、もう一度チェックしてください</string>
-
+    <string name="high_score">スコアボード</string>
+    <string name="nobody">ヌル</string>
+    <string name="init_sco">0</string>
+    <string name="your_score">君のハイスクール</string>
+    <string name="goToHS">スコアボードへ</string>
 </resources>
 
 

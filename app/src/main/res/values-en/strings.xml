@@ -54,4 +54,9 @@
     <string name="null_nm">Please enter your username and password without null.</string>
     <string name="welcome">Welcome，%1$s~~~</string>
     <string name="wrong_pw">The password is Incorrect.Please enter again.</string>
+    <string name="high_score">High Score</string>
+    <string name="nobody">NULL</string>
+    <string name="init_sco">0</string>
+    <string name="your_score">Your High Score</string>
+    <string name="goToHS">go to High Score</string>
 </resources>

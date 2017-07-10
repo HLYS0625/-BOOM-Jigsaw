@@ -32,8 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private Context mContext;
     private GridView gridPhoto;
     private BaseAdapter mAdapter =null;
-    private ArrayList<Icon> mData = null;
-
+    private String userForIntent;
 
 
 
@@ -68,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         mData.add(new Icon(R.drawable.album,getStr(R.string.album)));
 
 
-
         mAdapter = new MyAdapter<Icon>(mData,R.layout.gridview_layout) {
             @Override
             public void bindView(ViewHolder holder, Icon obj) {
@@ -76,8 +74,12 @@ public class MainActivity extends AppCompatActivity {
                 holder.setText(R.id.txt_icon,obj.getiName());
             }
         };
+
+
         //弹出自定义对话框（登录界面）
         tankuang();
+
+
         //为gird建立监听器
         gridPhoto.setAdapter(mAdapter);
         gridPhoto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -85,9 +87,12 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent it = new Intent(MainActivity.this,detailedPage.class);
                 it.putExtra("msg",position);
+                it.putExtra("username",userForIntent);
                 startActivity(it);
             }
         });
+
+
         //监听help按钮
         help();
     }
@@ -184,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
                     }else if(state==1){
                         String a = getResources().getString(R.string.welcome);
                         a = String.format(a,userName);
+                        userForIntent = userName;
                         Toast.makeText(mContext,a,Toast.LENGTH_SHORT).show();
                         alert.dismiss();
                     }else if(state==2){
@@ -194,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
         });
         alert.show();
     }
+    //监控help按钮，并在点击确认后播放补间动画
     private void help(){
         Button b = (Button)findViewById(R.id.help);
         b.setOnClickListener(new View.OnClickListener() {

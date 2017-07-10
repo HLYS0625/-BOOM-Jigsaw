@@ -96,6 +96,9 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     MediaPlayer player = null;
     //游戏开始时间
     int costTime;
+    //登录用户名
+    String username;
+    //调用相册相关，相机拍照有空补充
     private static final int SELECT_PHOTO=0;//调用相册照片
     private static final int TAKE_PHOTO=1;//调用相机拍照
     private static final int CROP_PHOTO=2;//裁剪照片
@@ -216,10 +219,11 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
 
 
 //页面初始化相关
-    //根据主菜单传入的数值，决定使用的图片
+    //根据主菜单传入的数值，决定使用的图片。同时接收主菜单传来的用户名
     private void setPic() {
         Intent it = getIntent();
         i = it.getIntExtra("msg", 404);
+        username = it.getStringExtra("username");
         if (i == 404) {
             Toast.makeText(detailedPage.this, R.string.getPic_wrong,
                     Toast.LENGTH_SHORT).show();
@@ -641,6 +645,18 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                             Toast.makeText(detailedPage.this,R.string.chooseDiffcult,Toast.LENGTH_SHORT).show();
                         }
                     })
+                    .setNeutralButton(R.string.goToHS, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            int difficult = (int)Math.sqrt(picBlock.length)-3;
+                            Intent it = new Intent(detailedPage.this,highScore.class);
+                            it.putExtra("username",username);
+                            it.putExtra("costTime",costTime);
+                            it.putExtra("difficult",difficult);
+                            startActivity(it);
+                            finish();
+                        }
+                    })
                     .setNegativeButton(R.string.other_pic, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -651,6 +667,10 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             alt.show();
         }
     }
+
+
+//分数存储相关
+    //游戏成功后跳转到高分榜页面
 }
 
 

@@ -53,5 +53,9 @@
     <string name="null_nm">请输入用户名和密码，留空可是通不过的哟</string>
     <string name="welcome">欢迎回来，%1$s~~~</string>
     <string name="wrong_pw">您输入的密码不正确，请检查后再次输入</string>
-
+    <string name="high_score">高分榜</string>
+    <string name="nobody">等待您的君临</string>
+    <string name="init_sco">0</string>
+    <string name="your_score">您的高分记录</string>
+    <string name="goToHS">前往高分榜</string>
 </resources>
