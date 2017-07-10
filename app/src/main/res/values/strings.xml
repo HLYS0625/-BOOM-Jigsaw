@@ -32,14 +32,14 @@
     <string name="chosedDiffcult">おっど、きみはもう難易度を選択したよ</string>
     <string name="newGame">新しいゲーム</string>
     <string name="conti">続く</string>
-    <string name="nuli">もう少し頑張ってください、成功は目の前です</string>
+    <string name="nuli">もう少し頑張ってください、成功は目の前です（づ￣3￣）づ╭❤～</string>
     <string name="congratulation">おめでとうございます</string>
     <string name="congra_title">コングラチュレーション</string>
     <string name="replay">もう一度プレーしたい</string>
     <string name="other_pic">他のピクチャー</string>
     <string name="cant_move">Cannot move</string>
     <string name="getPic_wrong">Something Wrong,Cannot finding the picture</string>
-    <string name="unComplete">敬请期待</string>
+    <string name="unComplete">期待してください</string>
     <string name="helpMsg">一つのピクチャーを選びなさい。そして難易度を選択して 、ゲームを始めましょう。</string>
     <string name="OK">OK</string>
     <string name="cancel">cancel</string>
@@ -49,9 +49,14 @@
     <string name="username">ユーザー名</string>
     <string name="password">パスワード</string>
     <string name="wrong_nm">このユーザー名はありません…\n新しいのインフォをセーフして、必要ですか？</string>
-
-
-
-
+    <string name="cancel_nm">ログインの後に、プレーしてください</string>
+    <string name="null_nm">ユーザー名とパスワードを入力してください</string>
+    <string name="welcome">お帰りなさい、%1$s</string>
+    <string name="wrong_pw">入力したパスワードは違います、もう一度チェックしてください</string>
 
 </resources>
+
+
+
+
+

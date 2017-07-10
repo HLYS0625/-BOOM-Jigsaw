@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 alert.dismiss();
-                Toast.makeText(mContext,"请输入用户名后进行游戏",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,R.string.cancel_nm,Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -115,12 +115,14 @@ public class MainActivity extends AppCompatActivity {
                                 .create();
                         alt.show();
                     }else if(state==1){
-                        Toast.makeText(mContext,"欢迎回来，"+userName,Toast.LENGTH_SHORT).show();
+                        String a = getResources().getString(R.string.welcome);
+                        a = String.format(a,userName);
+                        Toast.makeText(mContext,a,Toast.LENGTH_SHORT).show();
                         alert.dismiss();
                     }else if(state==2){
-                        Toast.makeText(mContext,"密码错误",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext,R.string.wrong_pw,Toast.LENGTH_SHORT).show();
                     }
-                }else Toast.makeText(mContext,"用户名为空",Toast.LENGTH_SHORT).show();
+                }else Toast.makeText(mContext,R.string.null_nm,Toast.LENGTH_SHORT).show();
             }
         });
         alert.show();
