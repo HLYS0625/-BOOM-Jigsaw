@@ -67,6 +67,8 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Block> mData = new ArrayList<>();
     //随机数组，用以打乱拼图的顺序
     int[] r;
+//      示例图片View
+    private ImageView rei_pic;
     //fst为玩家点击的图片，sec始终为黑色图片（空白区块）
     private ImageView Fst;
     private ImageView Sec;
@@ -96,6 +98,9 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     MediaPlayer player = null;
     //游戏开始时间
     int costTime;
+
+//    作弊次数
+    int CheatCount=0;
     private static final int SELECT_PHOTO=0;//调用相册照片
     private static final int TAKE_PHOTO=1;//调用相机拍照
     private static final int CROP_PHOTO=2;//裁剪照片
@@ -122,11 +127,13 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         Button bhrd = (Button) findViewById(R.id.hard);
         Button bbck = (Button) findViewById(R.id.help);
         Button bmsc = (Button) findViewById(R.id.music);
+        rei_pic = (ImageView)findViewById(R.id.rei);
         bbck.setOnClickListener(this);
         bhrd.setOnClickListener(this);
         bnml.setOnClickListener(this);
         besy.setOnClickListener(this);
         bmsc.setOnClickListener(this);
+        rei_pic.setOnClickListener(this);
     }
     @Override
     //按钮监测器
@@ -165,6 +172,10 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.music:
                 music();
+                break;
+            case R.id.rei:
+//                作弊次数增加
+                CheatCount++;
                 break;
             default:
                 click(v);
@@ -564,26 +575,33 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     }
     //判断图片能否移动，若能移动，则通过exchange移动图片到空白位置
     private boolean moveable(){
-        String firstTag = (String) Fst.getTag();
-        String secondTag = (String) Sec.getTag();
-        //得到在list中索引位置
-        String[] fIndex = firstTag.split("_");
-        String[] sIndex = secondTag.split("_");
-        int i1,j1,i2,j2,b1,b2;
-        b1=Integer.parseInt(fIndex[1]);
-        i1=Integer.parseInt(fIndex[2]);
-        j1=Integer.parseInt(fIndex[3]);
-        b2=Integer.parseInt(sIndex[1]);
-        i2=Integer.parseInt(sIndex[2]);
-        j2=Integer.parseInt(sIndex[3]);
 
-        if(b1==blbl||b2==blbl) {
-            if ((i1 == i2) && (Math.abs(j1 - j2) == 1)) {
-                return true;
-            } else if ((j1 == j2) && (Math.abs(i1 - i2) == 1)) {
-                return true;
-            }else return false;
-        }else return false;
+//        增加有没有作弊次数的判断
+        if(CheatCount>0){
+            CheatCount--;
+            return true;
+        }else {
+            String firstTag = (String) Fst.getTag();
+            String secondTag = (String) Sec.getTag();
+            //得到在list中索引位置
+            String[] fIndex = firstTag.split("_");
+            String[] sIndex = secondTag.split("_");
+            int i1, j1, i2, j2, b1, b2;
+            b1 = Integer.parseInt(fIndex[1]);
+            i1 = Integer.parseInt(fIndex[2]);
+            j1 = Integer.parseInt(fIndex[3]);
+            b2 = Integer.parseInt(sIndex[1]);
+            i2 = Integer.parseInt(sIndex[2]);
+            j2 = Integer.parseInt(sIndex[3]);
+
+            if (b1 == blbl || b2 == blbl) {
+                if ((i1 == i2) && (Math.abs(j1 - j2) == 1)) {
+                    return true;
+                } else if ((j1 == j2) && (Math.abs(i1 - i2) == 1)) {
+                    return true;
+                } else return false;
+            } else return false;
+        }
     }
     //交换两个图片
     private void exchange(){
