@@ -20,7 +20,7 @@
     <string name="normal">正常</string>
     <string name="hard">困难</string>
     <string name="help">帮助</string>
-    <string name="sml_pic">图片范例</string>
+    <string name="sml_pic">范例图片</string>
     <string name="big_pic_pic">主图片</string>
     <string name="music">音乐</string>
     <string name="weixuantupian">您未选择图片</string>
@@ -41,14 +41,14 @@
     <string name="getPic_wrong">Something Wrong,Cannot finding the picture</string>
     <string name="unComplete">敬请期待</string>
     <string name="helpMsg">请先选择一个图片，然后选择想要的难度。之后就可以开始游戏了~~</string>
-    <string name="OK">OK</string>
-    <string name="cancel">cancel</string>
+    <string name="OK">确定</string>
+    <string name="cancel">取消</string>
     <string name="costTime">\n\n您总共用了 %1$d 分 %2$d 秒</string>
     <string name="name_hint">输入用户名</string>
     <string name="pw_hint">输入密码</string>
     <string name="username">用户名</string>
     <string name="password">密码</string>
-    <string name="wrong_nm">您输入的用户名不存在 \需要新建用户吗？</string>
+    <string name="wrong_nm">您输入的用户名不存在 \n 需要新建用户吗？</string>
     <string name="cancel_nm">请在登陆后再进行游戏</string>
     <string name="null_nm">请输入用户名和密码，留空可是通不过的哟</string>
     <string name="welcome">欢迎回来，%1$s~~~</string>

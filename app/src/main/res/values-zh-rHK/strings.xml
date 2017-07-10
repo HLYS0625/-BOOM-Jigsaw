@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">拼圖遊戲</string>
+    <string name="aido">偶像大師</string>
+    <string name="akunohana">惡之花</string>
+    <string name="album">從相冊選擇</string>
+    <string name="bijyutu">這個美術部</string>
+    <string name="bleach">漂靈</string>
+    <string name="deathNote">死亡筆記</string>
+    <string name="demichan">亞人醬有話要說</string>
+    <string name="gaburiiru">珈百璃的墮落</string>
+    <string name="girls_panzer">少女與戰車</string>
+    <string name="hibike">吹響吧，低音號</string>
+    <string name="original">原創角色</string>
+    <string name="overWatch">鬥陣特攻</string>
+    <string name="pcychoPass">心理測量者</string>
+    <string name="suzumiya">涼宮春日的憂鬱</string>
+    <string name="touhou">東方妖々夢</string>
+    <string name="karaKyokai">空之境界</string>
+    <string name="easy">簡單</string>
+    <string name="normal">正常</string>
+    <string name="hard">困難</string>
+    <string name="help">幫助</string>
+    <string name="sml_pic">範例圖片</string>
+    <string name="music">音樂</string>
+    <string name="weixuantupian">您未選擇圖片</string>
+    <string name="on">:開</string>
+    <string name="off">:關</string>
+    <string name="hint">提示</string>
+    <string name="coder">\n\n開発者：理子</string>
+    <string name="chooseDiffcult">那麼，請重新選擇一下難度吧</string>
+    <string name="chosedDiffcult">啊哦，您已經選擇過難度了呢</string>
+    <string name="newGame">重新開始</string>
+    <string name="conti">繼續遊玩</string>
+    <string name="nuli">請再努力一下吧，馬上就要成功了呢（づ￣3￣）づ╭❤～</string>
+    <string name="congratulation">恭喜您</string>
+    <string name="congra_title">congratulation</string>
+    <string name="replay">再玩一遍</string>
+    <string name="other_pic">其他圖片</string>
+    <string name="cant_move">Cannot move</string>
+    <string name="getPic_wrong">Something Wrong,Cannot finding the picture</string>
+    <string name="unComplete">敬請期待</string>
+    <string name="helpMsg">請先選擇一個圖片，然後選擇想要的難度。之後就可以盡情遊戲了~~</string>
+    <string name="OK">確定</string>
+    <string name="cancel">取消</string>
+    <string name="costTime">\n\n 您總共用了 %1$d 分 %2$d 秒</string>
+    <string name="name_hint">請輸入用戶名</string>
+    <string name="pw_hint">請輸入密碼</string>
+    <string name="username">用戶名</string>
+    <string name="password">密碼</string>
+    <string name="wrong_nm">您輸入的用戶名不存在 \n 需要新建用戶嗎？</string>
+    <string name="cancel_nm">請在登錄后再進行遊戲</string>
+    <string name="null_nm">請輸入用戶名和密碼，不能為空（QwQ不然程式炸了找你嘛？）</string>
+    <string name="welcome">歡迎回來，%1$s~~~</string>
+    <string name="wrong_pw">您輸入的密碼不正確，請檢查后再次輸入</string>
+
+</resources>

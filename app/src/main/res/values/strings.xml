@@ -41,8 +41,8 @@
     <string name="getPic_wrong">Something Wrong,Cannot finding the picture</string>
     <string name="unComplete">期待してください</string>
     <string name="helpMsg">一つのピクチャーを選びなさい。そして難易度を選択して 、ゲームを始めましょう。</string>
-    <string name="OK">OK</string>
-    <string name="cancel">cancel</string>
+    <string name="OK">オーケー</string>
+    <string name="cancel">キャンセル</string>
     <string name="costTime">\n\n時間は %1$d 分 %2$d 秒です</string>
     <string name="name_hint">ユーザー名を入力</string>
     <string name="pw_hint">パスワードを入力</string>
