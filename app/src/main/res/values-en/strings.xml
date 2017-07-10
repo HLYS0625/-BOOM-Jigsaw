@@ -59,4 +59,8 @@
     <string name="init_sco">0</string>
     <string name="your_score">Your High Score</string>
     <string name="goToHS">go to High Score</string>
+    <string name="change_easy">mode：easy</string>
+    <string name="change_normal">mode：normal</string>
+    <string name="change_hard">mode：hard</string>
+    <string name="change_title">change the High Score Board</string>
 </resources>

@@ -58,6 +58,10 @@
     <string name="init_sco">0</string>
     <string name="your_score">君のハイスクール</string>
     <string name="goToHS">スコアボードへ</string>
+    <string name="change_easy">モド：イージー</string>
+    <string name="change_normal">モド：ノーマル</string>
+    <string name="change_hard">モド：ハード</string>
+    <string name="change_title">スコアボードを切り替える</string>
 </resources>
 
 

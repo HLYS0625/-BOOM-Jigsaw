@@ -1,11 +1,15 @@
 package com.cugb.xiaob.mozaiku;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
@@ -26,6 +30,7 @@ public class highScore extends AppCompatActivity {
     int[] HS_costTime = new int[8];//高分榜文件中记录的全部最高分数
     int[] yourHighscore = new int[3];//当前登录用户的最高分数
     int difficult;//当前登录用户的难度类型，三种取值为0,1,2,对应简单，普通，困难。5表示没有接收到该项数据
+    int CheatCount;//从游戏页面接收的作弊次数计数，若作弊次数大于0，则拒绝将成绩录入排行榜
 
 
     @Override
@@ -36,31 +41,62 @@ public class highScore extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.high_score);
 
+        //切换按钮监听，按此按钮后可以选择UI中显示不同难度的排行榜。
+        Button changeButton = (Button)findViewById(R.id.change) ;
+        changeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String[] change = new String[]{
+                        getResources().getString(R.string.change_easy),
+                        getResources().getString(R.string.change_normal),
+                        getResources().getString(R.string.change_hard)
+                };
+                AlertDialog alert = null;
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(highScore.this);
+                alert = alertBuilder.setIcon(R.drawable.konosuba_h_01)
+                        .setTitle(R.string.change_title)
+                        .setSingleChoiceItems(change, 0, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                cutover(which);
+                            }
+                        }).create();
+                alert.show();
+            }
+        });
 
+        //使用Intent接收传入的数据，分别为当前用户名『curUsername』，此次用时『curCostTime』，此次使用的难度『difficult』
         Intent it = getIntent();
         curUsername = it.getStringExtra("username");
         curCostTime = it.getIntExtra("costTime",999999999);
         difficult = it.getIntExtra("difficult",5);
-        loadHS();
-        if(difficult!=5){
-            freshHS(curUsername,curCostTime);
-        }
-        saveHS(HS_username,HS_costTime);
+        CheatCount = it.getIntExtra("cheat",0);
+
+        //读取高分榜
+        loadHS(difficult);
+        //读取个人最佳成绩
         loadPHS(curUsername);
-        freshPHS(curCostTime);
-        savePHS(curUsername);
+        //如果是通关后进入此页面，（依成绩）刷新高分榜和个人最好成绩，并保存在文件中。
+        if(difficult!=5 && CheatCount == 0 ){
+            freshHS(curUsername,curCostTime);
+            freshPHS(curCostTime);
+            saveHS(HS_username,HS_costTime,difficult);
+            savePHS(curUsername);
+        }
+        //刷新UI显示
         displayHS();
         displayPHS();
     }
 
-    //在高分榜文件中写入最高分。
-    public void saveHS(String[] username,int[] score) {
+    //在高分榜文件中写入最高分,difficult的值代表向哪个文件写入。
+    public void saveHS(String[] username,int[] score,int difficult) {
         try {
-            FileOutputStream outStream=this.openFileOutput("HighScore.txt", Context.MODE_PRIVATE);
+            String fileName = getFileName(difficult);
+            FileOutputStream outStream=this.openFileOutput(fileName, Context.MODE_PRIVATE);
             outStream.write("".getBytes());
             outStream.close();
             for(int i=0;i<8;i++){
-                outStream = this.openFileOutput("HighScore.txt",Context.MODE_APPEND);
+                outStream = this.openFileOutput(fileName,Context.MODE_APPEND);
                 String info = String.valueOf(score[i]);
                 info = username[i] + ":" + info + ",";
                 outStream.write(info.getBytes());
@@ -71,33 +107,39 @@ public class highScore extends AppCompatActivity {
         }
     }
     //读取高分榜文件的数据到全局变量中
-    public void loadHS(){
-        try{
-            FileInputStream inStream = this.openFileInput("HighScore.txt");
+    public void loadHS(int difficult){
+        try {
+            String fileName = getFileName(difficult);
+            if (fileName.equals("")) fileName = "HighScore_easy.txt";
+            //File file = new File(fileName);
+            FileInputStream inStream = this.openFileInput(fileName);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
-            int length =-1;
-            while ((length=inStream.read(buffer))!=-1){
-                stream.write(buffer,0,length);
+            int length = -1;
+            while ((length = inStream.read(buffer)) != -1) {
+                stream.write(buffer, 0, length);
             }
             stream.close();
             inStream.close();
             String text = stream.toString();
             String[] score = text.split(",");
             String[][] info = new String[8][2];
-            for (int i=0;i<8;i++) {
-                if(i<score.length) {
+            for (int i = 0; i < 8; i++) {
+                if (i < score.length) {
                     info[i] = score[i].split(":");
-                }else {
+                } else {
                     info[i][0] = getResources().getString(R.string.nobody);
                     info[i][1] = "0";
                 }
-            }
-            for(int i=0;i<8;i++){
+            }for(int i=0;i<8;i++){
                 HS_username[i] = info[i][0];
                 HS_costTime[i] = Integer.decode(info[i][1]);
             }
-        }catch (FileNotFoundException e){
+        }catch (FileNotFoundException e) {
+            for (int i = 0; i < 8; i++) {
+                HS_username[i] = getResources().getString(R.string.nobody);
+                HS_costTime[i] = 0;
+            }
         }catch (IOException e){
         }
     }
@@ -105,11 +147,12 @@ public class highScore extends AppCompatActivity {
     public void freshHS(String curUsername,int curCostTime){
         for(int i=0;i<8;i++){
             if(curCostTime<HS_costTime[i]||HS_costTime[i]==0){
-                int x =i;
-                for(int j=i+1;j<8;j++) {
-                    HS_username[j] = HS_username[x];
-                    HS_costTime[j] = HS_costTime[x];
-                    x++;
+                for(int j=7;j>i;j--) {
+                    if(HS_costTime[j-1]==0 ) {
+                        continue;
+                    }
+                    HS_username[j] = HS_username[j-1];
+                    HS_costTime[j] = HS_costTime[j-1];
                 }
                 HS_username[i] = curUsername;
                 HS_costTime[i] = curCostTime;
@@ -122,7 +165,6 @@ public class highScore extends AppCompatActivity {
         try{
             String filename = curUsername + ".txt";
             File file = new File(filename);
-            if (file.exists()) {
                 FileInputStream inStream = this.openFileInput(filename);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 byte[] buffer = new byte[1024];
@@ -135,20 +177,15 @@ public class highScore extends AppCompatActivity {
                 String score = stream.toString();
                 String[] usersScore = score.split(",");
                 for (int i = 0; i < 3; i++) {
-                    yourHighscore[i] = Integer.decode(usersScore[i]);
+                    if(i<usersScore.length) {
+                        yourHighscore[i] = Integer.decode(usersScore[i]);
+                    }else yourHighscore[i] = 0;
                 }
-            }else{
-                yourHighscore[0] = 0;
-                yourHighscore[1] = 0;
-                yourHighscore[2] = 0;
-                savePHS(curUsername);
-            }
-
         }catch (FileNotFoundException e){
             yourHighscore[0] = 0;
             yourHighscore[1] = 0;
             yourHighscore[2] = 0;
-            Toast.makeText(highScore.this,"尚未有您的得分数据",Toast.LENGTH_SHORT).show();
+            savePHS(curUsername);
         }catch (IOException e){
         }
     }
@@ -211,4 +248,44 @@ public class highScore extends AppCompatActivity {
             tv[i].setText(costtime);
         }
     }
+    //根据传入的difficult的值，决定向哪个文件进行读写
+    private String getFileName(int difficult){
+        String fileName;
+        Button changeButton = (Button)findViewById(R.id.change) ;
+        switch (difficult){
+            case 0:
+                changeButton.setText(R.string.change_easy);
+                fileName = "HighScore_easy.txt";
+                break;
+            case 1:
+                changeButton.setText(R.string.change_normal);
+                fileName = "HighScore_normal.txt";
+                break;
+            case 2:
+                changeButton.setText(R.string.change_hard);
+                fileName = "HighScore_hard.txt";
+                break;
+            default:
+                fileName="";
+        }
+        return fileName;
+    }
+    //根据传进的状态值选择读取的文件，与loadHS（）不同的地方在于这是按钮动作下手动切换的
+    private void cutover(int x){
+        switch (x){
+            case 0:
+                loadHS(0);
+                displayHS();
+                break;
+            case 1:
+                loadHS(1);
+                displayHS();
+                break;
+            case 2:
+                loadHS(2);
+                displayHS();
+                break;
+        }
+    }
+
 }

@@ -150,6 +150,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                         "显示图片碎片组picBlock[]的Tag",
                         "显示图片所对应的二维数组",
                         "尝试A*算法自动完成",
+                        "伪造胜利，直接进入排行榜",
                         "全部显示"
                 };
                 AlertDialog alert = null;
@@ -218,6 +219,14 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 break;
             case 5:
                 Toast.makeText(detailedPage.this,R.string.unComplete,Toast.LENGTH_SHORT).show();
+                break;
+            case 6:
+                Intent it = new Intent(detailedPage.this,highScore.class);
+                it.putExtra("username",username);
+                it.putExtra("costTime",50);
+                it.putExtra("difficult",0);
+                startActivity(it);
+                finish();
                 break;
             default:
                 debug(0);
@@ -671,6 +680,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                             it.putExtra("username",username);
                             it.putExtra("costTime",costTime);
                             it.putExtra("difficult",difficult);
+                            it.putExtra("cheat",CheatCount);
                             startActivity(it);
                             finish();
                         }

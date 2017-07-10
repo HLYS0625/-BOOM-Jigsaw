@@ -58,4 +58,8 @@
     <string name="init_sco">0</string>
     <string name="your_score">您的高分记录</string>
     <string name="goToHS">前往高分榜</string>
+    <string name="change_easy">难度：简单</string>
+    <string name="change_normal">难度：正常</string>
+    <string name="change_hard">难度：困难</string>
+    <string name="change_title">切换其他难度的高分榜</string>
 </resources>
