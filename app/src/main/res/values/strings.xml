@@ -43,6 +43,7 @@
     <string name="helpMsg">一つのピクチャーを選びなさい。そして難易度を選択して 、ゲームを始めましょう。</string>
     <string name="OK">OK</string>
     <string name="costTime">\n\n時間は %1$d 分 %2$d 秒です</string>
+    <string name="name_hint">请在此输入用户名</string>
 
 
 

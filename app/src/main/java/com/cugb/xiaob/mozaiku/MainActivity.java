@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AlertDialogLayout;
 import android.text.GetChars;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,9 +17,16 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Toast;
 
-        import java.util.ArrayList;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -64,6 +72,43 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        final LayoutInflater inflater = MainActivity.this.getLayoutInflater();
+        final View view_custom = inflater.inflate(R.layout.custom_dialog,null,false);
+        builder.setView(view_custom);
+        final AlertDialog alert = builder.create();
+        view_custom.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alert.dismiss();
+                Toast.makeText(mContext,"请输入用户名后进行游戏",Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+        view_custom.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText editText = (EditText)view_custom.findViewById(R.id.nameText);
+                String userName = editText.getText().toString();
+                if(userName != null){
+                    if(!finduser(userName)) {
+                        saveuser(userName);
+                        Toast.makeText(mContext,"未找到此用户，已新建用户名",Toast.LENGTH_SHORT).show();
+                        alert.dismiss();
+                    }else{
+                        Toast.makeText(mContext,"欢迎回来，"+userName,Toast.LENGTH_SHORT).show();
+                        alert.dismiss();
+                    }
+                }
+            }
+        });
+        alert.show();
+
+
+
+
+
+
         gridPhoto.setAdapter(mAdapter);
         gridPhoto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -103,6 +148,46 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Icon> mData = null;
     private String getStr(int i){
         return getResources().getString(i);
+    }
+
+
+    //在文件中存储用户名
+    public void saveuser(String username) {
+        try {
+            FileOutputStream outStream=this.openFileOutput("user.txt",Context.MODE_APPEND);
+            username+=",";
+            outStream.write(username.getBytes());
+            outStream.close();
+            Toast.makeText(MainActivity.this,"User Info Saved",Toast.LENGTH_SHORT).show();
+        } catch (IOException e){
+            //TODO:handle exception
+        }
+    }
+    //在文件中搜索用户名，找到返回true
+    public Boolean finduser(String username){
+        try{
+            boolean arimasu =false;
+            FileInputStream inStream = this.openFileInput("user.txt");
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length =-1;
+            while ((length=inStream.read(buffer))!=-1){
+                stream.write(buffer,0,length);
+            }
+            stream.close();
+            inStream.close();
+            String text = stream.toString();
+            String[] users = text.split(",");
+            for (int i=0;i<users.length;i++){
+                if(users[i].equals(username))
+                    arimasu =  true;
+            }
+            return arimasu;
+        }catch (FileNotFoundException e){
+            return false;
+        }catch (IOException e){
+            return false;
+        }
     }
 }
 

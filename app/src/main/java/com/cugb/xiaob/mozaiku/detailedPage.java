@@ -1,6 +1,7 @@
 package com.cugb.xiaob.mozaiku;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,19 +14,26 @@ import android.graphics.PorterDuff;
 import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Looper;
+import android.os.Message;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
@@ -43,10 +51,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Random;
+import android.os.Handler;
+
+import java.util.concurrent.ThreadFactory;
+import java.util.logging.LogRecord;
 
 public class detailedPage extends AppCompatActivity implements View.OnClickListener {
-    //debug函数用参数
-    int blockd=1,rd=0,stater=2,piclist=3;
     //黑色方块
     int blbl =404;
     //从页面一传入i的值，用以确定调取哪张图片
@@ -86,6 +96,14 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     MediaPlayer player = null;
     //游戏开始时间
     int costTime;
+    //自动完成的步骤
+    int[] zidong;
+
+    //分别代表左、上、右、下四个移动方向的操作数
+    private final int UP = 0;
+    private final int DOWN = 2;
+    private final int LEFT = 1;
+    private final int RIGHT = 3;
 
 
     private static final int SELECT_PHOTO=0;//调用相册照片
@@ -136,7 +154,26 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.help:
-                Toast.makeText(detailedPage.this,R.string.unComplete,Toast.LENGTH_SHORT).show();
+                final String[] debug = new String[]{
+                        "显示R数组",
+                        "显示ArrayList内容",
+                        "显示游戏状态值state",
+                        "显示图片碎片组picBlock[]的Tag",
+                        "显示图片所对应的二维数组",
+                        "尝试A*算法自动完成",
+                        "全部显示"
+                };
+                AlertDialog alert = null;
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(detailedPage.this);
+                alert = alertBuilder.setIcon(R.drawable.konosuba_h_01)
+                        .setTitle("选择Log输出的内容")
+                        .setSingleChoiceItems(debug, 0, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                debug(which);
+                            }
+                        }).create();
+                alert.show();
                 break;
             case R.id.easy:
                 hint(state,3,3);
@@ -446,10 +483,33 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                     Log.d("Help/","picBlock[]" + i + ":" + picBlock[i].getTag());
                 }
                 break;
+            case 4:
+                int width = (int)Math.sqrt(r.length);
+                int[][] L = getNumber(width);
+                for(int i=0;i<width;i++){
+                    for(int j=0;j<width;j++){
+                        Log.d("Help/","L["+i+"]["+j+"]:"+L[i][j]);
+                    }
+                }
+                break;
+            case 5:
+                int rows= (int)Math.sqrt(r.length);
+                IDAStarAlgorithm idas = new IDAStarAlgorithm(getNumber(rows),rows);
+                idas.getState(getNumber(rows));
+                idas.main();
+                zidong = idas.returnMoves();
+                for(int i=0;i<zidong.length;i++){
+                    autoExchange(zidong[i]);
+                    if(isSuccess()) break;
+                }
+                break;
+
             default:
+                debug(0);
                 debug(1);
                 debug(2);
                 debug(3);
+                debug(4);
         }
     }
     //判断游戏是否胜利
@@ -540,12 +600,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     }
     //判断游戏是否有解
     private boolean cansolve(int h) {
-        int[][] state = new int[h][h];
-        for(int i=0,k=0;i<h;i++)
-            for(int j =0;j<h;j++,k++)
-            {
-                state[i][j]=r[k];
-            }
+        int[][] state = getNumber(h);
         if(h % 2 == 1) { //問題寬度為奇數
             return (getInversions(state) % 2 == 0);
         } else { //問題寬度為偶數
@@ -580,43 +635,45 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         }
         return inversion;
     }
+    //将图片碎片转化为数组，便于AI算法计算。
+    private int[][] getNumber(int wideth) {
+        int[][] state = new int[wideth][wideth];
+        for (int i = 0, k = 0; i < wideth; i++)
+            for (int j = 0; j < wideth; j++, k++) {
+                if (r[k] == blbl) {
+                    state[i][j] = 0;
+                } else state[i][j] = r[k] + 1;
+            }
+        return state;
+    }
+    public void autoExchange(int x){
+        int i,j,width;
+            Sec = (ImageView)findViewById(R.id.nblock);
+            String tag = (String)Sec.getTag();
+            String[] str = tag.split("_");
+            i = Integer.decode(str[2]);
+            j = Integer.decode(str[3]);
+            width = (int)Math.sqrt(picBlock.length);
+            switch (x){
+            case UP:
+                Fst = (ImageView)findViewById(i*(width-1)+j);
+                exchange();
+                break;
+            case DOWN:
+                Fst = (ImageView)findViewById(i*(width+1)+j);
+                exchange();
+                break;
+            case LEFT:
+                Fst = (ImageView)findViewById(i*(width)+j-1);
+                exchange();
+                break;
+            case RIGHT:
+                Fst = (ImageView)findViewById(i*(width)+j+1);
+                exchange();
+                break;
+        }
+    }
 
-    public void saveuser(String username) {
-        try {
-            FileOutputStream outStream=this.openFileOutput("user.txt",Context.MODE_APPEND);
-            username+=",";
-            outStream.write(username.getBytes());
-            outStream.close();
-            Toast.makeText(detailedPage.this,"User Info Saved",Toast.LENGTH_SHORT).show();
-        } catch (IOException e){
-            //TODO:handle exception
-        }
-    }
-    public Boolean finduser(String username){
-        try{
-            boolean arimasu =false;
-            FileInputStream inStream = this.openFileInput("user.txt");
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int length =-1;
-            while ((length=inStream.read(buffer))!=-1){
-                stream.write(buffer,0,length);
-            }
-            stream.close();
-            inStream.close();
-            String text = stream.toString();
-            String[] users = text.split(",");
-            for (int i=0;i<users.length;i++){
-                if(users[i].equals(username))
-                    arimasu =  true;
-            }
-            return arimasu;
-        }catch (FileNotFoundException e){
-            return false;
-        }catch (IOException e){
-            return false;
-        }
-    }
 
 
 }
