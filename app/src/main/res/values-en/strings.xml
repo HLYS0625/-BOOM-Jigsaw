@@ -63,4 +63,7 @@
     <string name="change_hard">mode：hard</string>
     <string name="change_title">change the High Score Board</string>
     <string name="cant_solve">NOTICE:The game cannot be solved now</string>
+    <string name="HCG">Death_mode</string>
+    <string name="permission">Program can not open your album,unless you agree this permission.</string>
+    <string name="permission_no_notice">You set 『not show again』.Please turn on it in setting.</string>
 </resources>

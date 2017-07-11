@@ -6,10 +6,12 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.media.Image;
 import android.media.MediaPlayer;
@@ -20,6 +22,9 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +50,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +60,7 @@ import java.util.Random;
 import android.os.Handler;
 
 import java.util.concurrent.ThreadFactory;
+import java.util.jar.Manifest;
 import java.util.logging.LogRecord;
 
 public class detailedPage extends AppCompatActivity implements View.OnClickListener {
@@ -108,6 +115,10 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private static final int SELECT_PHOTO=0;//调用相册照片
     private static final int TAKE_PHOTO=1;//调用相机拍照
     private static final int CROP_PHOTO=2;//裁剪照片
+    private static final int REQUEST_CODE_REQUEST_PERMISSION = 0;//请求读写权限，用于传递裁剪的照片
+    //通过Uri方式存放剪裁后的图片，避免部分手机由于性能不够无法得到返回的data
+    private Uri uritempFile;
+    private File f;
 
 
 
@@ -152,6 +163,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                         "显示图片所对应的二维数组",
                         "尝试A*算法自动完成",
                         "伪造胜利，直接进入排行榜",
+                        "set File(f) to OriBitmap",
                         "全部显示"
                 };
                 AlertDialog alert = null;
@@ -229,6 +241,13 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 startActivity(it);
                 finish();
                 break;
+            case 7:
+                originBm = BitmapFactory.decodeFile(f.getPath());
+                setrei();
+                if(originBm==null) {
+                    Log.d("help","oriBm == null");
+                }else Log.d("help","oriBm != null");
+                break;
             default:
                 debug(0);
                 debug(1);
@@ -257,11 +276,43 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             rei_pic.setImageResource(pic_list[i]);
         }
     }
-    //从相册调取图片并返回给picList
+    //从相册调取图片并返回给picList，并申请相关权限
     private void pickImageFromAlbum(){
-        Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(intent,SELECT_PHOTO);
+        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            //如果游戏程序拥有读取权限，直接开启相册，进行剪裁，然后进行游戏
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            startActivityForResult(intent, SELECT_PHOTO);
+        }else {
+            //游戏程序没有读取权限，请求权限
+            boolean shouldShow = ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if(shouldShow) {
+                //请求权限
+                ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_REQUEST_PERMISSION);
+            }
+            //权限申请被用户永久关闭，弹出提示，并关闭该页面
+            else {
+                Toast.makeText(this,R.string.permission_no_notice,Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+        }
+    }
+   //对申请权限的结果进行响应
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_REQUEST_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //权限申请成功，开启相册
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, SELECT_PHOTO);
+            } else {
+                //权限申请被拒绝，提示用户，并关闭该页面
+                Toast.makeText(this, R.string.permission, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
     }
 
 
@@ -271,7 +322,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         super.onActivityResult(requestCode, resultCode,data);
         if(resultCode==RESULT_OK) {
             if (requestCode == SELECT_PHOTO) {
-                ContentResolver resolver = getContentResolver();
                 //获取图片原始地址
                 Uri imguri = data.getData();
                 try {
@@ -281,8 +331,12 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 }
             } else if (requestCode == CROP_PHOTO) {
                 try {
-                    originBm = data.getParcelableExtra("data");
-                    setrei();
+                    Uri uri =uritempFile;
+                    f = new File(uri.getPath());
+                    if(f.exists()) {
+                        originBm = BitmapFactory.decodeFile(f.getPath());
+                        setrei();
+                    }else Toast.makeText(this,"Wrong",Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     // TODO: handle exception
                 }
@@ -305,13 +359,16 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         intent.putExtra("aspectY", aspectY);
         intent.putExtra("outputX",outputX);
         intent.putExtra("outputY",outputY);
-        intent.putExtra("return-data", true);
+        intent.putExtra("return-data", false);
+        //实例化UriTemp，将剪裁后的图片保存到这里
+        uritempFile = Uri.parse("file://" + "/" + Environment.getExternalStorageDirectory().getPath() + "/temp/" + "small.jpg");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uritempFile);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         startActivityForResult(intent, CROP_PHOTO);
     }
 
 
-//工具函数
+    //工具函数
     //计时函数
     private int getTime(){
         int Hour,minute,second;
