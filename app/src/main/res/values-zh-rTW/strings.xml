@@ -36,8 +36,8 @@
     <string name="congra_title">congratulation</string>
     <string name="replay">再玩一遍</string>
     <string name="other_pic">其他圖片</string>
-    <string name="cant_move">Cannot move</string>
-    <string name="getPic_wrong">Something Wrong,Cannot finding the picture</string>
+    <string name="cant_move">無法移動</string>
+    <string name="getPic_wrong">抱歉，沒有找到該圖片</string>
     <string name="unComplete">敬請期待</string>
     <string name="helpMsg">請先選擇一個圖片，然後選擇想要的難度。之後就可以盡情遊戲了~~</string>
     <string name="OK">確定</string>
@@ -55,7 +55,7 @@
     <string name="high_score">高分榜</string>
     <string name="nobody">等待您的登頂</string>
     <string name="init_sco">0</string>
-    <string name="your_score">您的高分記錄</string>
+    <string name="your_score">您的歷史高分</string>
     <string name="goToHS">前往高分榜</string>
     <string name="change_easy">難度：簡單</string>
     <string name="change_normal">難度：正常</string>
