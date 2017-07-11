@@ -44,8 +44,11 @@
 
 
 <TableLayout
+    android:id="@+id/hcg_tb"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/black">
 
 </TableLayout>
 
