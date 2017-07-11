@@ -28,7 +28,7 @@ public class highScore extends AppCompatActivity {
     int curCostTime;//刚刚完成的游戏用时
     String[] HS_username = new String[8];//高分榜文件中记录的全部玩家名称
     int[] HS_costTime = new int[8];//高分榜文件中记录的全部最高分数
-    int[] yourHighscore = new int[3];//当前登录用户的最高分数
+    int[] yourHighscore = {0,0,0};//当前登录用户的最高分数
     int difficult;//当前登录用户的难度类型，三种取值为0,1,2,对应简单，普通，困难。5表示没有接收到该项数据
     int CheatCount;//从游戏页面接收的作弊次数计数，若作弊次数大于0，则拒绝将成绩录入排行榜
     int noStay;//从游戏页面接收的停留标识，如果noStay值为1，则记录信息后立刻关闭此页面，不做停留。
@@ -94,6 +94,8 @@ public class highScore extends AppCompatActivity {
         }else finish();
     }
 
+
+//存储相关函数
     //在高分榜文件中写入最高分,difficult的值代表向哪个文件写入。
     public void saveHS(String[] username,int[] score,int difficult) {
         try {
@@ -112,6 +114,24 @@ public class highScore extends AppCompatActivity {
             //TODO:handle exception
         }
     }
+    //在用户名对应的个人文件中写入该用户每个难度所获得的历史最高分
+    public void savePHS(String curUsername){
+        try {
+            String filename = curUsername + ".txt";
+            FileOutputStream outStream=this.openFileOutput(filename, Context.MODE_PRIVATE);
+            for(int i=0;i<3;i++){
+                String info = String.valueOf(yourHighscore[i]);
+                info = i + ":" + info + ",";
+                outStream.write(info.getBytes());
+                outStream.close();
+            }
+        } catch (IOException e){
+            //TODO:handle exception
+        }
+    }
+
+
+//读取相关函数
     //读取高分榜文件的数据到全局变量中
     public void loadHS(int difficult){
         try {
@@ -149,6 +169,39 @@ public class highScore extends AppCompatActivity {
         }catch (IOException e){
         }
     }
+    //读取个人最高分文件的数据到全局变量中
+    public void loadPHS(String curUsername){
+        try{
+            String filename = curUsername + ".txt";
+            File file = new File(filename);
+            FileInputStream inStream = this.openFileInput(filename);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length = -1;
+            while ((length = inStream.read(buffer)) != -1) {
+                stream.write(buffer, 0, length);
+            }
+            stream.close();
+            inStream.close();
+            String score = stream.toString();
+            String[] usersScore = score.split(",");
+            for (int i = 0; i < usersScore.length; i++) {
+                String[] info = usersScore[i].split(":");
+                int no = Integer.decode(info[0]);
+                int sco = Integer.decode(info[1]);
+                yourHighscore[no] =  sco;
+            }
+        }catch (FileNotFoundException e){
+            yourHighscore[0] = 0;
+            yourHighscore[1] = 0;
+            yourHighscore[2] = 0;
+            savePHS(curUsername);
+        }catch (IOException e){
+        }
+    }
+
+
+//更新全局变量函数（以便刷新数据后写入到文件中保存）
     //更新暂存在全局变量中的高分榜数据
     public void freshHS(String curUsername,int curCostTime){
         for(int i=0;i<8;i++){
@@ -166,54 +219,14 @@ public class highScore extends AppCompatActivity {
             }
         }
     }
-    //读取个人最高分表
-    public void loadPHS(String curUsername){
-        try{
-            String filename = curUsername + ".txt";
-            File file = new File(filename);
-                FileInputStream inStream = this.openFileInput(filename);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                byte[] buffer = new byte[1024];
-                int length = -1;
-                while ((length = inStream.read(buffer)) != -1) {
-                    stream.write(buffer, 0, length);
-                }
-                stream.close();
-                inStream.close();
-                String score = stream.toString();
-                String[] usersScore = score.split(",");
-                for (int i = 0; i < 3; i++) {
-                    if(i<usersScore.length) {
-                        yourHighscore[i] = Integer.decode(usersScore[i]);
-                    }else yourHighscore[i] = 0;
-                }
-        }catch (FileNotFoundException e){
-            yourHighscore[0] = 0;
-            yourHighscore[1] = 0;
-            yourHighscore[2] = 0;
-            savePHS(curUsername);
-        }catch (IOException e){
-        }
-    }
     //更新暂存在全局变量中的个人最高分
     public void freshPHS(int curCostTime){
-        if(yourHighscore[difficult]==0 || yourHighscore[difficult]>curCostTime)
+        if(yourHighscore[difficult]!=0 && (yourHighscore[difficult]==0 || yourHighscore[difficult]>curCostTime))
             yourHighscore[difficult]=curCostTime;
     }
-    public void savePHS(String curUsername){
-        try {
-            String filename = curUsername + ".txt";
-            FileOutputStream outStream=this.openFileOutput(filename, Context.MODE_PRIVATE);
-            for(int i=0;i<3;i++){
-                String info = String.valueOf(yourHighscore[i]);
-                info = yourHighscore[i] + ",";
-                outStream.write(info.getBytes());
-                outStream.close();
-            }
-        } catch (IOException e){
-            //TODO:handle exception
-        }
-    }
+
+
+//UI显示相关函数
     //刷新UI中的高分榜显示
     private void displayHS(){
         TextView[] username = new TextView[]{
@@ -254,6 +267,9 @@ public class highScore extends AppCompatActivity {
             tv[i].setText(costtime);
         }
     }
+
+
+//工具函数
     //根据传入的difficult的值，决定向哪个文件进行读写
     private String getFileName(int difficult){
         String fileName;
@@ -276,7 +292,7 @@ public class highScore extends AppCompatActivity {
         }
         return fileName;
     }
-    //根据传进的状态值选择读取的文件，与loadHS（）不同的地方在于这是按钮动作下手动切换的
+    //根据传进的状态值选择读取的文件，提供给切换按钮刷新数据之用。
     private void cutover(int x){
         switch (x){
             case 0:
@@ -293,5 +309,4 @@ public class highScore extends AppCompatActivity {
                 break;
         }
     }
-
 }
