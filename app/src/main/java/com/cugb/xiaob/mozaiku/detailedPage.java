@@ -684,30 +684,39 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                     .setPositiveButton(R.string.replay, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            record(1);
                             Toast.makeText(detailedPage.this,R.string.chooseDiffcult,Toast.LENGTH_SHORT).show();
                         }
                     })
                     .setNeutralButton(R.string.goToHS, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            int difficult = (int)Math.sqrt(picBlock.length)-3;
-                            Intent it = new Intent(detailedPage.this,highScore.class);
-                            it.putExtra("username",username);
-                            it.putExtra("costTime",costTime);
-                            it.putExtra("difficult",difficult);
-                            it.putExtra("cheat",hasCheated);
-                            startActivity(it);
-                            finish();
+                            record(0);
                         }
                     })
                     .setNegativeButton(R.string.other_pic, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            record(1);
                             finish();
                         }
                     })
                     .create();
             alt.show();
+        }
+    }
+    //将分数信息传入高分榜，只有选择前往高分榜页面，noStay值方设为0，表示停留在高分榜页面。
+    private void record(int noStay){
+        int difficult = (int)Math.sqrt(picBlock.length)-3;
+        Intent it = new Intent(detailedPage.this,highScore.class);
+        it.putExtra("username",username);
+        it.putExtra("costTime",costTime);
+        it.putExtra("difficult",difficult);
+        it.putExtra("cheat",hasCheated);
+        it.putExtra("noStay",noStay);
+        startActivity(it);
+        if(noStay==0){
+            finish();
         }
     }
 }

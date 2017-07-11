@@ -31,6 +31,7 @@ public class highScore extends AppCompatActivity {
     int[] yourHighscore = new int[3];//当前登录用户的最高分数
     int difficult;//当前登录用户的难度类型，三种取值为0,1,2,对应简单，普通，困难。5表示没有接收到该项数据
     int CheatCount;//从游戏页面接收的作弊次数计数，若作弊次数大于0，则拒绝将成绩录入排行榜
+    int noStay;//从游戏页面接收的停留标识，如果noStay值为1，则记录信息后立刻关闭此页面，不做停留。
 
 
     @Override
@@ -71,6 +72,8 @@ public class highScore extends AppCompatActivity {
         curCostTime = it.getIntExtra("costTime",999999999);
         difficult = it.getIntExtra("difficult",5);
         CheatCount = it.getIntExtra("cheat",0);
+        noStay = it.getIntExtra("noStay",0);
+
 
         //读取高分榜
         loadHS(difficult);
@@ -83,9 +86,12 @@ public class highScore extends AppCompatActivity {
             saveHS(HS_username,HS_costTime,difficult);
             savePHS(curUsername);
         }
-        //刷新UI显示
-        displayHS();
-        displayPHS();
+        //如果通关后没有选择前往高分榜，立刻在存储分数后关闭此页面
+        if(noStay==0) {
+            //刷新UI显示
+            displayHS();
+            displayPHS();
+        }else finish();
     }
 
     //在高分榜文件中写入最高分,difficult的值代表向哪个文件写入。
