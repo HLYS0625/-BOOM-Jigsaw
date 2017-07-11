@@ -6,7 +6,7 @@
     <string name="bijyutu">この美術部</string>
     <string name="bleach">ブリーチ</string>
     <string name="deathNote">デスノート</string>
-    <string name="demichan">デミちゃん</string>
+    <string name="demichan">デミちゃんは語りたい</string>
     <string name="gaburiiru">ガヴリールドロップ</string>
     <string name="girls_panzer">ガールズ＆パンツァー</string>
     <string name="hibike">響けユーフォニアム</string>
@@ -21,7 +21,6 @@
     <string name="hard">ハード</string>
     <string name="help">ヘルプ</string>
     <string name="sml_pic">ターゲットピクチャー</string>
-    <string name="big_pic_pic">マインピクチャー</string>
     <string name="music">ミュージック</string>
     <string name="weixuantupian">ピクチャーを選びませんです</string>
     <string name="on">:オン</string>
@@ -37,8 +36,8 @@
     <string name="congra_title">コングラチュレーション</string>
     <string name="replay">もう一度プレーしたい</string>
     <string name="other_pic">他のピクチャー</string>
-    <string name="cant_move">Cannot move</string>
-    <string name="getPic_wrong">Something Wrong,Cannot finding the picture</string>
+    <string name="cant_move">このような移動は無理です</string>
+    <string name="getPic_wrong">申し訳ありません、エラーが発生しました。ピクチャーを見つけなかった</string>
     <string name="unComplete">期待してください</string>
     <string name="helpMsg">一つのピクチャーを選びなさい。そして難易度を選択して 、ゲームを始めましょう。</string>
     <string name="OK">オーケー</string>
@@ -63,6 +62,7 @@
     <string name="change_normal">モド：ノーマル</string>
     <string name="change_hard">モド：ハード</string>
     <string name="change_title">スコアボードを切り替える</string>
+    <string name="cant_solve">注目してください：いま、ゲームは不可解になりました…</string>
 </resources>
 
 

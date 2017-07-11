@@ -95,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
         HCG();
         //监听help按钮
         help();
+        //监听toHighScore按钮
+        toHighScore();
     }
 
     //获取存储在string资源文件中的字符串
@@ -198,6 +200,8 @@ public class MainActivity extends AppCompatActivity {
                 }else Toast.makeText(mContext,R.string.null_nm,Toast.LENGTH_SHORT).show();
             }
         });
+        alert.setCanceledOnTouchOutside(false);
+        alert.setCancelable(false);
         alert.show();
     }
 
@@ -220,6 +224,18 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }).create();
                 alt.show();
+            }
+        });
+    }
+    //从主菜单直接前往高分榜
+    private void toHighScore(){
+        Button B = (Button)findViewById(R.id.toHighScore) ;
+        B.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(MainActivity.this,highScore.class);
+                it.putExtra("username",userForIntent);
+                startActivity(it);
             }
         });
     }

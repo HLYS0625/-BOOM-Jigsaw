@@ -6,7 +6,7 @@
     <string name="bijyutu">这个美术部</string>
     <string name="bleach">漂灵</string>
     <string name="deathNote">死亡笔记</string>
-    <string name="demichan">亚人酱</string>
+    <string name="demichan">亚人酱有话要说</string>
     <string name="gaburiiru">珈百璃的堕落</string>
     <string name="girls_panzer">少女与战车</string>
     <string name="hibike">吹响吧，低音号</string>
@@ -21,7 +21,6 @@
     <string name="hard">困难</string>
     <string name="help">帮助</string>
     <string name="sml_pic">范例图片</string>
-    <string name="big_pic_pic">主图片</string>
     <string name="music">音乐</string>
     <string name="weixuantupian">您未选择图片</string>
     <string name="on">:开</string>
@@ -37,8 +36,8 @@
     <string name="congra_title">congratulation</string>
     <string name="replay">再玩一遍</string>
     <string name="other_pic">其他图片</string>
-    <string name="cant_move">Cannot move</string>
-    <string name="getPic_wrong">Something Wrong,Cannot finding the picture</string>
+    <string name="cant_move">无法移动</string>
+    <string name="getPic_wrong">抱歉，没有找到该图片。</string>
     <string name="unComplete">敬请期待</string>
     <string name="helpMsg">请先选择一个图片，然后选择想要的难度。之后就可以开始游戏了~~</string>
     <string name="OK">确定</string>
@@ -56,10 +55,11 @@
     <string name="high_score">高分榜</string>
     <string name="nobody">等待您的君临</string>
     <string name="init_sco">0</string>
-    <string name="your_score">您的高分记录</string>
+    <string name="your_score">您的历史高分</string>
     <string name="goToHS">前往高分榜</string>
     <string name="change_easy">难度：简单</string>
     <string name="change_normal">难度：正常</string>
     <string name="change_hard">难度：困难</string>
     <string name="change_title">切换其他难度的高分榜</string>
+    <string name="cant_solve">注意：当前游戏处于不可解模式，请再次使用作弊方法修正</string>
 </resources>

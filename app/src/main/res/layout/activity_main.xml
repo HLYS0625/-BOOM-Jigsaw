@@ -16,6 +16,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/pink">
+
+            <Button
+                android:id="@+id/toHighScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/pink"
+                android:text="@string/goToHS"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:paddingTop="20dp"
+                style="?android:attr/buttonBarButtonStyle"
+                />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
