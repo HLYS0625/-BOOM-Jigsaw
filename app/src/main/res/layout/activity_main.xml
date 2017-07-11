@@ -16,7 +16,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/pink">
-
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/HCG"
+                android:background="@color/pink"
+                android:id="@+id/HCGBUTTON"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:gravity="right"
+                android:padding="20dp"
+                style="?android:attr/buttonBarButtonStyle"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

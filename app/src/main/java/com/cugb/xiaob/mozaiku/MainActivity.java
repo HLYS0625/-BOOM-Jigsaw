@@ -91,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(it);
             }
         });
-
-
+//      监听HCG按钮
+        HCG();
         //监听help按钮
         help();
     }
@@ -200,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
         });
         alert.show();
     }
+
     //监控help按钮，并在点击确认后播放补间动画
     private void help(){
         Button b = (Button)findViewById(R.id.help);
@@ -222,5 +223,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    //监控HCG按钮 并在点击确认后进入骨灰级玩家游戏界面 IC
+    private void HCG(){
+        Button buttonHCG=(Button)findViewById(R.id.HCGBUTTON);
+        buttonHCG.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivity.this,HCGView.class);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+
 }
 
