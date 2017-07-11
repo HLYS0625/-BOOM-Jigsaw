@@ -200,6 +200,8 @@ public class MainActivity extends AppCompatActivity {
                 }else Toast.makeText(mContext,R.string.null_nm,Toast.LENGTH_SHORT).show();
             }
         });
+        alert.setCanceledOnTouchOutside(false);
+        alert.setCancelable(false);
         alert.show();
     }
     //监控help按钮，并在点击确认后播放补间动画
