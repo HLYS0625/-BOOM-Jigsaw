@@ -41,7 +41,7 @@
     <string name="unComplete">期待してください</string>
     <string name="helpMsg">一つのピクチャーを選びなさい。そして難易度を選択して 、ゲームを始めましょう。</string>
     <string name="OK">オーケー</string>
-    <string name="HCG">骨灰</string>
+    <string name="HCG">地獄モード</string>
     <string name="cancel">キャンセル</string>
     <string name="costTime">\n\n時間は %1$d 分 %2$d 秒です</string>
     <string name="name_hint">ユーザー名を入力</string>
@@ -63,6 +63,8 @@
     <string name="change_hard">モド：ハード</string>
     <string name="change_title">スコアボードを切り替える</string>
     <string name="cant_solve">注目してください：いま、ゲームは不可解になりました…</string>
+    <string name="permission">プログラムはこの権限は必要です</string>
+    <string name="permission_no_notice">君はこの権限を拒否した、設定に同意してください</string>
 </resources>
 
 

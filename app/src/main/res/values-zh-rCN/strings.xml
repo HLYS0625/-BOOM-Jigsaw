@@ -62,4 +62,7 @@
     <string name="change_hard">难度：困难</string>
     <string name="change_title">切换其他难度的高分榜</string>
     <string name="cant_solve">注意：当前游戏处于不可解模式，请再次使用作弊方法修正</string>
+    <string name="HCG">骨灰</string>
+    <string name="permission">本程序需要这个权限来存取相册图片。</string>
+    <string name="permission_no_notice">您选择了『不再提示』，请在设定内开启此权限</string>
 </resources>
