@@ -25,6 +25,7 @@ import android.widget.Toast;
  */
 
 public class HCGView extends Activity {
+    String username;
     Gallery gallery;
     int pos;
     LinearLayout linearLayout;
@@ -38,7 +39,8 @@ public class HCGView extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hcg_view );
-
+        Intent intent=getIntent();
+        username = intent.getStringExtra("username");
         //监控画廊图片选择
         ChooseImage();
         //监控FIGHT按钮
@@ -109,22 +111,13 @@ public class HCGView extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int imageId;
-                imageId=picture[pos];
                 Intent intent=new Intent();
-                intent.putExtra("ImageId",imageId);
+                intent.putExtra("username",username);
+                intent.putExtra("Imagepos",pos);
                 intent.setClass(HCGView.this,HCGPlay.class);
                 startActivity(intent);
-//                Play();
+
             }
         });
     }
-
-
-
-    public void Play(){
-        Toast.makeText(HCGView.this,"Paly",Toast.LENGTH_SHORT).show();
-    }
-
-
 }
