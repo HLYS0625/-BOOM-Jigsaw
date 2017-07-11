@@ -62,4 +62,5 @@
     <string name="change_normal">难度：正常</string>
     <string name="change_hard">难度：困难</string>
     <string name="change_title">切换其他难度的高分榜</string>
+    <string name="cant_solve">注意：当前游戏处于不可解模式，请再次使用作弊方法修正</string>
 </resources>

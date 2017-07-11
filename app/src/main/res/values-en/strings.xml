@@ -63,4 +63,5 @@
     <string name="change_normal">mode：normal</string>
     <string name="change_hard">mode：hard</string>
     <string name="change_title">change the High Score Board</string>
+    <string name="cant_solve">NOTICE:The game can&apos;t be solved now</string>
 </resources>

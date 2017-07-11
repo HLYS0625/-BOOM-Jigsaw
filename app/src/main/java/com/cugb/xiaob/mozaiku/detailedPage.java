@@ -100,10 +100,11 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     int costTime;
     //登录用户名
     String username;
-    //调用相册相关，相机拍照有空补充
-
-//    作弊次数
+    //剩余作弊次数
     int CheatCount=0;
+    //已经作弊次数
+    int hasCheated = 0;
+    //调用相册相关，相机拍照有空补充
     private static final int SELECT_PHOTO=0;//调用相册照片
     private static final int TAKE_PHOTO=1;//调用相机拍照
     private static final int CROP_PHOTO=2;//裁剪照片
@@ -389,9 +390,12 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         int[][] state = new int[wideth][wideth];
         for (int i = 0, k = 0; i < wideth; i++)
             for (int j = 0; j < wideth; j++, k++) {
-                if (r[k] == blbl) {
+                String tag = (String)picBlock[k].getTag();
+                String[] tags = tag.split("_");
+                int no = Integer.decode(tags[1]);
+                if (no == blbl) {
                     state[i][j] = 0;
-                } else state[i][j] = r[k] + 1;
+                } else state[i][j] = no + 1;
             }
         return state;
     }
@@ -585,6 +589,9 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             Fst = null;
             Toast.makeText(detailedPage.this, R.string.cant_move, Toast.LENGTH_SHORT).show();
         }
+        if (hasCheated > 0) {
+            check();
+        }
     }
     //判断图片能否移动，若能移动，则通过exchange移动图片到空白位置
     private boolean moveable(){
@@ -592,6 +599,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
 //        增加有没有作弊次数的判断
         if(CheatCount>0){
             CheatCount--;
+            hasCheated++;
             return true;
         }else {
             String firstTag = (String) Fst.getTag();
@@ -634,6 +642,13 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         Sec = Fst;
         Fst = null;
         judge();
+    }
+    //如果调用过作弊方法，移动后检测游戏按照正常方式游玩是否有解，不可解的话弹窗提示
+    private void check() {
+        int width = (int) Math.sqrt(picBlock.length);
+        if (!cansolve(width)) {
+            Toast.makeText(detailedPage.this, R.string.cant_solve, Toast.LENGTH_SHORT).show();
+        }
     }
     //判断游戏是否胜利，每次移动后都会进行检测
     private boolean isSuccess(){
@@ -680,7 +695,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                             it.putExtra("username",username);
                             it.putExtra("costTime",costTime);
                             it.putExtra("difficult",difficult);
-                            it.putExtra("cheat",CheatCount);
+                            it.putExtra("cheat",hasCheated);
                             startActivity(it);
                             finish();
                         }

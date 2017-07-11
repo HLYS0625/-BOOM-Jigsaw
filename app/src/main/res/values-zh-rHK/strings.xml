@@ -62,4 +62,5 @@
     <string name="change_normal">難度：正常</string>
     <string name="change_hard">難度：困難</string>
     <string name="change_title">切換其他難度的高分榜</string>
+    <string name="cant_solve">警示：當前遊戲已經處於不可解狀態</string>
 </resources>
