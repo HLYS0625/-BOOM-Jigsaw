@@ -62,6 +62,7 @@
     <string name="change_normal">モド：ノーマル</string>
     <string name="change_hard">モド：ハード</string>
     <string name="change_title">スコアボードを切り替える</string>
+    <string name="cant_solve">注目してください：いま、ゲームは不可解になりました…</string>
 </resources>
 
 
