@@ -9,8 +9,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,17 +24,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by 496983022 on 2017/7/11.
  */
 
 public class HCGPlay extends Activity implements View.OnClickListener{
+    Timer timer;
     //黑色方块
     int blbl =404;
     //从页面一传入i的值，用以确定调取哪张图片
@@ -41,7 +49,7 @@ public class HCGPlay extends Activity implements View.OnClickListener{
     private ArrayList<Block> mData = new ArrayList<>();
     //随机数组，用以打乱拼图的顺序
     int[] r;
-    //      示例图片View
+    //      示例图片View   貌似可删
     private ImageView rei_pic;
     //fst为玩家点击的图片，sec始终为黑色图片（空白区块）
     private ImageView Fst;
@@ -56,9 +64,10 @@ public class HCGPlay extends Activity implements View.OnClickListener{
     //被黑色替代的图片以及从相册中传入的原图
     private Bitmap bitmap;
     //游戏开始时间
-    int costTime;
+    int reamainTime;
     //登录用户名
     String username;
+    TextView textViewGameTime;
 
 
     @Override
@@ -72,8 +81,11 @@ public class HCGPlay extends Activity implements View.OnClickListener{
         setPic();
         Button buttonchallenge=(Button)findViewById(R.id.hcg_begin);
         Button buttonback=(Button)findViewById(R.id.hcg_back);
+        textViewGameTime=(TextView)findViewById(R.id.hcg_time);
         buttonback.setOnClickListener(this);
         buttonchallenge.setOnClickListener(this);
+        //时间耗尽监听
+        TimeOut();
     }
     @Override
     public void onClick(View v) {
@@ -281,13 +293,17 @@ public class HCGPlay extends Activity implements View.OnClickListener{
     private void newgame(int rows,int cols){
         state=0;//初始状态
         blbl=404;
-        costTime=0;
         mData.clear();
         if(r!=null) {
             for (int i = 0; i < r.length; i++) {
                 r[i] = 0;
             }
         }
+        timer=new Timer();
+        //游戏时间
+        reamainTime=300;
+        timer.schedule(task,0,1000);
+
         TableLayout t1 = (TableLayout)findViewById(R.id.hcg_tb);
         t1.removeAllViewsInLayout();
         chooseLevel(rows, cols, i);
@@ -297,7 +313,6 @@ public class HCGPlay extends Activity implements View.OnClickListener{
             newgame(rows,cols);
         }
         state = 1;//游戏中
-//        costTime = getTime();
     }
 
 //    游戏过程相关的操作
@@ -375,10 +390,9 @@ public class HCGPlay extends Activity implements View.OnClickListener{
         if (isSuccess())
         {
             state=2;
-//            costTime = getTime()-costTime;
             int minute,second;
-            minute = costTime/60;
-            second = costTime%60;
+            minute = (300-reamainTime)/60;
+            second = (300-reamainTime)%60;
             Sec.setImageBitmap(bitmap);
             AlertDialog alt ;
             AlertDialog.Builder alb = new AlertDialog.Builder(HCGPlay.this);
@@ -410,6 +424,84 @@ public class HCGPlay extends Activity implements View.OnClickListener{
                     .create();
             alt.show();
         }
+    }
+
+//计时
+    TimerTask task = new TimerTask() {
+        @Override
+        public void run() {
+            Message message = new Message();
+            message.what = 1;
+            handler.sendMessage(message);
+        }
+    };
+
+    final Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    update();
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
+//时间停止 终止线程
+    protected void timestop() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        if(task!=null){
+            task.cancel();
+            task=null;
+        }
+    }
+    //更新时间
+    public void update(){
+        reamainTime--;
+        textViewGameTime.setText("剩余时间："+reamainTime+"秒");
+    }
+//时间耗尽监听函数
+    public  void TimeOut(){
+        textViewGameTime.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(reamainTime==0){
+//                    Toast.makeText(HCGPlay.this,"时间耗尽",Toast.LENGTH_SHORT).show();
+                    //时间耗尽 游戏结束 停止计时 弹窗回到上一页
+                    timestop();
+//                    judge();
+                    if(!isSuccess()){
+                        AlertDialog alt ;
+                        AlertDialog.Builder alb = new AlertDialog.Builder(HCGPlay.this);
+                        alt = alb.setIcon(R.drawable.konosuba_h_01)
+                                .setTitle("sorry")
+                                .setMessage("未完成,点击按钮返回上一界面")
+                                .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent=new Intent(HCGPlay.this,HCGView.class);
+                                        startActivity(intent);
+                                    }
+                                })
+
+                                .create();
+                        alt.show();
+                    }
+                }
+            }
+        });
     }
 
 }
