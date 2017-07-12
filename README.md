@@ -73,3 +73,16 @@ _________________________________________________________________
             userName    创建此条记录的玩家名称，暂时未作为外键（似乎没有必要关联这两个表？）
             difficult   此条记录的通关难度，0为简单，1位正常，2为困难。（3为骨灰？有必要的话加上就好）
             record      通关用时，按秒记录。
+    _________________________________________________________________
+     数据库TABLE：『hcgInfo』
+         此Table结构
+             imagePos	    integer		 PrimaryKey,
+             challengeTime  datetime
+             useTime        integer
+             userName       varchar（20）
+         默认version 1
+         数据字典：
+             imagePos       记录所选图片坐标位置 用作主键 查找改图片是否被完成过
+             challengeTime  挑战完成的时间  yyyy年MM月dd日HH:mm:ss
+             useTime        通关时间 按秒记录
+             userName       挑战者名字
