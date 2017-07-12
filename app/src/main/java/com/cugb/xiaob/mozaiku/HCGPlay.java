@@ -69,6 +69,8 @@ public class HCGPlay extends Activity implements View.OnClickListener{
     //登录用户名
     String username;
     TextView textViewGameTime;
+//   是否是第一次调用handler
+    int IsFirst=0;
 
 
     @Override
@@ -426,8 +428,14 @@ public class HCGPlay extends Activity implements View.OnClickListener{
 
 //    倒计时2.0
     public void CountDowm(){
+        if(IsFirst!=0){
+//            Toast.makeText(HCGPlay.this,"???",Toast.LENGTH_SHORT).show();
+        }
+        else {
+            IsFirst=1;
         Message message=handler.obtainMessage(1);
-        handler.sendMessageDelayed(message,1000);
+        handler.sendMessageDelayed(message,0);
+        }
     }
     final Handler handler=new Handler(){
         public  void handleMessage(Message mes){
