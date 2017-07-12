@@ -186,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         saveuserByDB(userName,password);
+                                        userForIntent = userName;
                                         alert.dismiss();
                                     }
                                 })
@@ -264,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-//废弃代码，稳定后删除
+/*废弃代码，稳定后删除
     //在文件中存储用户名及密码
     public void saveuser(String username,String password) {
         try {
@@ -306,5 +307,6 @@ public class MainActivity extends AppCompatActivity {
             return 0;
         }
     }
+    */
 }
 

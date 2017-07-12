@@ -1,10 +1,15 @@
 package com.cugb.xiaob.mozaiku;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -26,12 +31,15 @@ import java.io.IOException;
 public class highScore extends AppCompatActivity {
     String curUsername;//当前登录的用户名
     int curCostTime;//刚刚完成的游戏用时
-    String[] HS_username = new String[8];//高分榜文件中记录的全部玩家名称
-    int[] HS_costTime = new int[8];//高分榜文件中记录的全部最高分数
     int[] yourHighscore = {0,0,0};//当前登录用户的最高分数
-    int difficult;//当前登录用户的难度类型，三种取值为0,1,2,对应简单，普通，困难。5表示没有接收到该项数据
+    int difficult;//当前登录用户的难度类型，三种取值为0,1,2,对应简单，普通，困难。5表示没有接收到该项数据,即非游戏结束后进入此页面
     int CheatCount;//从游戏页面接收的作弊次数计数，若作弊次数大于0，则拒绝将成绩录入排行榜
     int noStay;//从游戏页面接收的停留标识，如果noStay值为1，则记录信息后立刻关闭此页面，不做停留。
+    //数据库相关变量
+    private DBOpenHelper myDBHelper = new DBOpenHelper(highScore.this,1);
+
+
+    //____________________________________变量和函数的分割线________________________________________\\
 
 
     @Override
@@ -75,29 +83,136 @@ public class highScore extends AppCompatActivity {
         noStay = it.getIntExtra("noStay",0);
 
 
-        //读取高分榜
-        loadHS(difficult);
-        //读取个人最佳成绩
-        loadPHS(curUsername);
         //如果是通关后进入此页面，（依成绩）刷新高分榜和个人最好成绩，并保存在文件中。
         if(difficult!=5 && CheatCount == 0 ){
-            freshHS(curUsername,curCostTime);
-            freshPHS(curCostTime);
-            saveHS(HS_username,HS_costTime,difficult);
-            savePHS(curUsername);
+            saveHSByDatabase(curUsername,curCostTime,difficult);
+            savePHSByDatabase(curUsername,curCostTime,difficult);
         }
         //如果通关后没有选择前往高分榜，立刻在存储分数后关闭此页面
         if(noStay==0) {
             //刷新UI显示
-            displayHS();
-            displayPHS();
+            if(difficult!=5) {
+                loadHSByDatabase(difficult);
+            }else loadHSByDatabase(0);
+            loadPHSByDatabase(curUsername);
         }else finish();
     }
 
 
 //存储相关函数
-    //在高分榜文件中写入最高分,difficult的值代表向哪个文件写入。
-    public void saveHS(String[] username,int[] score,int difficult) {
+    //向数据库高分榜文件中写入最高分
+    public void saveHSByDatabase(String curUsername,int curCostTime,int difficult){
+        SQLiteDatabase db = myDBHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("userName",curUsername);
+        values.put("record",curCostTime);
+        values.put("difficult",difficult);
+        db.insert("scoreInfo",null,values);
+    }
+    //向数据库用户信息文件中更新该用户的个人最高分
+    public void savePHSByDatabase(String curUsername,int curCostTime,int difficult){
+        loadPHSByDatabase(curUsername);
+        if(yourHighscore[difficult]==0 || curCostTime < yourHighscore[difficult]){
+            yourHighscore[difficult] = curCostTime;
+        }
+        String[] s = {
+                String.valueOf(yourHighscore[0]),
+                String.valueOf(yourHighscore[1]),
+                String.valueOf(yourHighscore[2]),
+                curUsername
+        };
+        SQLiteDatabase db = myDBHelper.getWritableDatabase();
+        db.execSQL("UPDATE userInfo SET easyHS = ? ,normalHS = ? ,hardHS = ?" +
+                "WHERE userName = ?",s);
+    }
+
+
+//读取数据库并刷新UI相关函数
+    //从高分榜数据库中读取高分记录并显示在UI上
+    public void loadHSByDatabase(int difficult){
+        TextView[] username = new TextView[]{
+                (TextView)findViewById(R.id.HS_name1),
+                (TextView)findViewById(R.id.HS_name2),
+                (TextView)findViewById(R.id.HS_name3),
+                (TextView)findViewById(R.id.HS_name4),
+                (TextView)findViewById(R.id.HS_name5),
+                (TextView)findViewById(R.id.HS_name6),
+                (TextView)findViewById(R.id.HS_name7),
+                (TextView)findViewById(R.id.HS_name8),
+        };
+        TextView[] userscore = new TextView[]{
+                (TextView)findViewById(R.id.HS_score1) ,
+                (TextView)findViewById(R.id.HS_score2) ,
+                (TextView)findViewById(R.id.HS_score3) ,
+                (TextView)findViewById(R.id.HS_score4) ,
+                (TextView)findViewById(R.id.HS_score5) ,
+                (TextView)findViewById(R.id.HS_score6) ,
+                (TextView)findViewById(R.id.HS_score7) ,
+                (TextView)findViewById(R.id.HS_score8) ,
+        };
+        int i =0;//刷新第i条姓名文本和分数文本的显示
+        SQLiteDatabase db = myDBHelper.getReadableDatabase();
+        String diff = String.valueOf(difficult);
+        Cursor cursor = db.rawQuery("SELECT * FROM scoreInfo WHERE difficult = ? " +
+                "ORDER BY record",new String[]{diff});
+        if(cursor != null){//如果数据库中存在该难度的高分记录
+            //逐行读取找到的记录
+            for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext(),i++){
+                username[i] .setText(cursor.getString(cursor.getColumnIndex("userName")));
+                userscore[i].setText(cursor.getString(cursor.getColumnIndex("record")));
+                if(i>7) {
+                    break; //只显示前8条记录
+                }
+            }
+            cursor.close();
+            db.close();
+        }
+    }
+    //从玩家信息数据库中读取个人高分记录并显示在UI上
+    public void loadPHSByDatabase(String username){
+        TextView[] tv = new TextView[]{
+                (TextView)findViewById(R.id.P_score_easy),
+                (TextView)findViewById(R.id.P_score_normal),
+                (TextView)findViewById(R.id.P_score_hard)
+        };
+        SQLiteDatabase db = myDBHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM userInfo WHERE userName = ?",new String[]{username});
+        if(cursor.moveToFirst()){
+            cursor.moveToFirst();
+            yourHighscore[0] = cursor.getInt(cursor.getColumnIndex("easyHS"));
+            tv[0].setText(String.valueOf(yourHighscore[0]));
+            yourHighscore[1] = cursor.getInt(cursor.getColumnIndex("normalHS"));
+            tv[1].setText(String.valueOf(yourHighscore[1]));
+            yourHighscore[2] = cursor.getInt(cursor.getColumnIndex("hardHS"));
+            tv[2].setText(String.valueOf(yourHighscore[2]));
+        }
+        cursor.close();
+        db.close();
+    }
+
+//对选择按钮弹出的单选框进行响应
+    //根据传进的状态值选择读取的文件，提供给切换按钮刷新数据之用。
+    private void cutover(int x){
+        switch (x){
+            case 0:
+                loadHSByDatabase(0);
+                break;
+            case 1:
+                loadHSByDatabase(1);
+                break;
+            case 2:
+                loadHSByDatabase(2);
+                break;
+        }
+    }
+
+
+
+
+/*已废弃
+    //写入文件相关函数
+        //在高分榜文件中写入最高分,difficult的值代表向哪个文件写入。
+        public void saveHS(String[] username,int[] score,int difficult) {
         try {
             String fileName = getFileName(difficult);
             FileOutputStream outStream=this.openFileOutput(fileName, Context.MODE_PRIVATE);
@@ -111,11 +226,10 @@ public class highScore extends AppCompatActivity {
                 outStream.close();
             }
         } catch (IOException e){
-            //TODO:handle exception
         }
     }
-    //在用户名对应的个人文件中写入该用户每个难度所获得的历史最高分
-    public void savePHS(String curUsername){
+        //在用户名对应的个人文件中写入该用户每个难度所获得的历史最高分
+        public void savePHS(String curUsername){
         try {
             String filename = curUsername + ".txt";
             FileOutputStream outStream=this.openFileOutput(filename, Context.MODE_PRIVATE);
@@ -126,14 +240,11 @@ public class highScore extends AppCompatActivity {
                 outStream.close();
             }
         } catch (IOException e){
-            //TODO:handle exception
         }
     }
-
-
-//读取相关函数
-    //读取高分榜文件的数据到全局变量中
-    public void loadHS(int difficult){
+    //读取相关函数
+        //读取高分榜文件的数据到全局变量中
+        public void loadHS(int difficult){
         try {
             String fileName = getFileName(difficult);
             if (fileName.equals("")) fileName = "HighScore_easy.txt";
@@ -169,8 +280,8 @@ public class highScore extends AppCompatActivity {
         }catch (IOException e){
         }
     }
-    //读取个人最高分文件的数据到全局变量中
-    public void loadPHS(String curUsername){
+        //读取个人最高分文件的数据到全局变量中
+        public void loadPHS(String curUsername){
         try{
             String filename = curUsername + ".txt";
             File file = new File(filename);
@@ -199,11 +310,9 @@ public class highScore extends AppCompatActivity {
         }catch (IOException e){
         }
     }
-
-
-//更新全局变量函数（以便刷新数据后写入到文件中保存）
-    //更新暂存在全局变量中的高分榜数据
-    public void freshHS(String curUsername,int curCostTime){
+    //更新全局变量函数（以便刷新数据后写入到文件中保存）
+        //更新暂存在全局变量中的高分榜数据
+        public void freshHS(String curUsername,int curCostTime){
         for(int i=0;i<8;i++){
             if(curCostTime<HS_costTime[i]||HS_costTime[i]==0){
                 for(int j=7;j>i;j--) {
@@ -219,16 +328,14 @@ public class highScore extends AppCompatActivity {
             }
         }
     }
-    //更新暂存在全局变量中的个人最高分
-    public void freshPHS(int curCostTime){
+        //更新暂存在全局变量中的个人最高分
+        public void freshPHS(int curCostTime){
         if(yourHighscore[difficult]!=0 && (yourHighscore[difficult]==0 || yourHighscore[difficult]>curCostTime))
             yourHighscore[difficult]=curCostTime;
     }
-
-
-//UI显示相关函数
-    //刷新UI中的高分榜显示
-    private void displayHS(){
+    //UI显示相关函数
+        //刷新UI中的高分榜显示
+        private void displayHS(){
         TextView[] username = new TextView[]{
                 (TextView)findViewById(R.id.HS_name1),
                 (TextView)findViewById(R.id.HS_name2),
@@ -255,8 +362,8 @@ public class highScore extends AppCompatActivity {
             userscore[i].setText(str);
         }
     }
-    //刷新UI中的个人高分榜显示
-    private void displayPHS(){
+        //刷新UI中的个人高分榜显示
+        private void displayPHS(){
         TextView[] tv = new TextView[]{
                 (TextView)findViewById(R.id.P_score_easy),
                 (TextView)findViewById(R.id.P_score_normal),
@@ -267,11 +374,9 @@ public class highScore extends AppCompatActivity {
             tv[i].setText(costtime);
         }
     }
-
-
-//工具函数
-    //根据传入的difficult的值，决定向哪个文件进行读写
-    private String getFileName(int difficult){
+    //工具函数
+        //根据传入的difficult的值，决定向哪个文件进行读写
+        private String getFileName(int difficult){
         String fileName;
         Button changeButton = (Button)findViewById(R.id.change) ;
         switch (difficult){
@@ -292,21 +397,5 @@ public class highScore extends AppCompatActivity {
         }
         return fileName;
     }
-    //根据传进的状态值选择读取的文件，提供给切换按钮刷新数据之用。
-    private void cutover(int x){
-        switch (x){
-            case 0:
-                loadHS(0);
-                displayHS();
-                break;
-            case 1:
-                loadHS(1);
-                displayHS();
-                break;
-            case 2:
-                loadHS(2);
-                displayHS();
-                break;
-        }
-    }
+        */
 }

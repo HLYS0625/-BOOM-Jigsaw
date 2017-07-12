@@ -65,4 +65,5 @@
     <string name="HCG">骨灰</string>
     <string name="permission">本程式需要這個權限來存取相冊圖片</string>
     <string name="permission_no_notice">您已選擇『不再提示』，請在設置中開啟此項權限</string>
+    <string name="userinfo_saved">註冊成功</string>
 </resources>
