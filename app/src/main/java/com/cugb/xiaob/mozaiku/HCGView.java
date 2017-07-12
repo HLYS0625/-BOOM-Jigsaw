@@ -31,7 +31,10 @@ public class HCGView extends Activity {
     LinearLayout linearLayout;
     int picture[]={
             R.drawable.hcg_01,
-            R.drawable.hcg_02
+            R.drawable.hcg_02,
+            R.drawable.hcg_03,
+            R.drawable.hcg_04,
+            R.drawable.hcg_05
     };
 
 
