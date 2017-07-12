@@ -61,7 +61,7 @@ _________________________________________________________________
             normalHS    该用户……正常模式……为0
             hardHS      该用户……困难模式……为0
     _________________________________________________________________
-    未完成数据库TABLE：『highScore』
+    数据库TABLE：『scoreInfo』
         此Table结构
             recordNo    Integer     PrimaryKey AutoIncrement,
             userName    varChar(20) NOT NULL,
