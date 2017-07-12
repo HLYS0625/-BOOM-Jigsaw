@@ -22,6 +22,18 @@
             android:text="剩余时间"
             android:id="@+id/hcg_time"
             android:layout_weight="1"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GO"
+                android:id="@+id/hcg_begin"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"/>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,7 +42,7 @@
             android:layout_weight="1"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"/>
-
+        </LinearLayout>
     </LinearLayout>
     <ImageView
         android:layout_width="0dp"
@@ -38,7 +50,6 @@
         android:id="@+id/hcg_example"
         android:layout_weight="1"
         android:layout_gravity="right"
-        android:background="@drawable/hcg_01"
         />
 </LinearLayout>
 
