@@ -56,7 +56,10 @@ public class HCGPlay extends Activity implements View.OnClickListener{
     //图片数组，用于调取图片
     private int[] pic_list = {
             R.drawable.hcg_01,
-            R.drawable.hcg_02
+            R.drawable.hcg_02,
+            R.drawable.hcg_03,
+            R.drawable.hcg_04,
+            R.drawable.hcg_05
     };
     //存放所有的零碎图片
     private ImageView[] picBlock;
