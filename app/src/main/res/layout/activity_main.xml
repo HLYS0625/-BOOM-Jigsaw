@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_Layout"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,56 +17,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/pink">
-
-            <Button
-                android:id="@+id/toHighScore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/pink"
-                android:text="@string/goToHS"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:paddingTop="20dp"
-                style="?android:attr/buttonBarButtonStyle"
-                />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/HCG"
-                android:background="@color/pink"
-                android:id="@+id/HCGBUTTON"
-                android:textColor="@color/white"
-                android:textSize="25sp"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:gravity="right"
-                android:padding="20dp"
-                style="?android:attr/buttonBarButtonStyle"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name"
                 android:textColor="@color/white"
-                android:textSize="25sp"
+                android:textSize="35sp"
                 android:layout_weight="2"
+                android:padding="10dp"
                 android:layout_gravity="center"
-                android:gravity="right"/>
-            <Button
-                android:id="@+id/help"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/pink"
-                android:text="@string/help"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:padding="20dp"
-                style="?android:attr/buttonBarButtonStyle"
-                />
-
+                android:gravity="center"/>
         </LinearLayout>
 
         <!--numColumns设置每行显示多少个-->
@@ -77,4 +38,15 @@
 
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+    <ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/white"
+        android:dividerHeight="3dp"
+        android:background="@color/pink"/>
+
+
+</android.support.v4.widget.DrawerLayout>

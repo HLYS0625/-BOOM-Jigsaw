@@ -6,6 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +28,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,9 +45,17 @@ public class MainActivity extends AppCompatActivity {
     private GridView gridPhoto;
     private BaseAdapter mAdapter =null;
     private String userForIntent;
-
+    //存储首页的Grid所需要的图片
+    private ArrayList<Icon> mData = new ArrayList<>();
     //数据库存取用到的变量
     private DBOpenHelper myDBHelper = new DBOpenHelper(MainActivity.this,1);
+    //侧边菜单需要用到的变量
+    private DrawerLayout drawer_layout;
+    private ListView list_left_drawer;
+    private ArrayList<Icon> menuLists;
+    private MyAdapter<Icon> myAdapter2 = null;
+
+
 
 
 //______________________________________变量和方法的分割线__________________________________\\
@@ -58,8 +71,97 @@ public class MainActivity extends AppCompatActivity {
         mContext = MainActivity.this;
         //grid声明
         gridPhoto = (GridView)findViewById(R.id.grid_photo);
-        //将图片作为ArrayList存储，以便于Grid使用
-        ArrayList<Icon> mData = new ArrayList<>();
+        initGrid_pic(mData);
+
+        //声明并初始化侧边菜单
+        drawer_layout = (DrawerLayout) findViewById(R.id.drawer_Layout);
+        list_left_drawer = (ListView) findViewById(R.id.left_drawer);
+
+        menuLists = new ArrayList<Icon>();
+        menuLists.add(new Icon(R.mipmap.ic_launcher,getStr(R.string.help)));
+        menuLists.add(new Icon(R.mipmap.ic_launcher,getStr(R.string.goToHS)));
+        menuLists.add(new Icon(R.mipmap.ic_launcher,getStr(R.string.HCG)));
+
+
+        //侧滑菜单选择器
+        myAdapter2 = new MyAdapter<Icon>(menuLists,R.layout.fg_content) {
+            @Override
+            public void bindView(ViewHolder holder, Icon obj) {
+                holder.setText(R.id.tv_content, obj.getiName());
+            }
+        };
+
+
+
+        //主界面图片选择器
+        mAdapter = new MyAdapter<Icon>(mData,R.layout.gridview_layout) {
+            @Override
+            public void bindView(ViewHolder holder, Icon obj) {
+                holder.setImageResource(R.id.img_icon,obj.getiId());
+                holder.setText(R.id.txt_icon,obj.getiName());
+            }
+        };
+
+
+        //弹出自定义对话框（登录界面）
+        tankuang();
+
+
+
+        //为主界面图片选择gird建立监听器
+        gridPhoto.setAdapter(mAdapter);
+        gridPhoto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent it = new Intent(MainActivity.this,detailedPage.class);
+                it.putExtra("msg",position);
+                it.putExtra("username",userForIntent);
+                startActivity(it);
+            }
+        });
+
+        //为侧滑菜单建立监听器
+        list_left_drawer.setAdapter(myAdapter2);
+        list_left_drawer.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                switch (position){
+                    case 0:
+                        AlertDialog alt ;
+                        AlertDialog.Builder alb = new AlertDialog.Builder(mContext);
+                        alt = alb.setIcon(R.drawable.konosuba_h_01)
+                                .setTitle(R.string.help)
+                                .setMessage(getStr(R.string.helpMsg)+getStr(R.string.coder))
+                                .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Animation anime = AnimationUtils.loadAnimation(mContext,R.anim.rotate);
+                                        gridPhoto.startAnimation(anime);
+                                    }
+                                }).create();
+                        alt.show();
+                        break;
+                    case 1:
+                        Intent it = new Intent(MainActivity.this,highScore.class);
+                        it.putExtra("username",userForIntent);
+                        startActivity(it);
+                        break;
+                    case 2:
+                        Intent intent=new Intent(MainActivity.this,HCGView.class);
+                        intent.putExtra("username",userForIntent);
+                        startActivity(intent);
+                }
+            }
+        });
+    }
+
+//工具函数
+    //获取存储在string资源文件中的字符串
+    private String getStr(int i){
+        return getResources().getString(i);
+    }
+    //将图片作为ArrayList存储，以便于Grid使用
+    private void initGrid_pic(ArrayList<Icon> mData){
         mData.add(new Icon(R.drawable.overwatch_04,getStr(R.string.overWatch)));
         mData.add(new Icon(R.drawable.girls_panzer_rsa_05,getStr(R.string.girls_panzer)));
         mData.add(new Icon(R.drawable.typemoon_shiki_15, getStr(R.string.karaKyokai)));
@@ -76,45 +178,6 @@ public class MainActivity extends AppCompatActivity {
         mData.add(new Icon(R.drawable.bijyutubu_11,getStr(R.string.bijyutu)));
         mData.add(new Icon(R.drawable.original_17,getStr(R.string.original)));
         mData.add(new Icon(R.drawable.album,getStr(R.string.album)));
-
-
-        mAdapter = new MyAdapter<Icon>(mData,R.layout.gridview_layout) {
-            @Override
-            public void bindView(ViewHolder holder, Icon obj) {
-                holder.setImageResource(R.id.img_icon,obj.getiId());
-                holder.setText(R.id.txt_icon,obj.getiName());
-            }
-        };
-
-
-        //弹出自定义对话框（登录界面）
-        tankuang();
-
-
-
-        //为gird建立监听器
-        gridPhoto.setAdapter(mAdapter);
-        gridPhoto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent it = new Intent(MainActivity.this,detailedPage.class);
-                it.putExtra("msg",position);
-                it.putExtra("username",userForIntent);
-                startActivity(it);
-            }
-        });
-//      监听HCG按钮
-        HCG();
-        //监听help按钮
-        help();
-        //监听toHighScore按钮
-        toHighScore();
-    }
-
-//工具函数
-    //获取存储在string资源文件中的字符串
-    private String getStr(int i){
-        return getResources().getString(i);
     }
 
 
@@ -240,56 +303,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-    }
-
-
-//按钮监控
-    //监控help按钮，并在点击确认后播放补间动画
-    private void help(){
-        Button b = (Button)findViewById(R.id.help);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog alt ;
-                AlertDialog.Builder alb = new AlertDialog.Builder(mContext);
-                alt = alb.setIcon(R.drawable.konosuba_h_01)
-                        .setTitle(R.string.help)
-                        .setMessage(getStr(R.string.helpMsg)+getStr(R.string.coder))
-                        .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Animation anime = AnimationUtils.loadAnimation(mContext,R.anim.rotate);
-                                gridPhoto.startAnimation(anime);
-                            }
-                        }).create();
-                alt.show();
-            }
-        });
-    }
-    //从主菜单直接前往高分榜
-    private void toHighScore(){
-        Button B = (Button)findViewById(R.id.toHighScore) ;
-        B.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(MainActivity.this,highScore.class);
-                it.putExtra("username",userForIntent);
-                startActivity(it);
-            }
-        });
-    }
-    //监控HCG按钮 并在点击确认后进入骨灰级玩家游戏界面 IC
-    private void HCG(){
-        Button buttonHCG=(Button)findViewById(R.id.HCGBUTTON);
-        buttonHCG.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(MainActivity.this,HCGView.class);
-                intent.putExtra("username",userForIntent);
-                startActivity(intent);
-            }
-        });
 
     }
 
