@@ -299,9 +299,9 @@ public class HCGPlay extends Activity implements View.OnClickListener{
                 r[i] = 0;
             }
         }
-        timer=new Timer();
         //游戏时间
         reamainTime=300;
+        timer=new Timer();
         timer.schedule(task,0,1000);
 
         TableLayout t1 = (TableLayout)findViewById(R.id.hcg_tb);
