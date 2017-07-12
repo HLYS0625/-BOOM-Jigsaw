@@ -37,3 +37,39 @@ _________________________________________________________________
 额外目标：
 
 一、增加了作弊功能。（已完成）
+
+二、骨灰级玩家增加倒计时器，如果时间用尽游戏失败
+
+_________________________________________________________________
+
+数据库：
+
+数据库名称『my.db』
+
+    数据库TABLE：『userInfo』
+        此Table结构
+            userName    varChar(20) PrimaryKey,
+            password    varChar(20) NOT NULL,
+            easyHS      Integer     Default 0,
+            normalHS      Integer     Default 0,
+            hardHS      Integer     Default 0,
+        默认version：1
+        数据字典：
+            userName    存储用户名，用作主键
+            password    该用户的密码，非空校验
+            easyHS      该用户在简单模式的历史最快通关时间，默认为0
+            normalHS    该用户……正常模式……为0
+            hardHS      该用户……困难模式……为0
+    _________________________________________________________________
+    未完成数据库TABLE：『highScore』
+        此Table结构
+            recordNo    Integer     PrimaryKey AutoIncrement,
+            userName    varChar(20) NOT NULL,
+            difficult   Integer     Check(difficult<=3)
+            record      Integer     Default 0
+        默认version 1
+        数据字典：
+            recordNo    记录的序号，用作主键，按录入顺序自增长
+            userName    创建此条记录的玩家名称，暂时未作为外键（似乎没有必要关联这两个表？）
+            difficult   此条记录的通关难度，0为简单，1位正常，2为困难。（3为骨灰？有必要的话加上就好）
+            record      通关用时，按秒记录。
