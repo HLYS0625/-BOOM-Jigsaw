@@ -61,6 +61,7 @@ public class HCGPlay extends Activity implements View.OnClickListener{
             R.drawable.hcg_04,
             R.drawable.hcg_05
     };
+
     //存放所有的零碎图片
     private ImageView[] picBlock;
     //被黑色替代的图片以及从相册中传入的原图
