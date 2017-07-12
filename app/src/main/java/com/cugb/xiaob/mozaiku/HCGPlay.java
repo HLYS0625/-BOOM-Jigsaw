@@ -63,11 +63,14 @@ public class HCGPlay extends Activity implements View.OnClickListener{
     private ImageView[] picBlock;
     //被黑色替代的图片以及从相册中传入的原图
     private Bitmap bitmap;
+    int MaxTime=300;
     //游戏开始时间
     int reamainTime;
     //登录用户名
     String username;
     TextView textViewGameTime;
+//   是否是第一次调用handler
+    int IsFirst=0;
 
 
     @Override
@@ -299,11 +302,8 @@ public class HCGPlay extends Activity implements View.OnClickListener{
                 r[i] = 0;
             }
         }
-        //游戏时间
-        reamainTime=300;
-        timer=new Timer();
-        timer.schedule(task,0,1000);
-
+        reamainTime=MaxTime;
+        CountDowm();
         TableLayout t1 = (TableLayout)findViewById(R.id.hcg_tb);
         t1.removeAllViewsInLayout();
         chooseLevel(rows, cols, i);
@@ -391,8 +391,8 @@ public class HCGPlay extends Activity implements View.OnClickListener{
         {
             state=2;
             int minute,second;
-            minute = (300-reamainTime)/60;
-            second = (300-reamainTime)%60;
+            minute = (MaxTime-reamainTime)/60;
+            second = (MaxTime-reamainTime)%60;
             Sec.setImageBitmap(bitmap);
             AlertDialog alt ;
             AlertDialog.Builder alb = new AlertDialog.Builder(HCGPlay.this);
@@ -426,42 +426,36 @@ public class HCGPlay extends Activity implements View.OnClickListener{
         }
     }
 
-//计时
-    TimerTask task = new TimerTask() {
-        @Override
-        public void run() {
-            Message message = new Message();
-            message.what = 1;
-            handler.sendMessage(message);
+//    倒计时2.0
+    public void CountDowm(){
+        if(IsFirst!=0){
+//            Toast.makeText(HCGPlay.this,"???",Toast.LENGTH_SHORT).show();
+        }
+        else {
+            IsFirst=1;
+        Message message=handler.obtainMessage(1);
+        handler.sendMessageDelayed(message,0);
+        }
+    }
+    final Handler handler=new Handler(){
+        public  void handleMessage(Message mes){
+            switch (mes.what){
+                case 1:
+                    reamainTime--;
+                    textViewGameTime.setText("剩余时间："+reamainTime+"秒");
+                    if(reamainTime>0){
+                        Message message=handler.obtainMessage(1);
+                        handler.sendMessageDelayed(message,1000);
+                    }
+                    else {
+                        //时间没了就消失不见了？
+                        textViewGameTime.setVisibility(View.GONE);
+                        Toast.makeText(HCGPlay.this,"时间耗尽",Toast.LENGTH_SHORT).show();
+                    }
+            }
         }
     };
 
-    final Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 1:
-                    update();
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    };
-//时间停止 终止线程
-    protected void timestop() {
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-        if(task!=null){
-            task.cancel();
-            task=null;
-        }
-    }
-    //更新时间
-    public void update(){
-        reamainTime--;
-        textViewGameTime.setText("剩余时间："+reamainTime+"秒");
-    }
 //时间耗尽监听函数
     public  void TimeOut(){
         textViewGameTime.addTextChangedListener(new TextWatcher() {
@@ -480,7 +474,6 @@ public class HCGPlay extends Activity implements View.OnClickListener{
                 if(reamainTime==0){
 //                    Toast.makeText(HCGPlay.this,"时间耗尽",Toast.LENGTH_SHORT).show();
                     //时间耗尽 游戏结束 停止计时 弹窗回到上一页
-                    timestop();
 //                    judge();
                     if(!isSuccess()){
                         AlertDialog alt ;
