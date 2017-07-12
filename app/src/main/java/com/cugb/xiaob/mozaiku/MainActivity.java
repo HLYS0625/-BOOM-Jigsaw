@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent=new Intent(MainActivity.this,HCGView.class);
                         intent.putExtra("username",userForIntent);
                         startActivity(intent);
+                        break;
                 }
             }
         });
