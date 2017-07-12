@@ -1,8 +1,11 @@
 package com.cugb.xiaob.mozaiku;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +25,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -34,7 +38,11 @@ public class MainActivity extends AppCompatActivity {
     private BaseAdapter mAdapter =null;
     private String userForIntent;
 
+    //数据库存取用到的变量
+    private DBOpenHelper myDBHelper = new DBOpenHelper(MainActivity.this,1);
 
+
+//______________________________________变量和方法的分割线__________________________________\\
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,51 +107,51 @@ public class MainActivity extends AppCompatActivity {
         toHighScore();
     }
 
+//工具函数
     //获取存储在string资源文件中的字符串
     private String getStr(int i){
         return getResources().getString(i);
     }
-    //在文件中存储用户名及密码
-    public void saveuser(String username,String password) {
-        try {
-            String userinfo = username + ":" + password + ",";
-            FileOutputStream outStream=this.openFileOutput("user.txt",Context.MODE_APPEND);
-            outStream.write(userinfo.getBytes());
-            outStream.close();
-            Toast.makeText(MainActivity.this,"User Info Saved",Toast.LENGTH_SHORT).show();
-        } catch (IOException e){
-            //TODO:handle exception
-        }
+
+
+//数据库操作相关
+    //在数据库中储存用户信息
+    private void saveuserByDB(String userName,String password){
+        SQLiteDatabase db = myDBHelper.getWritableDatabase();
+        ContentValues values1 = new ContentValues();
+        values1.put("userName",userName);
+        values1.put("password",password);
+        //db的insert函数的参数分别为『要操作的表名』，『要强行插入null值的列名』，『插入的一行数据』
+        db.insert("userInfo",null,values1);
+        Toast.makeText(MainActivity.this,"您已注册",Toast.LENGTH_SHORT).show();
     }
-    //在文件中搜索用户名，未找到返回0，找到用户名但密码不正确返回2，用户名和密码匹配返回1
-    public int finduser(String username,String password){
-        try{
-            FileInputStream inStream = this.openFileInput("user.txt");
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int length =-1;
-            while ((length=inStream.read(buffer))!=-1){
-                stream.write(buffer,0,length);
+    //在数据库中搜索用户信息
+    private int searchByDB(String userName,String password){
+        SQLiteDatabase db=myDBHelper.getReadableDatabase();
+        //参数依次是:数据库查询语句
+        Cursor cursor = db.rawQuery("SELECT * FROM userInfo WHERE userName = ?",new String[]{userName});
+        //存在数据才返回true
+        if(cursor.moveToFirst()) {
+            cursor.close();
+            Cursor newCursor = db.rawQuery("SELECT * FROM userInfo WHERE userName = ? AND password = ?",new String[]{userName,password});
+            if(cursor.moveToFirst()) {
+                newCursor.close();
+                db.close();
+                return 1;
             }
-            stream.close();
-            inStream.close();
-            String text = stream.toString();
-            String[] users = text.split(",");
-            String[] user;
-            for (int i=0;i<users.length;i++){
-                user = users[i].split(":");
-                if(user[0].equals(username)) {
-                    if (user[1].equals(password)) {
-                        return 1;
-                    } else return 2;
-                }
-            }return 0;
-        }catch (FileNotFoundException e){
-            return 0;
-        }catch (IOException e){
+            else {
+                newCursor.close();
+                db.close();
+                return 2;
+            }
+        }else {
+            cursor.close();
+            db.close();
             return 0;
         }
     }
+
+//自定义弹框
     //自定义弹出框（登录界面）
     private void tankuang(){
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -167,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                 EditText editText_password = (EditText)view_custom.findViewById(R.id.passwordText);
                 final String password = editText_password.getText().toString();
                 if(!userName.matches("")&&!password.matches("")){
-                    int state = finduser(userName,password);
+                    int state = searchByDB(userName,password);
                     if(state==0) {
                         AlertDialog alt ;
                         AlertDialog.Builder alb = new AlertDialog.Builder(mContext);
@@ -177,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
                                 .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        saveuser(userName,password);
+                                        saveuserByDB(userName,password);
                                         alert.dismiss();
                                     }
                                 })
@@ -205,6 +213,8 @@ public class MainActivity extends AppCompatActivity {
         alert.show();
     }
 
+
+//按钮监控
     //监控help按钮，并在点击确认后播放补间动画
     private void help(){
         Button b = (Button)findViewById(R.id.help);
@@ -254,5 +264,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+//废弃代码，稳定后删除
+    //在文件中存储用户名及密码
+    public void saveuser(String username,String password) {
+        try {
+            String userinfo = username + ":" + password + ",";
+            FileOutputStream outStream=this.openFileOutput("user.txt",Context.MODE_APPEND);
+            outStream.write(userinfo.getBytes());
+            outStream.close();
+            Toast.makeText(MainActivity.this,"User Info Saved",Toast.LENGTH_SHORT).show();
+        } catch (IOException e){
+            //TODO:handle exception
+        }
+    }
+    //在文件中搜索用户名，未找到返回0，找到用户名但密码不正确返回2，用户名和密码匹配返回1
+    public int finduser(String username,String password){
+        try{
+            FileInputStream inStream = this.openFileInput("user.txt");
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length =-1;
+            while ((length=inStream.read(buffer))!=-1){
+                stream.write(buffer,0,length);
+            }
+            stream.close();
+            inStream.close();
+            String text = stream.toString();
+            String[] users = text.split(",");
+            String[] user;
+            for (int i=0;i<users.length;i++){
+                user = users[i].split(":");
+                if(user[0].equals(username)) {
+                    if (user[1].equals(password)) {
+                        return 1;
+                    } else return 2;
+                }
+            }return 0;
+        }catch (FileNotFoundException e){
+            return 0;
+        }catch (IOException e){
+            return 0;
+        }
+    }
 }
 
