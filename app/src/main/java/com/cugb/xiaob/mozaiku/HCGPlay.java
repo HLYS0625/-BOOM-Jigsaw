@@ -1,9 +1,11 @@
 package com.cugb.xiaob.mozaiku;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -15,6 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +30,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -74,7 +79,12 @@ public class HCGPlay extends Activity implements View.OnClickListener{
     TextView textViewGameTime;
 //   是否是第一次调用handler
     int IsFirst=0;
+//    获取挑战时间
+    String challengeYMD;
 
+
+    //数据库相关变量
+    private DBOpenHelper myDBHelper = new DBOpenHelper(HCGPlay.this,1);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,20 +100,20 @@ public class HCGPlay extends Activity implements View.OnClickListener{
         buttonchallenge.setOnClickListener(this);
         //时间耗尽监听
         TimeOut();
+//        获取挑战时间
+        getChallengeYMD();
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.hcg_begin:
-                newgame( 5, 5);
+                newgame( 2, 2);
                 break;
             default:
                 click(v);
                 break;
         }
     }
-
-
 
     //页面初始化相关
     //根据主菜单传入的数值，决定使用的图片。同时接收主菜单传来的用户名
@@ -123,6 +133,24 @@ public class HCGPlay extends Activity implements View.OnClickListener{
     }
 
 
+//    数据库相关
+    public void saveChallengeInfo(){
+        SQLiteDatabase db = myDBHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("userName",username);
+        values.put("useTime",MaxTime-reamainTime);
+        values.put("challengeTime",challengeYMD);
+        values.put("imagePos",i);
+        db.insert("scoreInfo",null,values);
+    }
+
+
+//    获取当前挑战时间
+    public void getChallengeYMD(){
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy年MM月dd日HH:mm:ss");
+        Date curDate=new Date(System.currentTimeMillis());
+        challengeYMD = simpleDateFormat.format(curDate);
+    }
     //放大/缩小所给的位图
     private Bitmap zoomBitmap(Bitmap Bm, int w, int h) {
         //得到原始位图和要得到的宽高
@@ -382,6 +410,7 @@ public class HCGPlay extends Activity implements View.OnClickListener{
     private void judge(){
         if (isSuccess())
         {
+            saveChallengeInfo();
             state=2;
             int minute,second;
             minute = (MaxTime-reamainTime)/60;
@@ -404,6 +433,8 @@ public class HCGPlay extends Activity implements View.OnClickListener{
                     .setNeutralButton(R.string.goToHS, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            saveChallengeInfo();
+                            Toast.makeText(HCGPlay.this,"save",Toast.LENGTH_SHORT).show();
 //                            record(0);
                         }
                     })
