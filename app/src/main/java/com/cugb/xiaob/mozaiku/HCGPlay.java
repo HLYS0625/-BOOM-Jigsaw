@@ -38,7 +38,6 @@ import java.util.TimerTask;
  */
 
 public class HCGPlay extends Activity implements View.OnClickListener{
-    Timer timer;
     //黑色方块
     int blbl =404;
     //从页面一传入i的值，用以确定调取哪张图片
@@ -83,9 +82,7 @@ public class HCGPlay extends Activity implements View.OnClickListener{
         setContentView(R.layout.hcg_paly);
         setPic();
         Button buttonchallenge=(Button)findViewById(R.id.hcg_begin);
-        Button buttonback=(Button)findViewById(R.id.hcg_back);
         textViewGameTime=(TextView)findViewById(R.id.hcg_time);
-        buttonback.setOnClickListener(this);
         buttonchallenge.setOnClickListener(this);
         //时间耗尽监听
         TimeOut();
@@ -93,14 +90,6 @@ public class HCGPlay extends Activity implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.easy:
-//                hint(state, 3, 3);
-//                break;
-            case R.id.hcg_back:
-                Intent intent=new Intent(this,HCGView.class);
-                startActivity(intent);
-//                Toast.makeText(this," NOT YET",Toast.LENGTH_SHORT).show();
-                break;
             case R.id.hcg_begin:
                 newgame( 5, 5);
                 break;
