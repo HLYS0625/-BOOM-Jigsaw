@@ -11,17 +11,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AlertDialogLayout;
 import android.text.GetChars;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         //弹出自定义对话框（登录界面）
         tankuang();
+
 
 
         //为gird建立监听器
@@ -159,6 +163,8 @@ public class MainActivity extends AppCompatActivity {
         final View view_custom = inflater.inflate(R.layout.custom_dialog,null,false);
         builder.setView(view_custom);
         final AlertDialog alert = builder.create();
+        final EditText editText_name = (EditText)view_custom.findViewById(R.id.nameText);
+        final EditText editText_password = (EditText)view_custom.findViewById(R.id.passwordText);
         view_custom.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,9 +176,7 @@ public class MainActivity extends AppCompatActivity {
         view_custom.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText editText_name = (EditText)view_custom.findViewById(R.id.nameText);
                 final String userName = editText_name.getText().toString();
-                EditText editText_password = (EditText)view_custom.findViewById(R.id.passwordText);
                 final String password = editText_password.getText().toString();
                 if(!userName.matches("")&&!password.matches("")){
                     int state = searchByDB(userName,password);
@@ -212,6 +216,31 @@ public class MainActivity extends AppCompatActivity {
         alert.setCanceledOnTouchOutside(false);
         alert.setCancelable(false);
         alert.show();
+
+        //监听登录界面账号输入框输入，重写回车事件，使得回车后切换到密码输入
+        editText_name.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_SEND || (event != null &&event.getKeyCode()==KeyEvent.KEYCODE_ENTER)){
+                    editText_password.requestFocus();//密码输入框获得焦点
+                    return true;
+                }
+                return false;
+            }
+        });
+        //监听登录界面密码输入，重写回车事件，使得回车相当于点击ok按钮
+        editText_password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_SEND || (event != null &&event.getKeyCode()==KeyEvent.KEYCODE_ENTER)){
+                    view_custom.findViewById(R.id.ok).performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
     }
 
 
@@ -263,6 +292,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
 
 
 /*废弃代码，稳定后删除
