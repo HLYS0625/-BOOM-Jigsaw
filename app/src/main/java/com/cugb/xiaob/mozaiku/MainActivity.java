@@ -118,12 +118,12 @@ public class MainActivity extends AppCompatActivity {
     //在数据库中储存用户信息
     private void saveuserByDB(String userName,String password){
         SQLiteDatabase db = myDBHelper.getWritableDatabase();
-        ContentValues values1 = new ContentValues();
-        values1.put("userName",userName);
-        values1.put("password",password);
+        ContentValues values = new ContentValues();
+        values.put("userName",userName);
+        values.put("password",password);
         //db的insert函数的参数分别为『要操作的表名』，『要强行插入null值的列名』，『插入的一行数据』
-        db.insert("userInfo",null,values1);
-        Toast.makeText(MainActivity.this,"您已注册",Toast.LENGTH_SHORT).show();
+        db.insert("userInfo",null,values);
+        Toast.makeText(MainActivity.this,R.string.userinfo_saved,Toast.LENGTH_SHORT).show();
     }
     //在数据库中搜索用户信息
     private int searchByDB(String userName,String password){
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         if(cursor.moveToFirst()) {
             cursor.close();
             Cursor newCursor = db.rawQuery("SELECT * FROM userInfo WHERE userName = ? AND password = ?",new String[]{userName,password});
-            if(cursor.moveToFirst()) {
+            if(newCursor.moveToFirst()) {
                 newCursor.close();
                 db.close();
                 return 1;

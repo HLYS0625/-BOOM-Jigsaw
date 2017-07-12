@@ -65,6 +65,7 @@
     <string name="cant_solve">注目してください：いま、ゲームは不可解になりました…</string>
     <string name="permission">プログラムはこの権限は必要です</string>
     <string name="permission_no_notice">君はこの権限を拒否した、設定に同意してください</string>
+    <string name="userinfo_saved">サインアップ成功</string>
 </resources>
 
 
