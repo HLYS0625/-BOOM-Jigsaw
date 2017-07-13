@@ -84,7 +84,7 @@ public class HCGPlay extends Activity implements View.OnClickListener{
 
 
     //数据库相关变量
-    private DBOpenHelper myDBHelper = new DBOpenHelper(HCGPlay.this,1);
+    private HcgDBOpenHelper myDBHelper = new HcgDBOpenHelper(HCGPlay.this,"hcgInfo.db",null,1);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,10 +138,10 @@ public class HCGPlay extends Activity implements View.OnClickListener{
         SQLiteDatabase db = myDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("userName",username);
-        values.put("useTime",MaxTime-reamainTime);
+        values.put("useTIme",MaxTime-reamainTime);
         values.put("challengeTime",challengeYMD);
         values.put("imagePos",i);
-        db.insert("scoreInfo",null,values);
+        db.insert("hcgInfo",null,values);
     }
 
 

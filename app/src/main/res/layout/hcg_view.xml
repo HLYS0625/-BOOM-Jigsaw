@@ -12,18 +12,25 @@
         android:layout_height="wrap_content"
         android:spacing="2dp"
         android:id="@+id/ga"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="10dp"
         >
     </Gallery>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:id="@+id/hcg_view_big"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/hcg_score"
         android:layout_gravity="center"
         android:gravity="center"
-        android:layout_marginTop="300dp"
-        android:textSize="50dp"
-        android:text="记录信息"/>
+        android:layout_marginTop="10dp"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,5 +43,5 @@
         android:gravity="center"
         style="?android:attr/buttonBarButtonStyle"
         />
-
+    </LinearLayout>
 </LinearLayout>

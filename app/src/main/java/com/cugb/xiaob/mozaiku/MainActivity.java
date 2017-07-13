@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Icon> mData = new ArrayList<>();
     //数据库存取用到的变量
     private DBOpenHelper myDBHelper = new DBOpenHelper(MainActivity.this,1);
+//    private DBOpenHelper myDBHelper = new DBOpenHelper(MainActivity.this,1);
     //侧边菜单需要用到的变量
     private DrawerLayout drawer_layout;
     private ListView list_left_drawer;

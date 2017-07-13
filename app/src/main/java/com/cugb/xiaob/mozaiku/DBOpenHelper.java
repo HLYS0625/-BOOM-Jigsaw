@@ -21,8 +21,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                 "difficult INTEGER NOT NULL,record INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE userInfo(userName VARCHAR(20) PRIMARY KEY ,password VARCHAR(20) NOT NULL," +
                 "easyHS INTEGER DEFAULT 0,normalHS INTEGER DEFAULT 0,hardHS INTEGER DEFAULT 0)");
-        db.execSQL("CREATE TABLE hcgInfo(imagePos INTEGER) PRIMARY KEY,userName VARCHAR(20),useTIme INTEGER,"+
-                "challengeTime datetime");
+
     }
 
     @Override
