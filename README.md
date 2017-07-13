@@ -81,7 +81,7 @@ _________________________________________________________________
      
      数据库TABLE：『hcgInfo』
          此Table结构
-             imagePos	    integer		 PrimaryKey AUTOINCREMENT,
+             imagePos	    integer		 PrimaryKey ,
              challengeTime  VARCHAR(50)
              useTime        integer
              userName       varchar（20）

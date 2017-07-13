@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -51,7 +52,9 @@ public class HCGView extends Activity {
 
     //数据库存取用到的变量
     private HcgDBOpenHelper myDBH ;
-    TextView textView;
+    TextView textViewhcgname;
+    TextView textViewhcgTime;
+    TextView textViewhcguseTime;
 
 
     @Override
@@ -70,7 +73,9 @@ public class HCGView extends Activity {
         //监控FIGHT按钮
         Challenge();
         myDBH= new HcgDBOpenHelper(this,"hcgInfo.db",null,1);
-       textView=(TextView)findViewById(R.id.hcg_score);
+       textViewhcgname=(TextView)findViewById(R.id.hcg_score_name);
+        textViewhcgTime=(TextView)findViewById(R.id.hcg_score_time);
+        textViewhcguseTime=(TextView)findViewById(R.id.hcg_score_usetime);
         imageViewForBig=(ImageView)findViewById(R.id.hcg_view_big);
 //
     }
@@ -150,31 +155,30 @@ public class HCGView extends Activity {
         });
     }
 
-
     //在数据库中搜索 图片完成记录 KEY 图片位置
     private void searchScoreByDB(int position){
         SQLiteDatabase db=myDBH.getWritableDatabase();
-        //可能有错误？应该不会吧  没错!
         String tempPos=String.valueOf(position);
         String[] str={tempPos};
-        Cursor cursor = db.rawQuery("SELECT * FROM hcgInfo WHERE imagePos = ?  order by useTIme",str );
+        Cursor cursor = db.rawQuery("SELECT * FROM hcgInfo WHERE imagePos = ?  order by useTIme ",str );
         if(cursor.moveToFirst()){
-            cursor.moveToFirst();
-            Toast.makeText(HCGView.this,"提取信息",Toast.LENGTH_SHORT).show();
-            hcgImagePos=position;
-            textView.setText("好像有数据欸"+hcgImagePos);
-
+            do {
                 hcgChallengeTime = cursor.getString(cursor.getColumnIndex("challengeTime"));
                 hcgUserName = cursor.getString(cursor.getColumnIndex("userName"));
-                hcgImagePos = cursor.getInt(cursor.getColumnIndex("imagePos"));
                 hcgUseTime = cursor.getInt(cursor.getColumnIndex("useTIme"));
-                textView.setTextSize(30);
-                textView.setText("挑战者：" + hcgUserName + "\n"+"挑战时间：" + hcgChallengeTime
-                    + "\n"+ "挑战用时" + hcgUseTime);
+            }while (cursor.moveToNext());
+            textViewhcgname.setTextSize(30);
+            textViewhcgTime.setTextSize(30);
+            textViewhcguseTime.setTextSize(30);
+            textViewhcgname.setText("挑战者： " + hcgUserName+ " ");
+            textViewhcgTime.setText("挑战时间：" + hcgChallengeTime+" " );
+            textViewhcguseTime.setText("挑战用时: " + hcgUseTime + "  秒");
 
         }else {
-            Toast.makeText(HCGView.this,"无数据",Toast.LENGTH_SHORT).show();
-            textView.setText("未有人挑战成功");
+//            Toast.makeText(HCGView.this,"无数据",Toast.LENGTH_SHORT).show();
+            textViewhcgname.setText("挑战者： 无 ");
+            textViewhcgTime.setText("挑战时间：无 " );
+            textViewhcguseTime.setText("挑战用时: 无 ");
         }
         cursor.close();
         db.close();
