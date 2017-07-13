@@ -36,7 +36,7 @@ public class highScore extends AppCompatActivity {
     int CheatCount;//从游戏页面接收的作弊次数计数，若作弊次数大于0，则拒绝将成绩录入排行榜
     int noStay;//从游戏页面接收的停留标识，如果noStay值为1，则记录信息后立刻关闭此页面，不做停留。
     //数据库相关变量
-    private DBOpenHelper myDBHelper = new DBOpenHelper(highScore.this,1);
+    private DBOpenHelper myDBHelper = new DBOpenHelper(highScore.this,2);
 
 
     //____________________________________变量和函数的分割线________________________________________\\

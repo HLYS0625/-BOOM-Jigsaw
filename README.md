@@ -46,6 +46,7 @@ _________________________________________________________________
 数据库：
 
 数据库名称『my.db』
+    Update(1→2):『userInfo』增加列head
 
     数据库TABLE：『userInfo』
         此Table结构
@@ -55,7 +56,7 @@ _________________________________________________________________
             easyHS      Integer     Default 0,
             normalHS    Integer     Default 0,
             hardHS      Integer     Default 0,
-        默认version：1
+        默认version：2
         数据字典：
             userName    存储用户名，用作主键
             password    该用户的密码，非空校验
@@ -70,7 +71,7 @@ _________________________________________________________________
             userName    varChar(20) NOT NULL,
             difficult   Integer     Check(difficult<=3)
             record      Integer     Default 0
-        默认version 1
+        默认version 2
         数据字典：
             recordNo    记录的序号，用作主键，按录入顺序自增长
             userName    创建此条记录的玩家名称，暂时未作为外键（似乎没有必要关联这两个表？）
