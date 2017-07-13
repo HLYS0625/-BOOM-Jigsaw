@@ -651,35 +651,35 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         }
     }
     //判断图片能否移动，若能移动，则通过exchange移动图片到空白位置
-    private boolean moveable(){
+    private boolean moveable() {
+        //增加是否在游戏中的检测
+        if (state == 1) {
+            //增加有没有作弊次数的判断
+            if (CheatCount > 0) {
+                CheatCount--;
+                hasCheated++;
+                return true;
+            } else {
+                String firstTag = (String) Fst.getTag();
+                String secondTag = (String) Sec.getTag();
+                //得到在list中索引位置
+                String[] fIndex = firstTag.split("_");
+                String[] sIndex = secondTag.split("_");
+                int i1, j1, i2, j2, b1, b2;
+                b1 = Integer.parseInt(fIndex[1]);
+                i1 = Integer.parseInt(fIndex[2]);
+                j1 = Integer.parseInt(fIndex[3]);
+                b2 = Integer.parseInt(sIndex[1]);
+                i2 = Integer.parseInt(sIndex[2]);
+                j2 = Integer.parseInt(sIndex[3]);
 
-//        增加有没有作弊次数的判断
-        if(CheatCount>0){
-            CheatCount--;
-            hasCheated++;
-            return true;
-        }else {
-            String firstTag = (String) Fst.getTag();
-            String secondTag = (String) Sec.getTag();
-            //得到在list中索引位置
-            String[] fIndex = firstTag.split("_");
-            String[] sIndex = secondTag.split("_");
-            int i1, j1, i2, j2, b1, b2;
-            b1 = Integer.parseInt(fIndex[1]);
-            i1 = Integer.parseInt(fIndex[2]);
-            j1 = Integer.parseInt(fIndex[3]);
-            b2 = Integer.parseInt(sIndex[1]);
-            i2 = Integer.parseInt(sIndex[2]);
-            j2 = Integer.parseInt(sIndex[3]);
-
-            if (b1 == blbl || b2 == blbl) {
-                if ((i1 == i2) && (Math.abs(j1 - j2) == 1)) {
-                    return true;
-                } else if ((j1 == j2) && (Math.abs(i1 - i2) == 1)) {
-                    return true;
-                } else return false;
-            } else return false;
-        }
+                if (b1 == blbl || b2 == blbl) {
+                    if (((i1 == i2) && (Math.abs(j1 - j2) == 1)) || ((j1 == j2) && (Math.abs(i1 - i2) == 1))) {
+                        return true;
+                    }
+                }
+            }
+        }return false;
     }
     //交换两个图片
     private void exchange(){
@@ -700,7 +700,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         Fst = null;
         judge();
     }
-    //如果调用过作弊方法，移动后检测游戏按照正常方式游玩是否有解，不可解的话弹窗提示
+    //如果调用过作弊方法，移动后检测游戏按照正常方式游玩是否有解，不可解的话弹出提示
     private void check() {
         int width = (int) Math.sqrt(picBlock.length);
         if (!cansolve(width)) {
@@ -759,6 +759,8 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                         }
                     })
                     .create();
+            alt.setCancelable(false);
+            alt.setCanceledOnTouchOutside(false);
             alt.show();
         }
     }
