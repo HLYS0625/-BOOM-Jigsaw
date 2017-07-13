@@ -67,4 +67,5 @@
     <string name="permission">Program can not open your album,unless you agree this permission.</string>
     <string name="permission_no_notice">You set 『not show again』.Please turn on it in setting.</string>
     <string name="userinfo_saved">Signed up successful</string>
+    <string name="logout">Log out</string>
 </resources>

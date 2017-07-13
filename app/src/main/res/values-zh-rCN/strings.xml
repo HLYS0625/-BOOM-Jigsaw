@@ -66,4 +66,5 @@
     <string name="permission">本程序需要这个权限来存取相册图片。</string>
     <string name="permission_no_notice">您选择了『不再提示』，请在设定内开启此权限</string>
     <string name="userinfo_saved">注册成功</string>
+    <string name="logout">注销</string>
 </resources>

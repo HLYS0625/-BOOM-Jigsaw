@@ -66,6 +66,7 @@
     <string name="permission">プログラムはこの権限は必要です</string>
     <string name="permission_no_notice">君はこの権限を拒否した、設定に同意してください</string>
     <string name="userinfo_saved">サインアップ成功</string>
+    <string name="logout">ログアウト</string>
 </resources>
 
 

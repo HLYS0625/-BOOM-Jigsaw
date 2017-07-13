@@ -38,15 +38,39 @@
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/left_drawer"
+    <LinearLayout
         android:layout_width="240dp"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:divider="@color/pink"
-        android:dividerHeight="2dp"
-        android:background="@drawable/background"/>
+        android:background="@drawable/background">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:padding="20dp"
+            android:src="@drawable/pic_4_head_new"/>
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="18sp"/>
+
+
+
+        <ListView
+            android:id="@+id/left_drawer"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:choiceMode="singleChoice"
+            android:divider="@color/pink"
+            android:dividerHeight="2dp" />
+
+    </LinearLayout>
+
 
 
 </android.support.v4.widget.DrawerLayout>

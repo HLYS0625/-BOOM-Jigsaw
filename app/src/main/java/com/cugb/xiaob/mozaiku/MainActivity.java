@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         menuLists.add(new Icon(R.mipmap.ic_launcher,getStr(R.string.help)));
         menuLists.add(new Icon(R.mipmap.ic_launcher,getStr(R.string.goToHS)));
         menuLists.add(new Icon(R.mipmap.ic_launcher,getStr(R.string.HCG)));
+        menuLists.add(new Icon(R.mipmap.ic_launcher,getStr(R.string.logout)));
 
 
         //侧滑菜单选择器
@@ -151,6 +152,11 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent=new Intent(MainActivity.this,HCGView.class);
                         intent.putExtra("username",userForIntent);
                         startActivity(intent);
+                        break;
+                    case 3:
+                        drawer_layout = (DrawerLayout) findViewById(R.id.drawer_Layout);
+                        drawer_layout.closeDrawers();
+                        tankuang();
                         break;
                 }
             }
@@ -270,6 +276,8 @@ public class MainActivity extends AppCompatActivity {
                         String a = getResources().getString(R.string.welcome);
                         a = String.format(a,userName);
                         userForIntent = userName;
+                        TextView tv = (TextView)findViewById(R.id.username);
+                        tv.setText(userForIntent);
                         Toast.makeText(mContext,a,Toast.LENGTH_SHORT).show();
                         alert.dismiss();
                     }else if(state==2){
