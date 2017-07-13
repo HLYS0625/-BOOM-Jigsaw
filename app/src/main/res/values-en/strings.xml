@@ -68,4 +68,9 @@
     <string name="permission_no_notice">You set 『not show again』.Please turn on it in setting.</string>
     <string name="userinfo_saved">Signed up successful</string>
     <string name="logout">Log out</string>
+    <string name="good_am">Good Morning，</string>
+    <string name="good_eve">Good Evening，</string>
+    <string name="good_ngh">Good Night，</string>
+    <string name="good_mor">Good Morning，</string>
+    <string name="good_pm">Good Afternoon，</string>
 </resources>

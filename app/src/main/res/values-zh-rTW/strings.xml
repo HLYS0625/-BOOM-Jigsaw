@@ -67,4 +67,9 @@
     <string name="permission_no_notice">您已選擇『不再提示』，請在設置中開啟此項權限</string>
     <string name="userinfo_saved">註冊成功</string>
     <string name="logout">更換賬號</string>
+    <string name="good_am">上午好，</string>
+    <string name="good_eve">晚上好，</string>
+    <string name="good_mor">早上好，</string>
+    <string name="good_ngh">夜深了，注意休息</string>
+    <string name="good_pm">下午好，</string>
 </resources>

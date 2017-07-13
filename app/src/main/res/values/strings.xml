@@ -67,6 +67,11 @@
     <string name="permission_no_notice">君はこの権限を拒否した、設定に同意してください</string>
     <string name="userinfo_saved">サインアップ成功</string>
     <string name="logout">ログアウト</string>
+    <string name="good_mor">おはよう、</string>
+    <string name="good_am">こんにちは、</string>
+    <string name="good_pm">こんにちは、</string>
+    <string name="good_eve">こんばんは、</string>
+    <string name="good_ngh">もう夜です、おやすみ、</string>
 </resources>
 
 

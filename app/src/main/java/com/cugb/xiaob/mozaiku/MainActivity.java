@@ -38,7 +38,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     private Context mContext;
@@ -187,6 +189,16 @@ public class MainActivity extends AppCompatActivity {
         mData.add(new Icon(R.drawable.original_17,getStr(R.string.original)));
         mData.add(new Icon(R.drawable.album,getStr(R.string.album)));
     }
+    //设定侧滑栏中的用户名和基于时间的招呼
+    private String setaisatu(){
+        final Calendar nowCalendar = Calendar.getInstance();
+        int hour = nowCalendar.get(Calendar.HOUR_OF_DAY);
+        if(hour >= 5 && hour <10) return getStr(R.string.good_mor)+userForIntent;
+        if(hour >=10 && hour < 13) return getStr(R.string.good_am)+userForIntent;
+        if(hour >=13 && hour <19) return getStr(R.string.good_pm)+userForIntent;
+        if(hour >=19 && hour <23) return getStr(R.string.good_eve)+userForIntent;
+        return getStr(R.string.good_ngh)+userForIntent;
+    }
 
 
 //数据库操作相关
@@ -277,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
                         a = String.format(a,userName);
                         userForIntent = userName;
                         TextView tv = (TextView)findViewById(R.id.username);
-                        tv.setText(userForIntent);
+                        tv.setText(setaisatu());
                         Toast.makeText(mContext,a,Toast.LENGTH_SHORT).show();
                         alert.dismiss();
                     }else if(state==2){
