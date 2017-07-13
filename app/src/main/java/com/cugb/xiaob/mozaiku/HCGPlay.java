@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -137,6 +138,7 @@ public class HCGPlay extends Activity implements View.OnClickListener{
 
 
 //    数据库相关
+    //插入数据
     public void saveChallengeInfo(){
 
         values.put("userName",username);
@@ -147,7 +149,25 @@ public class HCGPlay extends Activity implements View.OnClickListener{
         values.clear();
 
     }
+    //更新数据
+    public void upDateChallengeinfo(){
+        values.put("userName",username);
+        values.put("useTIme",MaxTime-reamainTime);
+        values.put("challengeTime",challengeYMD);
+        String str=String.valueOf(i);
+        db.update("hcgInfo",values,"imagePos = ? ",new String[]{str});
+        values.clear();
+    }
+    //查找是否之前存入数据
+    public  boolean IsSave(){
 
+        String str=String.valueOf(i);
+        Cursor cursor = db.rawQuery("SELECT * FROM hcgInfo WHERE imagePos = ?  ",new String[]{str});
+        if(cursor.moveToFirst()){
+            return true;
+        }
+        return false;
+    }
 
 //    获取当前挑战时间
     public void getChallengeYMD(){
@@ -414,7 +434,11 @@ public class HCGPlay extends Activity implements View.OnClickListener{
     private void judge(){
         if (isSuccess())
         {
-            saveChallengeInfo();
+            if(IsSave()){
+                upDateChallengeinfo();
+            }else {
+                saveChallengeInfo();
+            }
             state=2;
             int minute,second;
             minute = (MaxTime-reamainTime)/60;
@@ -430,9 +454,8 @@ public class HCGPlay extends Activity implements View.OnClickListener{
                     .setPositiveButton(R.string.replay, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-//                            saveChallengeInfo();
                             newgame(5,5);
-                            Toast.makeText(HCGPlay.this,R.string.chooseDiffcult,Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(HCGPlay.this,R.string.chooseDiffcult,Toast.LENGTH_SHORT).show();
                         }
                     })
                     .setNeutralButton(R.string.goToHS, new DialogInterface.OnClickListener() {

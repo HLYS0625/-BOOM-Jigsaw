@@ -160,7 +160,7 @@ public class HCGView extends Activity {
         SQLiteDatabase db=myDBH.getWritableDatabase();
         String tempPos=String.valueOf(position);
         String[] str={tempPos};
-        Cursor cursor = db.rawQuery("SELECT * FROM hcgInfo WHERE imagePos = ?  order by useTIme ",str );
+        Cursor cursor = db.rawQuery("SELECT * FROM hcgInfo WHERE imagePos = ?  ",str );
         if(cursor.moveToFirst()){
             do {
                 hcgChallengeTime = cursor.getString(cursor.getColumnIndex("challengeTime"));
