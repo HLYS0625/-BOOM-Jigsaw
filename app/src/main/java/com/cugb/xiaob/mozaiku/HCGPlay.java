@@ -71,21 +71,21 @@ public class HCGPlay extends Activity implements View.OnClickListener{
     private ImageView[] picBlock;
     //被黑色替代的图片以及从相册中传入的原图
     private Bitmap bitmap;
-    int MaxTime=300;
-    //游戏开始时间
-    int reamainTime;
-    //登录用户名
-    String username;
     TextView textViewGameTime;
 //   是否是第一次调用handler
     int IsFirst=0;
 //    获取挑战时间
     String challengeYMD;
-
+    int MaxTime=300;
+    //游戏开始时间
+    int reamainTime;
+    //登录用户名
+    String username;
 
     //数据库相关变量
     private HcgDBOpenHelper myDBHelper = new HcgDBOpenHelper(HCGPlay.this,"hcgInfo.db",null,1);
-
+    ContentValues values;
+    SQLiteDatabase db;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +95,9 @@ public class HCGPlay extends Activity implements View.OnClickListener{
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.hcg_paly);
         setPic();
+        //声明
+        db= myDBHelper.getWritableDatabase();
+        values= new ContentValues();
         Button buttonchallenge=(Button)findViewById(R.id.hcg_begin);
         textViewGameTime=(TextView)findViewById(R.id.hcg_time);
         buttonchallenge.setOnClickListener(this);
@@ -135,13 +138,14 @@ public class HCGPlay extends Activity implements View.OnClickListener{
 
 //    数据库相关
     public void saveChallengeInfo(){
-        SQLiteDatabase db = myDBHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
+
         values.put("userName",username);
         values.put("useTIme",MaxTime-reamainTime);
         values.put("challengeTime",challengeYMD);
         values.put("imagePos",i);
         db.insert("hcgInfo",null,values);
+        values.clear();
+
     }
 
 
@@ -426,22 +430,22 @@ public class HCGPlay extends Activity implements View.OnClickListener{
                     .setPositiveButton(R.string.replay, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-//                            record(1);
+//                            saveChallengeInfo();
+                            newgame(5,5);
                             Toast.makeText(HCGPlay.this,R.string.chooseDiffcult,Toast.LENGTH_SHORT).show();
                         }
                     })
                     .setNeutralButton(R.string.goToHS, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            saveChallengeInfo();
-                            Toast.makeText(HCGPlay.this,"save",Toast.LENGTH_SHORT).show();
-//                            record(0);
+//                            saveChallengeInfo();
+                            Toast.makeText(HCGPlay.this,"没有高分排行榜 是否要去掉",Toast.LENGTH_SHORT).show();
                         }
                     })
                     .setNegativeButton(R.string.other_pic, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-//                            record(1);
+//                            saveChallengeInfo();
                             finish();
                         }
                     })

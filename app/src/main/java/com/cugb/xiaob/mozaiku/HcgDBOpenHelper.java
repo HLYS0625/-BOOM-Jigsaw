@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 public class HcgDBOpenHelper extends SQLiteOpenHelper {
     public static final String CREATE_hcgInfo="create table hcgInfo("
-            +"imagePos INTEGER PRIMARY KEY AUTOINCREMENT ,"
+            +"imagePos INTEGER PRIMARY KEY  ,"
             +"userName VARCHAR(20),"
             +"useTIme INTEGER,"
             +"challengeTime VARCHAR(50))";
