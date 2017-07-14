@@ -73,7 +73,7 @@ public class LoginView extends Activity {
                 //跳转页面
                  Intent it = new Intent(LoginView.this, MainActivity.class);
                  it.putExtra("username", userForIntent);
-                 startActivity(it);
+                  startActivity(it);
             }
         }
 
