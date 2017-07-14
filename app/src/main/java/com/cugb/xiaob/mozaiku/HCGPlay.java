@@ -65,17 +65,17 @@ public class HCGPlay extends Activity implements View.OnClickListener{
             R.drawable.hcg_02,
             R.drawable.hcg_03,
             R.drawable.hcg_04,
-            R.drawable.hcg_05
+            R.drawable.hcg_05,
+            R.drawable.hcg_06
     };
-
     //存放所有的零碎图片
     private ImageView[] picBlock;
     //被黑色替代的图片以及从相册中传入的原图
     private Bitmap bitmap;
     TextView textViewGameTime;
-//   是否是第一次调用handler
+    //是否是第一次调用handler
     int IsFirst=0;
-//    获取挑战时间
+    //获取挑战时间
     String challengeYMD;
     int MaxTime=300;
     //游戏开始时间
@@ -87,6 +87,9 @@ public class HCGPlay extends Activity implements View.OnClickListener{
     private HcgDBOpenHelper myDBHelper = new HcgDBOpenHelper(HCGPlay.this,"hcgInfo.db",null,1);
     ContentValues values;
     SQLiteDatabase db;
+
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,7 +140,7 @@ public class HCGPlay extends Activity implements View.OnClickListener{
     }
 
 
-//    数据库相关
+//数据库相关
     //插入数据
     public void saveChallengeInfo(){
 
@@ -430,7 +433,6 @@ public class HCGPlay extends Activity implements View.OnClickListener{
         return isSuccess;
     }
     //若isSuccess返回true，则进行弹框
-//    将计分函数注释了 之后应该需要调用数据库
     private void judge(){
         if (isSuccess())
         {
@@ -455,20 +457,11 @@ public class HCGPlay extends Activity implements View.OnClickListener{
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             newgame(5,5);
-//                            Toast.makeText(HCGPlay.this,R.string.chooseDiffcult,Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNeutralButton(R.string.goToHS, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-//                            saveChallengeInfo();
-                            Toast.makeText(HCGPlay.this,"没有高分排行榜 是否要去掉",Toast.LENGTH_SHORT).show();
                         }
                     })
                     .setNegativeButton(R.string.other_pic, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-//                            saveChallengeInfo();
                             finish();
                         }
                     })
@@ -480,7 +473,6 @@ public class HCGPlay extends Activity implements View.OnClickListener{
 //    倒计时2.0
     public void CountDowm(){
         if(IsFirst!=0){
-//            Toast.makeText(HCGPlay.this,"???",Toast.LENGTH_SHORT).show();
         }
         else {
             IsFirst=1;
@@ -499,7 +491,7 @@ public class HCGPlay extends Activity implements View.OnClickListener{
                         handler.sendMessageDelayed(message,1000);
                     }
                     else {
-                        //时间没了就消失不见了？
+                        //时间没了就消失
                         textViewGameTime.setVisibility(View.GONE);
                         Toast.makeText(HCGPlay.this,"时间耗尽",Toast.LENGTH_SHORT).show();
                     }
@@ -523,9 +515,7 @@ public class HCGPlay extends Activity implements View.OnClickListener{
             @Override
             public void afterTextChanged(Editable editable) {
                 if(reamainTime==0){
-//                    Toast.makeText(HCGPlay.this,"时间耗尽",Toast.LENGTH_SHORT).show();
                     //时间耗尽 游戏结束 停止计时 弹窗回到上一页
-//                    judge();
                     if(!isSuccess()){
                         AlertDialog alt ;
                         AlertDialog.Builder alb = new AlertDialog.Builder(HCGPlay.this);
