@@ -85,7 +85,7 @@ public class LoginView extends Activity {
                     int state = searchByDB(username, password);
                     if (state == 0)//未注册
                     {
-                    toasttext.setText("!!!∑(ﾟДﾟノ)ノ:\n该用户未注册，请重试或注册账户！");
+                    toasttext.setText("!!!∑(ﾟДﾟノ)ノ:\n"+getStr(R.string.wrong_nm));
                         userName.setText("");
                         passwordtext.setText("");
                     } else if (state == 1)//正确登录
@@ -95,12 +95,12 @@ public class LoginView extends Activity {
                         startActivity(it);
                     } else if (state == 2)//密码错误
                     {
-                        toasttext.setText("Σ(っ°Д°;)っ:\n啊哦！用户名或密码错误，请重试！");
+                        toasttext.setText("Σ(っ°Д°;)っ:\n"+getStr(R.string.wrong_pw));
                         userName.setText("");
                         passwordtext.setText("");
                     }
                 } else{
-                    toasttext.setText("(｀・ω・´)：\n用户名和密码都要填写哦~~");
+                    toasttext.setText("(｀・ω・´)：\n"+getStr(R.string.null_nm));
                     passwordtext.setText("");
                 }
             }
@@ -208,5 +208,9 @@ private  void initView(){
         super.onStop();
     }
 
+    //获取存储在string资源文件中的字符串
+    private String getStr(int i){
+        return getResources().getString(i);
+    }
 
 }
