@@ -27,6 +27,7 @@ import android.widget.Toast;
  */
 
 public class LoginView extends Activity {
+    public DBOpenHelper newuserDBHelper=new DBOpenHelper(LoginView.this,2);
     private Context mContext;
     private String userForIntent;
     String username;//
@@ -34,7 +35,7 @@ public class LoginView extends Activity {
     //创建播放视频的控件对象
     private CustomVideoView videoview;
     //
-    private DBOpenHelper loginDBHelper = new DBOpenHelper(LoginView.this, 1);
+
 
     //_____________________________
 
@@ -44,12 +45,7 @@ public class LoginView extends Activity {
         requestWindowFeature(Window.FEATURE_PROGRESS);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.login);
-
-        //登录按钮监听
-
-
         initView();
-
         //实例化
         final EditText userName = (EditText) findViewById(R.id.userName);
         final EditText passwordtext = (EditText) findViewById(R.id.passwordText);
@@ -82,44 +78,18 @@ public class LoginView extends Activity {
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String username = userName.getText().toString();
-                final String password = passwordtext.getText().toString();
-                final TextView toasttext=(TextView)findViewById(R.id.toast);
+                String username = userName.getText().toString();
+                String password = passwordtext.getText().toString();
+                TextView toasttext=(TextView)findViewById(R.id.toast);
                 if (!username.matches("") && !password.matches("")) {
                     int state = searchByDB(username, password);
                     if (state == 0)//未注册
                     {
-                    /*AlertDialog alt ;
-                    AlertDialog.Builder alb = new AlertDialog.Builder(mContext);
-                    alt = alb.setIcon(R.drawable.konosuba_h_01)
-                            .setTitle(R.string.help)
-                            .setMessage(getString(R.string.wrong_nm)+getString(R.string.coder))
-                            .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    saveuserByDB(username,password);
-                                    userForIntent = username;
-                                    //alert.dismiss();*/
                     toasttext.setText("!!!∑(ﾟДﾟノ)ノ:\n该用户未注册，请重试或注册账户！");
                         userName.setText("");
                         passwordtext.setText("");
-                        //跳转页面
-                      //  Intent it = new Intent(LoginView.this, MainActivity.class);
-                       // it.putExtra("username", userForIntent);
-                       // startActivity(it);
-                           /*     }
-                            })
-                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            })
-                            .create();*/
                     } else if (state == 1)//正确登录
                     {
-                        //Toast.makeText(mContext, "Welcome", Toast.LENGTH_SHORT).show();
-                        toasttext.setText("ヾ(ｏ･ω･)ﾉ:\n欢迎回来~");
-                        //跳转页面
                         Intent it = new Intent(LoginView.this, MainActivity.class);
                         it.putExtra("username", userForIntent);
                         startActivity(it);
@@ -128,24 +98,6 @@ public class LoginView extends Activity {
                         toasttext.setText("Σ(っ°Д°;)っ:\n啊哦！用户名或密码错误，请重试！");
                         userName.setText("");
                         passwordtext.setText("");
-                        //添加Toast程序崩了，也不想再查哪里没有运行了，直接换Dialog
-                        // Toast.makeText(mContext, R.string.wrong_pw, Toast.LENGTH_SHORT).show();
-                        /*AlertDialog.Builder builder=new AlertDialog.Builder(mContext);
-                        builder.setTitle("提示");
-                        builder.setMessage("用户名或密码错误！");
-                        builder.setIcon(R.drawable.album);
-                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        });
-                        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        });
-                        builder.create().show();*/
-
                     }
                 } else{
                     toasttext.setText("(｀・ω・´)：\n用户名和密码都要填写哦~~");
@@ -190,7 +142,7 @@ public class LoginView extends Activity {
 //数据库操作相关
     //在数据库中储存用户信息
     private void saveuserByDB(String userName,String password){
-        SQLiteDatabase db = loginDBHelper.getWritableDatabase();
+        SQLiteDatabase db = newuserDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("userName",userName);
         values.put("password",password);
@@ -200,7 +152,7 @@ public class LoginView extends Activity {
     }
     //在数据库中搜索用户信息
     private int searchByDB(String userName,String password){
-        SQLiteDatabase db=loginDBHelper.getReadableDatabase();
+        SQLiteDatabase db=newuserDBHelper.getReadableDatabase();
         //参数依次是:数据库查询语句
         Cursor cursor = db.rawQuery("SELECT * FROM userInfo WHERE userName = ?",new String[]{userName});
         //存在数据才返回true
@@ -210,17 +162,17 @@ public class LoginView extends Activity {
             if(newCursor.moveToFirst()) {
                 newCursor.close();
                 db.close();
-                return 1;
+                return 1;//应该进入
             }
             else {
                 newCursor.close();
                 db.close();
-                return 2;
+                return 2;//应该是密码错误 或 密码为空
             }
         }else {
             cursor.close();
             db.close();
-            return 0;
+            return 0;//未注册
         }
     }
 
