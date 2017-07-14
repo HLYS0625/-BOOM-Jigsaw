@@ -59,17 +59,21 @@ import java.util.HashSet;
 import java.util.Random;
 import android.os.Handler;
 
+import java.util.Stack;
 import java.util.concurrent.ThreadFactory;
 import java.util.jar.Manifest;
 import java.util.logging.LogRecord;
 
 public class detailedPage extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG ="detailPage" ;
     //黑色方块
     int blbl =404;
     //从页面一传入i的值，用以确定调取哪张图片
     private int i;
     //状态值：0=初始状态，1=已选择难度，游戏中，2=游戏胜利
     private int state=0;
+    //游戏难度类型
+    private int type=3;
     //图片数组，用来保存分割后的小拼图
     private ArrayList<Block> mData = new ArrayList<>();
     //随机数组，用以打乱拼图的顺序
@@ -119,13 +123,45 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     //通过Uri方式存放剪裁后的图片，避免部分手机由于性能不够无法得到返回的data
     private Uri uritempFile;
     private File f;
-
+    //自动拼图待交换碎片
+    private int position;
+    //装存自动拼图步骤的栈
+    Stack<openListEle> stack;
+    //自动拼图矩阵所需数组
+    int[][] pt;
+    int[][] correct;
+    int[][] ptnext;
+    int[] switchnum=new int[]{-1,-1};
+    //自动拼图的线程
+    Thread thread;
 
 
     //____________________________以上为变量部分，以下为函数部分______________________________________
 
 
+    /**
+     * UI更新Handler
+     */
+    private Handler handler = new Handler() {
 
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    // 更新计时器
+
+                    break;
+                case 2:
+                    if(position>-1){
+                        // 交换点击Item与空格的位置
+                        picBlock[position].performClick();
+                    }
+
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     //页面初始化
@@ -155,37 +191,39 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.help:
-                final String[] debug = new String[]{
-                        "显示R数组",
-                        "显示ArrayList内容",
-                        "显示游戏状态值state",
-                        "显示图片碎片组picBlock[]的Tag",
-                        "显示图片所对应的二维数组",
-                        "尝试A*算法自动完成",
-                        "伪造胜利，直接进入排行榜",
-                        "set File(f) to OriBitmap",
-                        "全部显示"
-                };
-                AlertDialog alert = null;
-                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(detailedPage.this);
-                alert = alertBuilder.setIcon(R.drawable.konosuba_h_01)
-                        .setTitle("选择Log输出的内容")
-                        .setSingleChoiceItems(debug, 0, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                debug(which);
-                            }
-                        }).create();
-                alert.show();
+//                final String[] debug = new String[]{
+//                        "显示R数组",
+//                        "显示ArrayList内容",
+//                        "显示游戏状态值state",
+//                        "显示图片碎片组picBlock[]的Tag",
+//                        "显示图片所对应的二维数组",
+//                        "尝试A*算法自动完成",
+//                        "伪造胜利，直接进入排行榜",
+//                        "set File(f) to OriBitmap",
+//                        "全部显示"
+//                };
+//                AlertDialog alert = null;
+//                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(detailedPage.this);
+//                alert = alertBuilder.setIcon(R.drawable.konosuba_h_01)
+//                        .setTitle("选择Log输出的内容")
+//                        .setSingleChoiceItems(debug, 0, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                debug(which);
+//                            }
+//                        }).create();
+//                alert.show();
+                //自动拼图 hjy
+                autoJigsaw();
                 break;
             case R.id.easy:
-                hint(state,3,3);
+                hint(state,3,3);type=3;
                 break;
             case R.id.noomaru:
-                hint(state,4,4);
+                hint(state,4,4);type=4;
                 break;
             case R.id.hard:
-                hint(state,5,5);
+                hint(state,5,5);type=5;
                 break;
             case R.id.music:
                 music();
@@ -199,6 +237,229 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+    private void autoJigsaw() {
+        pt=new int[type][type];
+        correct=new int[type][type];
+        ptnext=new int[type][type];
+        //初始化当前位置矩阵和目标位置
+        for(int i=0;i<type;i++){
+            for(int j=0;j<type;j++){
+                pt[i][j]=getBlock(picBlock[i*type+j]).getIno();
+                correct[i][j]=i*type+j;
+            }
+        }
+        stack= puzzleAstar(pt,correct,type,type);//取栈
+        //弹出值为空的状态
+        stack.pop();
+        //弹出当前状态
+        stack.pop();
+        //判断是否已完成
+        judge();
+        // 启动线程
+        thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(stack.size()!=0) {
+                    try {
+                        thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    switchstep();
+                    Message msg = new Message();
+                    msg.what = 2;
+                    handler.sendMessage(msg);
+                    Log.i(TAG, "thread start run");//test
+                }
+            }
+        });
+        thread.start();
+
+    }
+
+    private Block getBlock(ImageView imageView) {
+        String thisTag=(String) imageView.getTag();
+        String[] thisImageIndex=thisTag.split("_");
+        return mData.get(Integer.parseInt(thisImageIndex[1]));
+    }
+
+    private void switchstep() {
+        openListEle q=stack.peek();
+        int t=0;long data;
+        stack.pop();
+        data=q.pts.state;
+        Log.i(TAG,"data is"+data);//test
+        for (int i = type - 1; i >= 0; --i) {
+            for (int j = type - 1; j >= 0; --j) {
+                ptnext[i][j] = (int)(data % 10);
+                data = data / 10;
+                if(pt[i][j]!=ptnext[i][j]){
+                    if(ptnext[i][j]==8)
+                        position=i*type+j;
+                }
+            }
+        }
+//        Log.i(TAG,"switch:"+switchnum[0]+"+"+switchnum[1]);//test
+//        //确定交换的itembean
+//        if( getBlock(picBlock[switchnum[0]]).equals( mData.get(blbl)))
+//            position=switchnum[1];
+//        else if(getBlock(picBlock[switchnum[0]]).equals( mData.get(blbl)))
+//            position=switchnum[0];
+        t++;
+        //赋值给新的当前矩阵
+        for(int i=0;i<type;i++){
+            for(int j=0;j<type;j++){
+                pt[i][j]=ptnext[i][j];
+            }
+        }
+        switchnum[0]=-1;switchnum[1]=-1;
+    }
+
+    private Stack<openListEle> puzzleAstar(int[][] pt, int[][] correct, int vol, int col) {
+        visited.clear();
+        //判断是否是正确状态
+        long correctStateInt = makeInt(correct,vol,col);
+        if(correctStateInt == makeInt(pt,vol,col)){
+
+            return null;
+        }
+        //初始化头节点
+        openListEle openList = new openListEle();
+        openList.next = null;
+        openList.pre = null;
+        //将初始状态加入openlist
+        openListEle startEle = new openListEle();
+        startEle.pts=new ptstate(0,0,makeInt(pt,vol,col));//?
+        openList.addNext(startEle);//?
+
+        openListEle finalEle = null;//?
+        while(true) {
+            if(finalEle!= null)
+                break;
+            //找到openlist中代价最小的
+            openListEle minEleP = openList.next;
+            openListEle minEle = null;
+            int minCost = -1;
+            //int minElePCount = 0;
+            while (minEleP != null) {
+                if (minCost == -1 || minEleP.pts.guessCost < minCost) {
+                    minCost = minEleP.pts.guessCost;
+                    minEle = minEleP;
+                }
+                //minElePCount++;
+                minEleP = minEleP.next;
+            }
+            if(minEle == null || minEle.pre == null)
+                break;
+            //计算以当前状态的可变状态的guessCost
+            int[][] tmpPt = new int[vol][col];
+            int data = (int) minEle.pts.state;
+            for (int i = vol - 1; i >= 0; --i) {
+                for (int j = col - 1; j >= 0; --j) {
+                    tmpPt[i][j] = data % 10;
+                    data = data / 10;
+                }
+            }
+            //找空白块的位置
+            int zi = 0, zj = 0;
+            for (int i = 0; i < vol; ++i) {
+                for (int j = 0; j < col; ++j)
+                    if (tmpPt[i][j] == 8) {
+                        zi = i;
+                        zj = j;
+                        break;
+                    }
+            }
+            int[] offseti = new int[]{-1, 0, 1, 0};
+            int[] offsetj = new int[]{0, 1, 0, -1};
+            for (int i = 0; i < 4; ++i) {
+                int ti = zi + offseti[i];
+                int tj = zj + offsetj[i];
+                if (ti < 0 || ti > vol - 1 || tj < 0 || tj > col - 1)
+                    continue;
+                int t = tmpPt[ti][tj];
+                tmpPt[ti][tj] = tmpPt[zi][zj];
+                tmpPt[zi][zj] = t;
+                long hashcode = makeInt(tmpPt,vol,col);
+                if (!visited.contains(hashcode)) {
+                    visited.add(hashcode);
+                    openListEle newEle = new openListEle();
+                    int tmpguessCost = getGuessCostBetweenTwoState(tmpPt, correct,vol,col);
+                    newEle.pts = new ptstate(minEle.pts.currentCost + 1, minEle.pts.currentCost + 1 + tmpguessCost, hashcode);
+                    minEle.addNext(newEle);
+                    if (hashcode == correctStateInt)
+                        finalEle = newEle;
+                }
+                t = tmpPt[ti][tj];
+                tmpPt[ti][tj] = tmpPt[zi][zj];
+                tmpPt[zi][zj] = t;
+            }
+            //从openlist中删除
+            deleteOpenListEle(openList,minEle);
+        }
+
+        //保存路径
+        Stack<openListEle> rightpath=new Stack<openListEle>();
+        openListEle pathEle = finalEle;
+        while(pathEle != null) {
+            rightpath.push(pathEle);
+            pathEle = pathEle.pre;
+        }
+        return rightpath;
+    }
+
+    private int getGuessCostBetweenTwoState(int[][] a, int[][] b, int vol, int col) {
+        int guessCost = 0;
+        for(int ai=0;ai<vol;++ai)
+            for(int aj=0;aj<col;++aj){
+                boolean found = false ;
+                for(int bi=0;bi<vol && !found;++bi)
+                    for(int bj=0;bj<col && !found;++bj)
+                        if(a[ai][aj] == b[bi][bj]){
+                            guessCost += Math.sqrt(1.0*(ai-bi)*(ai-bi)+(aj-bj)*(aj-bj));
+                            found = true;
+                        }
+            }
+        return guessCost;
+    }
+
+    HashSet<Long> visited=new HashSet();
+    private long makeInt(int[][] correct, int vol, int col) {
+        long sum = 0;
+        for(int i=0;i<vol;++i)
+            for(int j=0;j<col;++j){
+                sum = 10*sum+correct[i][j];
+            }
+        return sum;
+    }
+//从链表中删除指定节点
+    private void deleteOpenListEle(openListEle openList, openListEle minEle) {
+        int n=0;
+        openListEle p=openList;
+        //计算列表长度
+        while(p!=null){
+            n++;p=p.next;
+        }
+        //找到待删除结点
+        p=openList;
+        openListEle q=null;
+        for(int i=0;i<n;i++){
+            if(p.equals(minEle))
+                break;
+            else{
+                q=p;
+                p=p.next;
+            }
+        }
+        if(q==null){
+//            openList=openList.next;
+        }
+        else{
+            q.next=p.next;
+        }
+    }
+
     //debug用，输出一些信息，完成后删除
     private void debug(int x){
         switch (x){
@@ -626,7 +887,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         t1.removeAllViewsInLayout();
         chooseLevel(rows, cols, i);
         setBlack(rows,cols);
-        initPic(rows, cols);
+        initPic(rows,cols);
         while(!cansolve(rows)) {
             newgame(rows,cols);
         }

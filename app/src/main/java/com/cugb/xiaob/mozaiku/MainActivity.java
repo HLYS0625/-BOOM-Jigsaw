@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         drawer_layout = (DrawerLayout) findViewById(R.id.drawer_Layout);
         list_left_drawer = (ListView) findViewById(R.id.left_drawer);
 
-        menuLists = new ArrayList<Icon>();
+        menuLists = new ArrayList<>();
         menuLists.add(new Icon(R.mipmap.ic_launcher,getStr(R.string.help)));
         menuLists.add(new Icon(R.mipmap.ic_launcher,getStr(R.string.goToHS)));
         menuLists.add(new Icon(R.mipmap.ic_launcher,getStr(R.string.HCG)));
@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
         //弹出自定义对话框（登录界面）
         tankuang();
+
 
 
 
