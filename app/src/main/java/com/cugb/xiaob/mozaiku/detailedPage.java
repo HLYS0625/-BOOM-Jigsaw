@@ -628,7 +628,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         startActivityForResult(intent, CROP_PHOTO);
     }
 
-
     //工具函数
     //计时函数
     private int getTime(){
