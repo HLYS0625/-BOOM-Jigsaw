@@ -73,4 +73,5 @@
     <string name="good_ngh">Good Night，</string>
     <string name="good_mor">Good Morning，</string>
     <string name="good_pm">Good Afternoon，</string>
+    <string name="log_in">Log in</string>
 </resources>

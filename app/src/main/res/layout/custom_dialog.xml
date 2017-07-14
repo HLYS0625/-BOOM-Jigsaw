@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     style="">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/pink"
+        android:text="ログイン"
+        android:textSize="30sp"
+        android:textColor="@color/white"
+        android:padding="10dp"/>
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
