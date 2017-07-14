@@ -1,68 +1,40 @@
 package com.cugb.xiaob.mozaiku;
 
-import android.app.Activity;
-import android.app.Notification;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Environment;
-import android.os.Looper;
 import android.os.Message;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Random;
 import android.os.Handler;
-
 import java.util.Stack;
-import java.util.concurrent.ThreadFactory;
-import java.util.jar.Manifest;
-import java.util.logging.LogRecord;
 
 public class detailedPage extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG ="detailPage" ;
@@ -78,8 +50,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Block> mData = new ArrayList<>();
     //随机数组，用以打乱拼图的顺序
     int[] r;
-//      示例图片View
-    private ImageView rei_pic;
     //fst为玩家点击的图片，sec始终为黑色图片（空白区块）
     private ImageView Fst;
     private ImageView Sec;
@@ -121,7 +91,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private static final int REQUEST_CODE_REQUEST_PERMISSION = 0;//请求读写权限，用于传递裁剪的照片
     //通过Uri方式存放剪裁后的图片，避免部分手机由于性能不够无法得到返回的data
     private Uri uritempFile;
-    private File f;
     //自动拼图待交换碎片
     private int position;
     //装存自动拼图步骤的栈
@@ -147,14 +116,12 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             switch (msg.what) {
                 case 1:
                     // 更新计时器
-
                     break;
                 case 2:
                     if(position>-1){
                         // 交换点击Item与空格的位置
                         picBlock[position].performClick();
                     }
-
                 default:
                     break;
             }
@@ -190,28 +157,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.help:
-//                final String[] debug = new String[]{
-//                        "显示R数组",
-//                        "显示ArrayList内容",
-//                        "显示游戏状态值state",
-//                        "显示图片碎片组picBlock[]的Tag",
-//                        "显示图片所对应的二维数组",
-//                        "尝试A*算法自动完成",
-//                        "伪造胜利，直接进入排行榜",
-//                        "set File(f) to OriBitmap",
-//                        "全部显示"
-//                };
-//                AlertDialog alert = null;
-//                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(detailedPage.this);
-//                alert = alertBuilder.setIcon(R.drawable.konosuba_h_01)
-//                        .setTitle("选择Log输出的内容")
-//                        .setSingleChoiceItems(debug, 0, new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                debug(which);
-//                            }
-//                        }).create();
-//                alert.show();
                 autoJigsaw();
                 break;
             case R.id.easy:
@@ -227,7 +172,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 music();
                 break;
             case R.id.rei:
-//                作弊次数增加
+                //作弊次数增加
                 CheatCount++;
                 break;
             default:
@@ -457,63 +402,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             q.next=p.next;
         }
     }
-    //debug用，输出一些信息，完成后删除
-    private void debug(int x){
-        switch (x){
-            case 0:
-                for(int i =0;i<r.length;i++){
-                    Log.d("De","r"+i+":"+r[i]);
-                }
-                break;
-            case 1:
-                for(int i=0;i<mData.size();i++) {
-                    Log.d("Help/", "Arraylist<Block>" + i + ":" + mData.get(i).getiBm());
-                    Log.d("Help/", "Arraylist<Block>" + i + ":" + mData.get(i).getIno());
-                }
-                break;
-            case 2:
-                Log.d("Help/","state:"+state);
-                break;
-            case 3:
-                for(int i=0;i<picBlock.length;i++){
-                    Log.d("Help/","picBlock[]" + i + ":" + picBlock[i].getTag());
-                }
-                break;
-            case 4:
-                int width = (int)Math.sqrt(r.length);
-                int[][] L = getNumber(width);
-                for(int i=0;i<width;i++){
-                    for(int j=0;j<width;j++){
-                        Log.d("Help/","L["+i+"]["+j+"]:"+L[i][j]);
-                    }
-                }
-                break;
-            case 5:
-                Toast.makeText(detailedPage.this,R.string.unComplete,Toast.LENGTH_SHORT).show();
-                break;
-            case 6:
-                Intent it = new Intent(detailedPage.this,highScore.class);
-                it.putExtra("username",username);
-                it.putExtra("costTime",50);
-                it.putExtra("difficult",0);
-                startActivity(it);
-                finish();
-                break;
-            case 7:
-                originBm = BitmapFactory.decodeFile(f.getPath());
-                setrei();
-                if(originBm==null) {
-                    Log.d("help","oriBm == null");
-                }else Log.d("help","oriBm != null");
-                break;
-            default:
-                debug(0);
-                debug(1);
-                debug(2);
-                debug(3);
-                debug(4);
-        }
-    }
 
 
 //页面初始化相关
@@ -590,7 +478,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             } else if (requestCode == CROP_PHOTO) {
                 try {
                     Uri uri =uritempFile;
-                    f = new File(uri.getPath());
+                    File f = new File(uri.getPath());
                     if(f.exists()) {
                         originBm = BitmapFactory.decodeFile(f.getPath());
                         setrei();

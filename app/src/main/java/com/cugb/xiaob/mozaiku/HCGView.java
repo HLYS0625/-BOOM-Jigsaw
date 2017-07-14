@@ -8,40 +8,34 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Gallery;
+import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import static com.cugb.xiaob.mozaiku.R.color.black;
+import android.widget.ViewSwitcher;
 
 /**
  * Created by 496983022 on 2017/7/11.
  */
 
-public class HCGView extends Activity {
+public class HCGView extends Activity implements ViewSwitcher.ViewFactory, View.OnTouchListener {
     //挑战记录数据变量  挑战用时 挑战图片位置 挑战者名字 挑战时间
     int hcgUseTime;
-    int hcgImagePos;
     String hcgUserName;
     String hcgChallengeTime;
-//  放大图片
-    ImageView imageViewForBig;
     String username;
-    Gallery gallery;
     int pos;
-    LinearLayout linearLayout;
     int picture[]={
             R.drawable.hcg_01,
             R.drawable.hcg_02,
@@ -57,6 +51,15 @@ public class HCGView extends Activity {
     TextView textViewhcgTime;
     TextView textViewhcguseTime;
 
+    //ImageSwitcher的引用
+    private ImageSwitcher mImageSwitcher;
+    //当前选中的图片序号
+    private int currentPosition;
+    //按下的X点的坐标
+    private float downX;
+
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,75 +72,82 @@ public class HCGView extends Activity {
         setContentView(R.layout.hcg_view );
         Intent intent=getIntent();
         username = intent.getStringExtra("username");
-        //监控画廊图片选择
-        ChooseImage();
+
+        //实例化ImageSwitcher
+        mImageSwitcher  = (ImageSwitcher) findViewById(R.id.imageSwitcher1);
+        //设置Factory
+        mImageSwitcher.setFactory(this);
+        //设置OnTouchListener，我们通过Touch事件来切换图片
+        mImageSwitcher.setOnTouchListener(this);
+        currentPosition=0;
+        mImageSwitcher.setImageResource(picture[0]);
+
+
+
         //监控FIGHT按钮
         Challenge();
         myDBH= new HcgDBOpenHelper(this,"hcgInfo.db",null,1);
        textViewhcgname=(TextView)findViewById(R.id.hcg_score_name);
         textViewhcgTime=(TextView)findViewById(R.id.hcg_score_time);
         textViewhcguseTime=(TextView)findViewById(R.id.hcg_score_usetime);
-        imageViewForBig=(ImageView)findViewById(R.id.hcg_view_big);
 //
     }
-    //选择画廊图片
-    public void ChooseImage(){
-        gallery=(Gallery)findViewById(R.id.ga);
-        gallery.setAdapter(new imageAdapter(this));
-//        选择画廊里的一张图片 然后将他放大变成背景
-        linearLayout=(LinearLayout)findViewById(R.id.bg);
-        gallery.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                searchScoreByDB(position);
-                pos=position;
-                imageViewForBig.setBackgroundResource(picture[position]);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                linearLayout.setBackgroundResource(picture[0]);
-            }
-        });
 
+
+
+    @Override
+    public View makeView() {
+        final ImageView i = new ImageView(this);
+        i.setBackgroundColor(0xff000000);
+        i.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        i.setLayoutParams(new ImageSwitcher.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+        return i ;
     }
-    //画廊图片适配
-    public class imageAdapter extends BaseAdapter {
-        private Context mcontext;
-        int mGalleryItemBackground;
 
-        public imageAdapter(Context context){
-            mcontext=context;
-            TypedArray array= obtainStyledAttributes(R.styleable.GallerH);
-            mGalleryItemBackground=array.getResourceId(R.styleable.GallerH_android_galleryItemBackground,0);
-            array.recycle();
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:{
+                //手指按下的X坐标
+                downX = event.getX();
+                break;
+            }
+            case MotionEvent.ACTION_UP:{
+                float lastX = event.getX();
+                //抬起的时候的X坐标大于按下的时候就显示上一张图片
+                if(lastX > downX){
+                    if(currentPosition > 0){
+                        //设置动画，这里的动画比较简单，不明白的去网上看看相关内容
+                        mImageSwitcher.setInAnimation(AnimationUtils.loadAnimation(getApplication(), R.anim.left_in));
+                        mImageSwitcher.setOutAnimation(AnimationUtils.loadAnimation(getApplication(), R.anim.right_out));
+                        currentPosition --;
+                        mImageSwitcher.setImageResource(picture[currentPosition % picture.length]);
+                    }else{
+                        Toast.makeText(getApplication(), "已经是第一张", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-        }
-        @Override
-        public int getCount() {
-            return picture.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
+                if(lastX < downX){
+                    if(currentPosition < picture.length - 1){
+                        mImageSwitcher.setInAnimation(AnimationUtils.loadAnimation(getApplication(), R.anim.right_in));
+                        mImageSwitcher.setOutAnimation(AnimationUtils.loadAnimation(getApplication(), R.anim.left_out));
+                        currentPosition ++ ;
+                        mImageSwitcher.setImageResource(picture[currentPosition]);
+                    }else{
+                        Toast.makeText(getApplication(), "到了最后一张", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            break;
         }
 
-        @Override
-        public View getView(int position, View view, ViewGroup viewGroup) {
-            ImageView imageView=new ImageView(mcontext);
-            imageView.setImageResource(picture[position]);
-            imageView.setId(picture[position]);
-            imageView.setLayoutParams(new  Gallery.LayoutParams(120,160));
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            imageView.setBackgroundResource(mGalleryItemBackground);
-            return imageView;
-        }
+        return true;
     }
+
+
+
+
+
     //开始挑战
     public void Challenge(){
         Button button=(Button)findViewById(R.id.challenge);

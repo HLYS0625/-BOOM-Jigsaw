@@ -4,35 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/bg">
-    <Gallery
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:spacing="2dp"
-        android:id="@+id/ga"
-        android:layout_marginTop="10dp"
-        >
-    </Gallery>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="5dp"
-            android:layout_height="wrap_content"
-
-            android:layout_weight="1"/>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:id="@+id/hcg_view_big"
-            android:layout_weight="1"
-            />
-        <TextView
-            android:layout_width="5dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-    </LinearLayout>
+    <ImageSwitcher
+        android:id="@+id/imageSwitcher1"
+        android:layout_width="fill_parent"
+        android:layout_height="450dp">
+    </ImageSwitcher>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
