@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/newuser"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="">
+    <TextView
+        android:id="@+id/toast02"
+        android:text="(￣▽￣)~*:\n请输入新的用户名与密码~~"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:textColor="@color/pink"
+        android:layout_above="@+id/linearLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="18dp" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/username"
+                android:gravity="right"
+                android:layout_gravity="center"
+                android:layout_weight="1"/>
+            <EditText
+                android:id="@+id/nameText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginRight="60dp"
+                android:gravity="center"
+                android:layout_weight="2"
+                android:maxLines="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/password"
+                android:gravity="right"
+                android:layout_gravity="center"
+                android:layout_weight="1"/>
+            <EditText
+                android:id="@+id/passwordText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginRight="60dp"
+                android:gravity="center"
+                android:layout_weight="2"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/cancel"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="cancel" />
+
+            <Button
+                android:id="@+id/ok"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="OK" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</RelativeLayout>
