@@ -65,7 +65,8 @@ public class HCGPlay extends Activity implements View.OnClickListener{
             R.drawable.hcg_02,
             R.drawable.hcg_03,
             R.drawable.hcg_04,
-            R.drawable.hcg_05
+            R.drawable.hcg_05,
+            R.drawable.hcg_06
     };
 
     //存放所有的零碎图片

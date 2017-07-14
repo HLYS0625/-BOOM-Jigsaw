@@ -47,7 +47,8 @@ public class HCGView extends Activity {
             R.drawable.hcg_02,
             R.drawable.hcg_03,
             R.drawable.hcg_04,
-            R.drawable.hcg_05
+            R.drawable.hcg_05,
+            R.drawable.hcg_06
     };
 
     //数据库存取用到的变量
