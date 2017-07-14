@@ -291,7 +291,7 @@ public class HCGPlay extends Activity implements View.OnClickListener{
         for(int i=0;i<rows;i++){
             for(int j =0;j<cols;j++,no++){
                 Bitmap b = cutBitmap(bm,j*blockw,i*blockh,blockw,blockh);
-                mData.add(new Block(b,no,i,j));
+                mData.add(new Block(b,no));
                 Log.d("de","b"+b+"no"+no);
             }
         }

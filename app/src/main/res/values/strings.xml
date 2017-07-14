@@ -72,6 +72,7 @@
     <string name="good_pm">こんにちは、</string>
     <string name="good_eve">こんばんは、</string>
     <string name="good_ngh">もう夜です、おやすみ、</string>
+    <string name="log_in">ログイン</string>
 </resources>
 
 

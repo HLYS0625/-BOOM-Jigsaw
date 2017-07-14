@@ -4,52 +4,35 @@ import android.graphics.Bitmap;
 
 /**
  * Created by Riko on 2017/7/4.
+ * 拼图使用的碎片图片存储类
+ * 其中iBm存储碎片的位图
+ *     ino存储碎片从0自增长的正确序号
+ * Block类的信息不随拼图中碎片的位置变化而变化
  */
 
-public class Block {
+class Block {
     private Bitmap iBm;
     private int ino;
-    private int row;
-    private int col;
 
-    public Block() {
-    }
-
-    public Block(Bitmap iId, int ino,int row,int col) {
+    Block(Bitmap iId, int ino) {
         this.iBm = iId;
         this.ino = ino;
-        this.row = row;
-        this.col = col;
     }
 
-    public Bitmap getiBm() {
+    Bitmap getiBm() {
         return iBm;
     }
 
-    public int getIno() {
+    int getIno() {
         return ino;
     }
 
-    public int getRow(){
-        return row;
-    }
-
-    public int getCol(){
-        return col;
-    }
-
-    public void setRow(int row){
-        this.row = row;
-    }
-
-    public void setCol(int col){
-        this.col=col;
-    }
-    public void setiBm(Bitmap iBm) {
+    void setiBm(Bitmap iBm) {
         this.iBm = iBm;
     }
 
-    public void setino(int inum) {
+    /*设置图片的序号，并没有用到，考虑精简
+    void setino(int inum) {
         this.ino = inum;
-    }
+    }*/
 }
