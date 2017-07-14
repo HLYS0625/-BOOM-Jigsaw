@@ -26,7 +26,7 @@ _________________________________________________________________
 
 十一：记录成功拼图的玩家信息(已完成）
 
-十二：增加挑战功能（在骨灰级玩家里，设置为限时完成  算是挑战？）
+十二：增加挑战功能（已完成）
 
 十三：增加音效（已完成）
 
@@ -40,23 +40,27 @@ _________________________________________________________________
 
 二、骨灰级玩家增加倒计时器，如果时间用尽游戏失败（结束后三个按钮出口）
 
+三、增加了用户头像自定义并存储的功能
 _________________________________________________________________
 
 数据库：
 
 数据库名称『my.db』
+    Update(1→2):『userInfo』增加列head
 
     数据库TABLE：『userInfo』
         此Table结构
             userName    varChar(20) PrimaryKey,
             password    varChar(20) NOT NULL,
+            head        Integer     Default 0,
             easyHS      Integer     Default 0,
-            normalHS      Integer     Default 0,
+            normalHS    Integer     Default 0,
             hardHS      Integer     Default 0,
-        默认version：1
+        默认version：2
         数据字典：
             userName    存储用户名，用作主键
             password    该用户的密码，非空校验
+            head        用整形变量记录用户选择的头像，目前只有0-3的取值合法，但基于可扩展性的考虑未做数值校验。
             easyHS      该用户在简单模式的历史最快通关时间，默认为0
             normalHS    该用户……正常模式……为0
             hardHS      该用户……困难模式……为0
@@ -67,7 +71,7 @@ _________________________________________________________________
             userName    varChar(20) NOT NULL,
             difficult   Integer     Check(difficult<=3)
             record      Integer     Default 0
-        默认version 1
+        默认version 2
         数据字典：
             recordNo    记录的序号，用作主键，按录入顺序自增长
             userName    创建此条记录的玩家名称，暂时未作为外键（似乎没有必要关联这两个表？）

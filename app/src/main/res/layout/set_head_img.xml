@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="头像选择"
+        android:padding="15dp"
+        android:textSize="30sp"
+        android:textColor="@color/white"
+        android:background="@color/pink"/>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp">
+
+        <ImageView
+            android:id="@+id/head1"
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
+            android:layout_gravity="left"
+            android:src="@drawable/pic_4_head_1" />
+
+        <ImageView
+            android:id="@+id/head2"
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
+            android:layout_gravity="right"
+            android:src="@drawable/pic_4_head_2" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
+        <ImageView
+            android:id="@+id/head3"
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
+            android:src="@drawable/pic_4_head_3"/>
+        <ImageView
+            android:id="@+id/head4"
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
+            android:src="@drawable/pic_4_head_4"/>
+    </TableRow>
+
+
+
+
+</LinearLayout>

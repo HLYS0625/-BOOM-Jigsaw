@@ -6,15 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.AlertDialogLayout;
-import android.text.GetChars;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,22 +20,13 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     private Context mContext;
@@ -51,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Icon> mData = new ArrayList<>();
     //数据库存取用到的变量
     private DBOpenHelper myDBHelper = new DBOpenHelper(MainActivity.this,1);
-//    private DBOpenHelper myDBHelper = new DBOpenHelper(MainActivity.this,1);
     //侧边菜单需要用到的变量
     private DrawerLayout drawer_layout;
     private ListView list_left_drawer;
@@ -84,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         menuLists.add(new Icon(R.mipmap.ic_launcher,getStr(R.string.help)));
         menuLists.add(new Icon(R.mipmap.ic_launcher,getStr(R.string.goToHS)));
         menuLists.add(new Icon(R.mipmap.ic_launcher,getStr(R.string.HCG)));
-        menuLists.add(new Icon(R.mipmap.ic_launcher,getStr(R.string.logout)));
 
 
         //侧滑菜单选择器
@@ -156,11 +140,6 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtra("username",userForIntent);
                         startActivity(intent);
                         break;
-                    case 3:
-                        drawer_layout = (DrawerLayout) findViewById(R.id.drawer_Layout);
-                        drawer_layout.closeDrawers();
-                        tankuang();
-                        break;
                 }
             }
         });
@@ -190,16 +169,6 @@ public class MainActivity extends AppCompatActivity {
         mData.add(new Icon(R.drawable.original_17,getStr(R.string.original)));
         mData.add(new Icon(R.drawable.album,getStr(R.string.album)));
     }
-    //设定侧滑栏中的用户名和基于时间的招呼
-    private String setaisatu(){
-        final Calendar nowCalendar = Calendar.getInstance();
-        int hour = nowCalendar.get(Calendar.HOUR_OF_DAY);
-        if(hour >= 5 && hour <10) return getStr(R.string.good_mor)+userForIntent;
-        if(hour >=10 && hour < 13) return getStr(R.string.good_am)+userForIntent;
-        if(hour >=13 && hour <19) return getStr(R.string.good_pm)+userForIntent;
-        if(hour >=19 && hour <23) return getStr(R.string.good_eve)+userForIntent;
-        return getStr(R.string.good_ngh)+userForIntent;
-    }
 
 
 //数据库操作相关
@@ -225,17 +194,17 @@ public class MainActivity extends AppCompatActivity {
             if(newCursor.moveToFirst()) {
                 newCursor.close();
                 db.close();
-                return 1;
+                return 1;//正确
             }
             else {
                 newCursor.close();
                 db.close();
-                return 2;
+                return 2;//
             }
         }else {
             cursor.close();
             db.close();
-            return 0;
+            return 0;//注册
         }
     }
 
@@ -289,8 +258,6 @@ public class MainActivity extends AppCompatActivity {
                         String a = getResources().getString(R.string.welcome);
                         a = String.format(a,userName);
                         userForIntent = userName;
-                        TextView tv = (TextView)findViewById(R.id.username);
-                        tv.setText(setaisatu());
                         Toast.makeText(mContext,a,Toast.LENGTH_SHORT).show();
                         alert.dismiss();
                     }else if(state==2){

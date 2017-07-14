@@ -12,16 +12,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".LoginView">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".detailedPage"></activity>
-        <activity android:name=".highScore"></activity>
-        <activity android:name=".HCGView"></activity>
-        <activity android:name=".HCGPlay"></activity>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".detailedPage"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".highScore"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".HCGView"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".HCGPlay"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>
