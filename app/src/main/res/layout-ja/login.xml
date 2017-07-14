@@ -57,11 +57,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/pink"
-        android:layout_marginBottom="74dp"
-        android:layout_marginStart="26dp"
         android:text="@string/forget_pw"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/signin" />
+        android:layout_marginTop="57dp"
+        android:layout_below="@+id/signin"
+        android:layout_alignEnd="@+id/signin"
+        android:paddingLeft="25dp"/>
 
     <TextView
         android:id="@+id/signout"
@@ -69,10 +69,11 @@
         android:layout_height="wrap_content"
         android:text="@string/sign_up"
         android:textColor="@color/pink"
+        android:layout_alignTop="@+id/forget"
         android:layout_alignBaseline="@+id/forget"
         android:layout_alignBottom="@+id/forget"
-        android:layout_alignEnd="@+id/signin"
-        android:layout_marginEnd="29dp" />
+        android:layout_toStartOf="@+id/forget"
+        android:paddingRight="5dp"/>
     <TextView
         android:id="@+id/toast"
         android:text="@string/shoukai"
