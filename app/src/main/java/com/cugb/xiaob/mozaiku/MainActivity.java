@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     //侧边菜单需要用到的变量
     private DrawerLayout drawer_layout;
     private ListView list_left_drawer;
-    private ArrayList<Icon> menuLists;
     private MyAdapter<Icon> myAdapter2 = null;
 
 
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         //声明并初始化侧边菜单
         drawer_layout = (DrawerLayout) findViewById(R.id.drawer_Layout);
         list_left_drawer = (ListView) findViewById(R.id.left_drawer);
-        menuLists = new ArrayList<Icon>();
+        ArrayList<Icon> menuLists = new ArrayList<>();
         initMenuList(menuLists);
 
 
@@ -150,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
         userForIntent = userName;
         TextView tv = (TextView) findViewById(R.id.username);
         tv.setText(setaisatu());
-        ImageView headImg = (ImageView)findViewById(R.id.head_img);
         initByuser();
     }
     //重载，用于只需要改变用户头像而不需要改变用户名的时候
@@ -166,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
                 case 3:headImg.setImageResource(R.drawable.pic_4_head_4);break;
             }
         }
+        cursor.close();
+        db.close();
     }
 
 
@@ -219,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
         view_custom.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SQLiteDatabase db = myDBHelper.getReadableDatabase();
                 alert.dismiss();
                 Toast.makeText(mContext,R.string.cancel_nm,Toast.LENGTH_SHORT).show();
                 finish();
@@ -426,51 +425,5 @@ public class MainActivity extends AppCompatActivity {
         });
         initByuser();
     }
-
-
-
-/*废弃代码，稳定后删除
-    //在文件中存储用户名及密码
-    public void saveuser(String username,String password) {
-        try {
-            String userinfo = username + ":" + password + ",";
-            FileOutputStream outStream=this.openFileOutput("user.txt",Context.MODE_APPEND);
-            outStream.write(userinfo.getBytes());
-            outStream.close();
-            Toast.makeText(MainActivity.this,"User Info Saved",Toast.LENGTH_SHORT).show();
-        } catch (IOException e){
-            //TODO:handle exception
-        }
-    }
-    //在文件中搜索用户名，未找到返回0，找到用户名但密码不正确返回2，用户名和密码匹配返回1
-    public int finduser(String username,String password){
-        try{
-            FileInputStream inStream = this.openFileInput("user.txt");
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int length =-1;
-            while ((length=inStream.read(buffer))!=-1){
-                stream.write(buffer,0,length);
-            }
-            stream.close();
-            inStream.close();
-            String text = stream.toString();
-            String[] users = text.split(",");
-            String[] user;
-            for (int i=0;i<users.length;i++){
-                user = users[i].split(":");
-                if(user[0].equals(username)) {
-                    if (user[1].equals(password)) {
-                        return 1;
-                    } else return 2;
-                }
-            }return 0;
-        }catch (FileNotFoundException e){
-            return 0;
-        }catch (IOException e){
-            return 0;
-        }
-    }
-    */
 }
 

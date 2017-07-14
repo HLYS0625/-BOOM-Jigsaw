@@ -1,67 +1,36 @@
 package com.cugb.xiaob.mozaiku;
 
-import android.app.Activity;
-import android.app.Notification;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Environment;
-import android.os.Looper;
-import android.os.Message;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.Random;
-import android.os.Handler;
-
-import java.util.concurrent.ThreadFactory;
-import java.util.jar.Manifest;
-import java.util.logging.LogRecord;
 
 public class detailedPage extends AppCompatActivity implements View.OnClickListener {
     //黑色方块
@@ -74,8 +43,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Block> mData = new ArrayList<>();
     //随机数组，用以打乱拼图的顺序
     int[] r;
-//      示例图片View
-    private ImageView rei_pic;
     //fst为玩家点击的图片，sec始终为黑色图片（空白区块）
     private ImageView Fst;
     private ImageView Sec;
@@ -113,7 +80,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     int hasCheated = 0;
     //调用相册相关，相机拍照有空补充
     private static final int SELECT_PHOTO=0;//调用相册照片
-    private static final int TAKE_PHOTO=1;//调用相机拍照
     private static final int CROP_PHOTO=2;//裁剪照片
     private static final int REQUEST_CODE_REQUEST_PERMISSION = 0;//请求读写权限，用于传递裁剪的照片
     //通过Uri方式存放剪裁后的图片，避免部分手机由于性能不够无法得到返回的data
@@ -142,7 +108,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         Button bhrd = (Button) findViewById(R.id.hard);
         Button bbck = (Button) findViewById(R.id.help);
         Button bmsc = (Button) findViewById(R.id.music);
-        rei_pic = (ImageView)findViewById(R.id.rei);
+        ImageView rei_pic = (ImageView)findViewById(R.id.rei);
         bbck.setOnClickListener(this);
         bhrd.setOnClickListener(this);
         bnml.setOnClickListener(this);
@@ -166,7 +132,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                         "set File(f) to OriBitmap",
                         "全部显示"
                 };
-                AlertDialog alert = null;
+                AlertDialog alert;
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(detailedPage.this);
                 alert = alertBuilder.setIcon(R.drawable.konosuba_h_01)
                         .setTitle("选择Log输出的内容")
@@ -327,7 +293,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 try {
                     startImageZoom(imguri);
                 } catch (Exception e) {
-                    // TODO: handle exception
+                    Log.e("Error","Select Photo from Album Wrong");
                 }
             } else if (requestCode == CROP_PHOTO) {
                 try {
@@ -338,7 +304,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                         setrei();
                     }else Toast.makeText(this,"Wrong",Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
-                    // TODO: handle exception
+                    Log.e("Error","Crop Photo Wrong");
                 }
             }
         }else {
@@ -504,7 +470,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         for(int i=0;i<rows;i++){
             for(int j =0;j<cols;j++,no++){
                 Bitmap b = cutBitmap(bm,j*blockw,i*blockh,blockw,blockh);
-                mData.add(new Block(b,no,i,j));
+                mData.add(new Block(b,no));
                 Log.d("de","b"+b+"no"+no);
             }
         }
