@@ -92,9 +92,7 @@ public class HCGView extends Activity {
                 searchScoreByDB(position);
                 pos=position;
                 imageViewForBig.setBackgroundResource(picture[position]);
-//                linearLayout.setBackgroundResource(picture[position]);
             }
-            //        觉得没用的一行代码
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 linearLayout.setBackgroundResource(picture[0]);
@@ -176,7 +174,6 @@ public class HCGView extends Activity {
             textViewhcguseTime.setText("挑战用时: " + hcgUseTime + "  秒");
 
         }else {
-//            Toast.makeText(HCGView.this,"无数据",Toast.LENGTH_SHORT).show();
             textViewhcgname.setText("挑战者： 无 ");
             textViewhcgTime.setText("挑战时间：无 " );
             textViewhcguseTime.setText("挑战用时: 无 ");

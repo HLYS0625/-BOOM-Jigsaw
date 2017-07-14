@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    tools:context="com.cugb.xiaob.mozaiku.MainActivity">
+    <com.cugb.xiaob.mozaiku.CustomVideoView
+        android:id="@+id/videoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"></com.cugb.xiaob.mozaiku.CustomVideoView>
+
+    <EditText
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:ems="10"
+        android:textColor="@color/pink"
+
+        android:inputType="textPersonName"
+        android:text="手机号/邮箱"
+        android:layout_marginTop="148dp"
+        android:background="@drawable/text_view_border"
+        android:layout_centerInParent="true" />
+
+    <EditText
+        android:id="@+id/passwordText"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:ems="10"
+        android:textColor="@color/pink"
+
+        android:inputType="textPersonName"
+        android:text="密码"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/text_view_border"
+        android:layout_below="@+id/userName"
+        android:layout_alignStart="@+id/userName" />
+
+    <Button
+        android:id="@+id/signin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/pink"
+
+        android:layout_marginTop="57dp"
+        android:text="登录"
+        android:layout_alignTop="@+id/passwordText"
+        android:layout_alignStart="@+id/passwordText"
+        android:layout_alignEnd="@+id/passwordText" />
+
+    <TextView
+        android:id="@+id/forget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/pink"
+        android:layout_marginBottom="74dp"
+        android:layout_marginStart="26dp"
+        android:text="忘记密码？"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/signin" />
+
+    <TextView
+        android:id="@+id/signout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="注册账号"
+        android:textColor="@color/pink"
+        android:layout_alignBaseline="@+id/forget"
+        android:layout_alignBottom="@+id/forget"
+        android:layout_alignEnd="@+id/signin"
+        android:layout_marginEnd="29dp" />
+    <TextView
+        android:id="@+id/toast"
+        android:text="0.0:\nHello~这里是“拼图游戏”！"
+        android:layout_width="210dp"
+        android:layout_height="60dp"
+        android:ems="10"
+        android:textColor="@color/pink"
+
+        android:layout_marginBottom="38dp"
+        android:layout_above="@+id/passwordText"
+        android:layout_alignEnd="@+id/userName" />
+
+</RelativeLayout>
