@@ -18,7 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".detailedPage"></activity>
+        <activity android:name=".detailedPage" android:screenOrientation="portrait"></activity>
         <activity android:name=".highScore"></activity>
         <activity android:name=".HCGView"></activity>
         <activity android:name=".HCGPlay"></activity>
