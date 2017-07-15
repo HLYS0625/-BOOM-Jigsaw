@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -26,6 +27,7 @@ public class HCGView extends FragmentActivity {
     String hcgUserName;
     String hcgChallengeTime;
     String username;
+    int  currentposition;
     int picture[]={
             R.drawable.hcg_06,//为了在ViewPager首项可以向左划到最后一项，数组内添加这一项目
             R.drawable.hcg_01,
@@ -74,7 +76,9 @@ public class HCGView extends FragmentActivity {
             public void onPageSelected(int arg0) {
                 //划动结束后搜索数据库，并更新UI
                 searchScoreByDB(arg0);
-
+                //将当前页面编号传入全局变量中
+                currentposition = arg0;
+                Log.d("help","arg0:"+currentposition);
             }
 
             @Override
@@ -101,7 +105,7 @@ public class HCGView extends FragmentActivity {
 
 
         //监控FIGHT按钮
-        Challenge(mPager.getCurrentItem());
+        Challenge();
         myDBH= new HcgDBOpenHelper(this,"hcgInfo.db",null,1);
        textViewhcgname=(TextView)findViewById(R.id.hcg_score_name);
         textViewhcgTime=(TextView)findViewById(R.id.hcg_score_time);
@@ -134,26 +138,19 @@ public class HCGView extends FragmentActivity {
 
 
     //开始挑战
-    public void Challenge(int position){
+    public void Challenge(){
         Button button=(Button)findViewById(R.id.challenge);
         /**
          * 由于为了实现ViewPager的首位循环衔接
          * 更改了picture[]数组
          * 这是为了抵消其影响而进行的加工
          */
-        final int p;
-        //由于数组第一项插入了hcg06，所以目前的position0是原先的position5
-        if(position==0) p=5;
-            //由于数组最后一项插入了hcg01，所以目前的position7是原先的position0
-        else if(position==7) p=0;
-            //由于数组第一项出入了hcg06，所以所有数组应该向前减一操作
-        else p = position - 1;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent();
                 intent.putExtra("username",username);
-                intent.putExtra("Imagepos",p);
+                intent.putExtra("Imagepos",currentposition-1);
                 intent.setClass(HCGView.this,HCGPlay.class);
                 startActivity(intent);
 

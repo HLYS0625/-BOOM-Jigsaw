@@ -74,6 +74,6 @@
     <string name="good_pm">下午好，</string>
     <string name="log_in">登录</string>
     <string name="forget_pw">忘记密码</string>
-    <string name="shoukai">0.0:\\nHello~这里是“拼图游戏”！</string>
+    <string name="shoukai">0.0: \n\n Hello~这里是“拼图游戏”！</string>
     <string name="sign_up">注册用户</string>
 </resources>
