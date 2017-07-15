@@ -1,48 +1,40 @@
 package com.cugb.xiaob.mozaiku;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.MotionEvent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.Gallery;
-import android.widget.ImageSwitcher;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ViewSwitcher;
 
 /**
  * Created by 496983022 on 2017/7/11.
  */
 
-public class HCGView extends Activity implements ViewSwitcher.ViewFactory, View.OnTouchListener {
+public class HCGView extends FragmentActivity {
     //挑战记录数据变量  挑战用时 挑战图片位置 挑战者名字 挑战时间
     int hcgUseTime;
     String hcgUserName;
     String hcgChallengeTime;
     String username;
-    int pos;
     int picture[]={
+            R.drawable.hcg_06,//为了在ViewPager首项可以向左划到最后一项，数组内添加这一项目
             R.drawable.hcg_01,
             R.drawable.hcg_02,
             R.drawable.hcg_03,
             R.drawable.hcg_04,
             R.drawable.hcg_05,
-            R.drawable.hcg_06
+            R.drawable.hcg_06,
+            R.drawable.hcg_01//为了在ViewPager末项可以划到第一项，添加这个衔接
     };
 
     //数据库存取用到的变量
@@ -51,12 +43,8 @@ public class HCGView extends Activity implements ViewSwitcher.ViewFactory, View.
     TextView textViewhcgTime;
     TextView textViewhcguseTime;
 
-    //ImageSwitcher的引用
-    private ImageSwitcher mImageSwitcher;
-    //当前选中的图片序号
-    private int currentPosition;
-    //按下的X点的坐标
-    private float downX;
+    //ViewPager的引用
+    private ViewPager mPager;
 
 
 
@@ -73,90 +61,99 @@ public class HCGView extends Activity implements ViewSwitcher.ViewFactory, View.
         Intent intent=getIntent();
         username = intent.getStringExtra("username");
 
-        //实例化ImageSwitcher
-        mImageSwitcher  = (ImageSwitcher) findViewById(R.id.imageSwitcher1);
-        //设置Factory
-        mImageSwitcher.setFactory(this);
-        //设置OnTouchListener，我们通过Touch事件来切换图片
-        mImageSwitcher.setOnTouchListener(this);
-        currentPosition=0;
-        mImageSwitcher.setImageResource(picture[0]);
+        //实例化ViewPager
+        mPager = (ViewPager) findViewById(R.id.pager);
+        //实例化ViewPager的监听器
+        PictureSlidePagerAdapter mPagerAdapter = new PictureSlidePagerAdapter(getSupportFragmentManager());
+        //为ViewPager添加监听器
+        mPager.setAdapter(mPagerAdapter);
+        //划动改变事件
+        mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageSelected(int arg0) {
+                //划动结束后搜索数据库，并更新UI
+                searchScoreByDB(arg0);
+
+            }
+
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+                //页面划动中事件，空置中
+            }
+
+            @Override
+            //页面状态改变时调用此算法，目前用以实现循环
+            public void onPageScrollStateChanged(int state) {
+                // 当到第一张时切换到倒数第二张，当到最后一张时切换到第二张
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
+                    int curr = mPager.getCurrentItem();
+                    int lastReal = mPager.getAdapter().getCount() - 2;
+                    if (curr == 0) {
+                        mPager.setCurrentItem(lastReal, false);
+                    } else if (curr > lastReal) {
+                        mPager.setCurrentItem(1, false);
+                    }
+                }
+            }
+        });
 
 
 
         //监控FIGHT按钮
-        Challenge();
+        Challenge(mPager.getCurrentItem());
         myDBH= new HcgDBOpenHelper(this,"hcgInfo.db",null,1);
        textViewhcgname=(TextView)findViewById(R.id.hcg_score_name);
         textViewhcgTime=(TextView)findViewById(R.id.hcg_score_time);
         textViewhcguseTime=(TextView)findViewById(R.id.hcg_score_usetime);
+        //搜索一次
+        searchScoreByDB(0);
 //
     }
 
 
+    //ViewPager 的适配器
+    private class PictureSlidePagerAdapter extends FragmentStatePagerAdapter {
 
-    @Override
-    public View makeView() {
-        final ImageView i = new ImageView(this);
-        i.setBackgroundColor(0xff000000);
-        i.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        i.setLayoutParams(new ImageSwitcher.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
-        return i ;
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:{
-                //手指按下的X坐标
-                downX = event.getX();
-                break;
-            }
-            case MotionEvent.ACTION_UP:{
-                float lastX = event.getX();
-                //抬起的时候的X坐标大于按下的时候就显示上一张图片
-                if(lastX > downX){
-                    if(currentPosition > 0){
-                        //设置动画，这里的动画比较简单，不明白的去网上看看相关内容
-                        mImageSwitcher.setInAnimation(AnimationUtils.loadAnimation(getApplication(), R.anim.left_in));
-                        mImageSwitcher.setOutAnimation(AnimationUtils.loadAnimation(getApplication(), R.anim.right_out));
-                        currentPosition --;
-                        mImageSwitcher.setImageResource(picture[currentPosition % picture.length]);
-                    }else{
-                        Toast.makeText(getApplication(), "已经是第一张", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                if(lastX < downX){
-                    if(currentPosition < picture.length - 1){
-                        mImageSwitcher.setInAnimation(AnimationUtils.loadAnimation(getApplication(), R.anim.right_in));
-                        mImageSwitcher.setOutAnimation(AnimationUtils.loadAnimation(getApplication(), R.anim.left_out));
-                        currentPosition ++ ;
-                        mImageSwitcher.setImageResource(picture[currentPosition]);
-                    }else{
-                        Toast.makeText(getApplication(), "到了最后一张", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-            break;
+        public PictureSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
         }
 
-        return true;
-    }
+        @Override
+        public Fragment getItem(int position) {
+            return PictureSlideFragment.newInstance(picture[position]);
+        }
 
+        @Override
+        public int getCount() {
+            return picture.length;
+        }
+    }
 
 
 
 
     //开始挑战
-    public void Challenge(){
+    public void Challenge(int position){
         Button button=(Button)findViewById(R.id.challenge);
+        /**
+         * 由于为了实现ViewPager的首位循环衔接
+         * 更改了picture[]数组
+         * 这是为了抵消其影响而进行的加工
+         */
+        final int p;
+        //由于数组第一项插入了hcg06，所以目前的position0是原先的position5
+        if(position==0) p=5;
+            //由于数组最后一项插入了hcg01，所以目前的position7是原先的position0
+        else if(position==7) p=0;
+            //由于数组第一项出入了hcg06，所以所有数组应该向前减一操作
+        else p = position - 1;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent();
                 intent.putExtra("username",username);
-                intent.putExtra("Imagepos",pos);
+                intent.putExtra("Imagepos",p);
                 intent.setClass(HCGView.this,HCGPlay.class);
                 startActivity(intent);
 
@@ -167,6 +164,20 @@ public class HCGView extends Activity implements ViewSwitcher.ViewFactory, View.
     //在数据库中搜索 图片完成记录 KEY 图片位置
     private void searchScoreByDB(int position){
         SQLiteDatabase db=myDBH.getWritableDatabase();
+
+        /**
+         * 由于为了实现ViewPager的首位循环衔接
+         * 更改了picture[]数组
+         * 这是为了抵消其影响而进行的加工
+         */
+        //由于数组第一项插入了hcg06，所以目前的position0是原先的position5
+        if(position==0) position=5;
+        //由于数组最后一项插入了hcg01，所以目前的position7是原先的position0
+        else if(position==7) position=0;
+        //由于数组第一项出入了hcg06，所以所有数组应该向前减一操作
+        else position -= 1;
+
+
         String tempPos=String.valueOf(position);
         String[] str={tempPos};
         Cursor cursor = db.rawQuery("SELECT * FROM hcgInfo WHERE imagePos = ?  ",str );
