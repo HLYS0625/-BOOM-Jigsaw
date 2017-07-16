@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:id="@+id/newuser"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    style="">
-
+    android:layout_height="match_parent">
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/pink"
-        android:text="ログイン"
-        android:textSize="20sp"
-        android:textColor="@color/white"
-        android:gravity="center"/>
+        android:id="@+id/toast02"
+        android:text="(￣▽￣)~*:\n请输入新的用户名与密码~~"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:textColor="@color/pink"
+        android:layout_above="@+id/linearLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="18dp" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
+            android:layout_marginTop="30dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -91,4 +93,4 @@
 
 
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

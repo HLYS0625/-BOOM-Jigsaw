@@ -72,6 +72,10 @@
     <string name="good_pm">こんにちは、</string>
     <string name="good_eve">こんばんは、</string>
     <string name="good_ngh">もう夜です、おやすみ、</string>
+    <string name="log_in">ログイン</string>
+    <string name="forget_pw">パスワードを忘れた方</string>
+    <string name="sign_up">新規登録</string>
+    <string name="shoukai">QwQ:\nこちらはモザイクです、ようこそ！</string>
 </resources>
 
 

@@ -73,4 +73,8 @@
     <string name="good_mor">早上好，</string>
     <string name="good_ngh">夜深了，注意休息</string>
     <string name="good_pm">下午好，</string>
+    <string name="log_in">登錄</string>
+    <string name="forget_pw">忘記密碼</string>
+    <string name="shoukai">0.0:  \n\n  Hello~這裡是『拼圖遊戲』！</string>
+    <string name="sign_up">註冊用戶</string>
 </resources>

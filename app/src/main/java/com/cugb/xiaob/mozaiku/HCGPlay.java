@@ -291,7 +291,7 @@ public class HCGPlay extends Activity implements View.OnClickListener{
         for(int i=0;i<rows;i++){
             for(int j =0;j<cols;j++,no++){
                 Bitmap b = cutBitmap(bm,j*blockw,i*blockh,blockw,blockh);
-                mData.add(new Block(b,no,i,j));
+                mData.add(new Block(b,no));
                 Log.d("de","b"+b+"no"+no);
             }
         }
@@ -436,6 +436,7 @@ public class HCGPlay extends Activity implements View.OnClickListener{
     private void judge(){
         if (isSuccess())
         {
+//            textViewGameTime.setVisibility(View.GONE);
             if(IsSave()){
                 upDateChallengeinfo();
             }else {
@@ -486,9 +487,13 @@ public class HCGPlay extends Activity implements View.OnClickListener{
                 case 1:
                     reamainTime--;
                     textViewGameTime.setText("剩余时间："+reamainTime+"秒");
-                    if(reamainTime>0){
-                        Message message=handler.obtainMessage(1);
-                        handler.sendMessageDelayed(message,1000);
+                    if(reamainTime>0) {
+                        if(isSuccess()){
+
+                    }else {
+                        Message message = handler.obtainMessage(1);
+                        handler.sendMessageDelayed(message, 1000);
+                        }
                     }
                     else {
                         //时间没了就消失
