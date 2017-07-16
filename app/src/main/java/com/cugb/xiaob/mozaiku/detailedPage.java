@@ -188,33 +188,33 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     }
 
     private void autoJigsaw() {
-        if(type*type>10){
-            ;
-        }
-        else{
-            pt=new int[type][type];
-            correct=new int[type][type];
-            ptnext=new int[type][type];
-            //初始化当前位置矩阵和目标位置
-            for(int i=0;i<type;i++){
-                for(int j=0;j<type;j++){
-                    pt[i][j]=getBlock(picBlock[i*type+j]).getIno();
-                    correct[i][j]=i*type+j;
-                }
-            }
-            stack= puzzleAstar(pt,correct,type,type);//取栈
-            //弹出值为空的状态
-            stack.pop();
-            //弹出当前状态
-            stack.pop();
-        }
+//        if(type*type>10){
+//            ;
+//        }
+//        else{
+//            pt=new int[type][type];
+//            correct=new int[type][type];
+//            ptnext=new int[type][type];
+//            //初始化当前位置矩阵和目标位置
+//            for(int i=0;i<type;i++){
+//                for(int j=0;j<type;j++){
+//                    pt[i][j]=getBlock(picBlock[i*type+j]).getIno();
+//                    correct[i][j]=i*type+j;
+//                }
+//            }
+//            stack= puzzleAstar(pt,correct,type,type);//取栈
+//            //弹出值为空的状态
+//            stack.pop();
+//            //弹出当前状态
+//            stack.pop();
+//        }
         //判断是否已完成
         judge();
         // 启动线程
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                if(type>3){
+//                if(type>3){
                    for(int i=type*type*2;i>0;i--){
                        position=positions[i-1];
                        Message msg = new Message();
@@ -227,21 +227,21 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                            e.printStackTrace();
                        }
                    }
-                }
-                else {
-                    while(stack.size()!=0) {
-                        switchstep();
-                        Message msg = new Message();
-                        msg.what = 2;
-                        handler.sendMessage(msg);
-                        Log.i(TAG, "thread start run");//test
-                        try {
-                            thread.sleep(200);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+//                }
+//                else {
+//                    while(stack.size()!=0) {
+//                        switchstep();
+//                        Message msg = new Message();
+//                        msg.what = 2;
+//                        handler.sendMessage(msg);
+//                        Log.i(TAG, "thread start run");//test
+//                        try {
+//                            thread.sleep(200);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
 
             }
         });
@@ -635,7 +635,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private void Rdm(int rows,int cols) {
         int a;
         r = new int[rows * cols];
-        if(rows*cols>10){
+//        if(rows*cols>10){
             positions=new int[rows*cols*2];
             int zi = rows-1, zj = cols-1;//空白块的位置
             int[][] tmp=new int[rows][cols];
@@ -694,17 +694,17 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                    r[i*cols+j]=tmp[i][j];
                }
            }
-        }
-        else{
-            for (int i = 0; i < rows * cols - 1; i++) {
-                Random random = new Random();
-                a = random.nextInt(rows * cols);
-                if (NExist(r, a)) {
-                    r[i] = a;
-                } else i -= 1;
-            }
-            r[rows * cols - 1] = 0;
-        }
+//        }
+//        else{
+//            for (int i = 0; i < rows * cols - 1; i++) {
+//                Random random = new Random();
+//                a = random.nextInt(rows * cols);
+//                if (NExist(r, a)) {
+//                    r[i] = a;
+//                } else i -= 1;
+//            }
+//            r[rows * cols - 1] = 0;
+//        }
 
 
     }
