@@ -77,4 +77,21 @@
     <string name="sign_up">sign up</string>
     <string name="shoukai">\"QwQ \n\n This is a Puzzle game,enjoy it!\"</string>
     <string name="forget_pw">Forget Password</string>
+    <string name="fill_problem">Something you filled is wrong,Please check again.</string>
+    <string name="find_password">Reset Password</string>
+    <string name="mail">mail address</string>
+    <string name="mail_content_ed">\"PLEASE DONOT TELL ANYONE ELSE.</string>
+    <string name="mail_content_op">This mail is for resetting password in \"Puzzle\".If you have not kown about this,I think the reason is  who input a wrong E-mail address.Please ignore this mail if you receiving it  Inadvertently.Your verification code is</string>
+    <string name="mail_hint">Input your e-mail address here</string>
+    <string name="mail_success">A mail was sent to your address,Please check it.</string>
+    <string name="newPw">New Password</string>
+    <string name="no_such_mail">This Mail has not signed up in our game yet.</string>
+    <string name="password_reset">Your password was updata.</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="reset_success">Your password is reset successful.Please login with your new password</string>
+    <string name="send_verification">send verification code</string>
+    <string name="user_exists">This nickname is used by another user.</string>
+    <string name="verification">verification code</string>
+    <string name="verification_wrong">verification code is wrong,check again,</string>
+    <string name="wrong_address">Please input your mail address FIRST</string>
 </resources>

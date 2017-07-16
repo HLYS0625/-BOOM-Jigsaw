@@ -88,6 +88,8 @@ public class LoginView extends Activity {
                         if(isEmail(mail)||!mail.equals("")){
                             //查验数据库中是否有这个邮箱
                             if(searchByDB(mail,"1")!=0){
+                                ETaddress.setFocusable(false);
+                                ETaddress.setFocusableInTouchMode(false);
                                 sendVerification(mail);
                                 Toast.makeText(LoginView.this,getStr(R.string.mail_success),Toast.LENGTH_SHORT).show();
                             }else Toast.makeText(LoginView.this,getStr(R.string.no_such_mail),Toast.LENGTH_SHORT).show();

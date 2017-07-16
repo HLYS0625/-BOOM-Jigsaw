@@ -89,7 +89,7 @@
     <string name="verification">検証コード</string>
     <string name="wrong_address">先に正確なメールアドレスを書きなさい</string>
     <string name="no_such_mail">このメールはまだサインアップしない</string>
-    <string name="mail_content_op">このメールは、《モザイク》のパスワードをリセットために発信した。今度の検証コードは</string>
+    <string name="mail_content_op">このメールは、《モザイク》のパスワードをリセットために発信した。もし君はこの事を知らないなら、きっと誰かメールアドレスを勘違いしました。そうならば、このメールを無視してください、申し訳ありません…今度の検証コードは</string>
     <string name="mail_content_ed">です…絶対に他の者を伝えないてください!!!</string>
     <string name="reset_success">パスワードをリセットした、新たなパスワードてログインしてください</string>
     <string name="verification_wrong">検証コードは違います、もう一度チェックしてください</string>
