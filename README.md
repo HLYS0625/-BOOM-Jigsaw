@@ -50,20 +50,25 @@ _________________________________________________________________
 
     数据库TABLE：『userInfo』
         此Table结构
-            userName    varChar(20) PrimaryKey,
-            password    varChar(20) NOT NULL,
-            head        Integer     Default 0,
-            easyHS      Integer     Default 0,
-            normalHS    Integer     Default 0,
-            hardHS      Integer     Default 0,
+            userName        varChar(20)     PrimaryKey,
+            password        varChar(20)     NOT NULL,
+            address         varChar(40)     NOT NULL,
+            head            Integer         Default 0,
+            easyHS          Integer         Default 0,
+            normalHS        Integer         Default 0,
+            hardHS          Integer         Default 0,
+            verification    Integer         Default 0
+
         默认version：2
         数据字典：
-            userName    存储用户名，用作主键
-            password    该用户的密码，非空校验
-            head        用整形变量记录用户选择的头像，目前只有0-3的取值合法，但基于可扩展性的考虑未做数值校验。
-            easyHS      该用户在简单模式的历史最快通关时间，默认为0
-            normalHS    该用户……正常模式……为0
-            hardHS      该用户……困难模式……为0
+            userName        存储用户名，用作主键
+            password        该用户的密码，非空校验
+            address         储存该用户的邮箱，非空校验，正则校验写在了安卓代码中，故而未在数据库中做二次校验。
+            head            用整形变量记录用户选择的头像，目前只有0-3的取值合法，但基于可扩展性的考虑未做数值校验。
+            easyHS          该用户在简单模式的历史最快通关时间，默认为0
+            normalHS        该用户……正常模式……为0
+            hardHS          该用户……困难模式……为0
+            verification    用于找回密码服务时向邮箱发送的验证码
     _________________________________________________________________
     数据库TABLE：『scoreInfo』
         此Table结构

@@ -76,6 +76,23 @@
     <string name="forget_pw">パスワードを忘れた方</string>
     <string name="sign_up">新規登録</string>
     <string name="shoukai">QwQ:\nこちらはモザイクです、ようこそ！</string>
+    <string name="find_password">パスワードを取り戻す</string>
+    <string name="mail_success">メールはちゃんと君のメールアドレスへ発信した</string>
+    <string name="password_reset">新たなパスワードをアップデートした</string>
+    <string name="mail">メールアドレス</string>
+    <string name="mail_hint">メールアドレスを入力してください</string>
+    <string name="user_exists">このネームは既に存在します</string>
+    <string name="fill_problem">何かおかしいです、もう一度チェックしてください</string>
+    <string name="reset_password">パスワードをリセット</string>
+    <string name="send_verification">検証コードを発信する</string>
+    <string name="newPw">新たなパスワード</string>
+    <string name="verification">検証コード</string>
+    <string name="wrong_address">先に正確なメールアドレスを書きなさい</string>
+    <string name="no_such_mail">このメールはまだサインアップしない</string>
+    <string name="mail_content_op">このメールは、《モザイク》のパスワードをリセットために発信した。今度の検証コードは</string>
+    <string name="mail_content_ed">です…絶対に他の者を伝えないてください!!!</string>
+    <string name="reset_success">パスワードをリセットした、新たなパスワードてログインしてください</string>
+    <string name="verification_wrong">検証コードは違います、もう一度チェックしてください</string>
 </resources>
 
 
