@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -60,6 +61,24 @@ public class LoginView extends Activity {
 
         });
 
+        forget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //邮件接收端
+                String[] receiver = new String[]{"326599466@qq.com"};
+                //邮件主题
+                String subject = "Find My Password";
+                //邮件内容
+                String content = "random number as verification code";
+                Intent it = new Intent(Intent.ACTION_SENDTO);
+                it.setType("message/rfc822");
+                it.putExtra(Intent.EXTRA_EMAIL,receiver);
+                it.putExtra(Intent.EXTRA_SUBJECT,subject);
+                it.putExtra(Intent.EXTRA_TEXT,content);
+                startActivity(Intent.createChooser(it,"send this mail please"));
+            }
+        });
+
         signout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,6 +108,7 @@ public class LoginView extends Activity {
                         Intent it = new Intent(LoginView.this, MainActivity.class);
                         it.putExtra("username", username);
                         startActivity(it);
+                        finish();
                     } else if (state == 2)//密码错误
                     {
                         toasttext.setText("Σ(っ°Д°;)っ:\n"+getStr(R.string.wrong_pw));
@@ -124,7 +144,6 @@ public class LoginView extends Activity {
             }
         });
     }
-
 
 
 /*

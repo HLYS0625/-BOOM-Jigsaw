@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case 3:
-                        finish();
+                        startActivity(new Intent(mContext,LoginView.class));
                         break;
                 }
             }
