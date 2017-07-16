@@ -28,10 +28,7 @@ import android.widget.Toast;
 
 public class LoginView extends Activity {
     public DBOpenHelper newuserDBHelper=new DBOpenHelper(LoginView.this,2);
-    private Context mContext;
     private String userForIntent;
-    String username;//
-    String password;//
     //创建播放视频的控件对象
     private CustomVideoView videoview;
     //
@@ -63,12 +60,12 @@ public class LoginView extends Activity {
             }
 
         });
+
         signout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //跳转页面
-                 Intent it = new Intent(LoginView.this, MainActivity.class);
-                 it.putExtra("username", userForIntent);
+                //跳转页面  跳转到注册页面
+                 Intent it = new Intent(LoginView.this, NewuserView.class);
                  startActivity(it);
             }
         }
