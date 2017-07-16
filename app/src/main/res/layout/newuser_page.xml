@@ -4,8 +4,7 @@
     android:orientation="vertical"
     android:id="@+id/newuser"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    style="">
+    android:layout_height="match_parent">
     <TextView
         android:id="@+id/toast02"
         android:text="(￣▽￣)~*:\n请输入新的用户名与密码~~"

@@ -140,17 +140,13 @@ public class HCGView extends FragmentActivity {
     //开始挑战
     public void Challenge(){
         Button button=(Button)findViewById(R.id.challenge);
-        /**
-         * 由于为了实现ViewPager的首位循环衔接
-         * 更改了picture[]数组
-         * 这是为了抵消其影响而进行的加工
-         */
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent();
                 intent.putExtra("username",username);
-                intent.putExtra("Imagepos",currentposition-1);
+                if(currentposition!=0) intent.putExtra("Imagepos",currentposition-1);
+                else intent.putExtra("Imagepos",5);
                 intent.setClass(HCGView.this,HCGPlay.class);
                 startActivity(intent);
 
