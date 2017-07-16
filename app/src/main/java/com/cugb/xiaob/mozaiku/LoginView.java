@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 public class LoginView extends Activity {
     public DBOpenHelper newuserDBHelper=new DBOpenHelper(LoginView.this,2);
-    private String userForIntent;
     //创建播放视频的控件对象
     private CustomVideoView videoview;
     //
@@ -88,7 +87,7 @@ public class LoginView extends Activity {
                     } else if (state == 1)//正确登录
                     {
                         Intent it = new Intent(LoginView.this, MainActivity.class);
-                        it.putExtra("username", userForIntent);
+                        it.putExtra("username", username);
                         startActivity(it);
                     } else if (state == 2)//密码错误
                     {
