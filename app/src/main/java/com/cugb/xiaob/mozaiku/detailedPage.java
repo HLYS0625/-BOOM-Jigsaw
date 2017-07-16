@@ -259,6 +259,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         switchnum[0]=-1;switchnum[1]=-1;
     }
 
+    //自动拼图相关
     private Stack<openListEle> puzzleAstar(int[][] pt, int[][] correct, int vol, int col) {
         visited.clear();
         //判断是否是正确状态
@@ -888,6 +889,9 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             record(1);
+                            //更新游戏状态
+                            state=0;
+
                             Toast.makeText(detailedPage.this,R.string.chooseDiffcult,Toast.LENGTH_SHORT).show();
                         }
                     })
