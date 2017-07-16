@@ -78,7 +78,6 @@
     <string name="shoukai">QwQ:\nこちらはモザイクです、ようこそ！</string>
     <string name="find_password">パスワードを取り戻す</string>
     <string name="mail_success">メールはちゃんと君のメールアドレスへ発信した</string>
-    <string name="password_reset">新たなパスワードをアップデートした</string>
     <string name="mail">メールアドレス</string>
     <string name="mail_hint">メールアドレスを入力してください</string>
     <string name="user_exists">このネームは既に存在します</string>

@@ -85,7 +85,7 @@ public class LoginView extends Activity {
                     public void onClick(View v) {
                         String mail = ETaddress.getText().toString();
                         //保证邮箱格式正确且不为空
-                        if(isEmail(mail)||!mail.equals("")){
+                        if(isEmail(mail)&&!mail.equals("")){
                             //查验数据库中是否有这个邮箱
                             if(searchByDB(mail,"1")!=0){
                                 ETaddress.setFocusable(false);

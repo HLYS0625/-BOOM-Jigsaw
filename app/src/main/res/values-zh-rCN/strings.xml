@@ -85,7 +85,6 @@
     <string name="mail_success">已经向您的邮箱发送了邮件，请查收（请务必检查是否被归类到了垃圾邮件中）。</string>
     <string name="newPw">新密码</string>
     <string name="no_such_mail">此邮箱尚未注册</string>
-    <string name="password_reset">您的密码已重置</string>
     <string name="reset_password">重置密码</string>
     <string name="reset_success">您的密码已更新，请使用新的密码登入</string>
     <string name="send_verification">发送验证码</string>

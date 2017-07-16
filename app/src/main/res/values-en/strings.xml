@@ -86,7 +86,6 @@
     <string name="mail_success">A mail was sent to your address,Please check it.</string>
     <string name="newPw">New Password</string>
     <string name="no_such_mail">This Mail has not signed up in our game yet.</string>
-    <string name="password_reset">Your password was updata.</string>
     <string name="reset_password">Reset Password</string>
     <string name="reset_success">Your password is reset successful.Please login with your new password</string>
     <string name="send_verification">send verification code</string>
