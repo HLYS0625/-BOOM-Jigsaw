@@ -102,7 +102,10 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     int[] switchnum=new int[]{-1,-1};
     //自动拼图的线程
     Thread thread;
-
+    //打乱中已经走过的状态
+    HashSet<String> steps=new HashSet();
+    //打乱步骤，即拼图步骤倒序
+    int positions[];
 
     //____________________________以上为变量部分，以下为函数部分______________________________________
 
@@ -161,12 +164,15 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.easy:
                 hint(state,3,3);
+                type=3;
                 break;
             case R.id.noomaru:
                 hint(state,4,4);
+                type=4;
                 break;
             case R.id.hard:
                 hint(state,5,5);
+                type=5;
                 break;
             case R.id.music:
                 music();
@@ -182,39 +188,61 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     }
 
     private void autoJigsaw() {
-        pt=new int[type][type];
-        correct=new int[type][type];
-        ptnext=new int[type][type];
-        //初始化当前位置矩阵和目标位置
-        for(int i=0;i<type;i++){
-            for(int j=0;j<type;j++){
-                pt[i][j]=getBlock(picBlock[i*type+j]).getIno();
-                correct[i][j]=i*type+j;
-            }
+        if(type*type>10){
+            ;
         }
-        stack= puzzleAstar(pt,correct,type,type);//取栈
-        //弹出值为空的状态
-        stack.pop();
-        //弹出当前状态
-        stack.pop();
+        else{
+            pt=new int[type][type];
+            correct=new int[type][type];
+            ptnext=new int[type][type];
+            //初始化当前位置矩阵和目标位置
+            for(int i=0;i<type;i++){
+                for(int j=0;j<type;j++){
+                    pt[i][j]=getBlock(picBlock[i*type+j]).getIno();
+                    correct[i][j]=i*type+j;
+                }
+            }
+            stack= puzzleAstar(pt,correct,type,type);//取栈
+            //弹出值为空的状态
+            stack.pop();
+            //弹出当前状态
+            stack.pop();
+        }
         //判断是否已完成
         judge();
         // 启动线程
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while(stack.size()!=0) {
-                    try {
-                        thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    switchstep();
-                    Message msg = new Message();
-                    msg.what = 2;
-                    handler.sendMessage(msg);
-                    Log.i(TAG, "thread start run");//test
+                if(type>3){
+                   for(int i=type*type*2;i>0;i--){
+                       position=positions[i-1];
+                       Message msg = new Message();
+                       msg.what = 2;
+                       handler.sendMessage(msg);
+                       Log.i(TAG, "thread start run");//test
+                       try {
+                           thread.sleep(200);
+                       } catch (InterruptedException e) {
+                           e.printStackTrace();
+                       }
+                   }
                 }
+                else {
+                    while(stack.size()!=0) {
+                        switchstep();
+                        Message msg = new Message();
+                        msg.what = 2;
+                        handler.sendMessage(msg);
+                        Log.i(TAG, "thread start run");//test
+                        try {
+                            thread.sleep(200);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
             }
         });
         thread.start();
@@ -228,35 +256,27 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     }
 
     private void switchstep() {
-        openListEle q=stack.peek();
-        int t=0;long data;
-        stack.pop();
-        data=q.pts.state;
-        Log.i(TAG,"data is"+data);//test
-        for (int i = type - 1; i >= 0; --i) {
-            for (int j = type - 1; j >= 0; --j) {
-                ptnext[i][j] = (int)(data % 10);
-                data = data / 10;
-                if(pt[i][j]!=ptnext[i][j]){
-                    if(ptnext[i][j]==8)
-                        position=i*type+j;
+            openListEle q=stack.peek();
+            long data;
+            stack.pop();
+            data=q.pts.state;
+            Log.i(TAG,"data is"+data);//test
+            for (int i = type - 1; i >= 0; --i) {
+                for (int j = type - 1; j >= 0; --j) {
+                    ptnext[i][j] = (int)(data % 10);
+                    data = data / 10;
+                    if(pt[i][j]!=ptnext[i][j]){
+                        if(ptnext[i][j]==8)
+                            position=i*type+j;
+                    }
                 }
             }
-        }
-//        Log.i(TAG,"switch:"+switchnum[0]+"+"+switchnum[1]);//test
-//        //确定交换的itembean
-//        if( getBlock(picBlock[switchnum[0]]).equals( mData.get(blbl)))
-//            position=switchnum[1];
-//        else if(getBlock(picBlock[switchnum[0]]).equals( mData.get(blbl)))
-//            position=switchnum[0];
-        t++;
-        //赋值给新的当前矩阵
-        for(int i=0;i<type;i++){
-            for(int j=0;j<type;j++){
-                pt[i][j]=ptnext[i][j];
+            //赋值给新的当前矩阵
+            for(int i=0;i<type;i++){
+                for(int j=0;j<type;j++){
+                    pt[i][j]=ptnext[i][j];
+                }
             }
-        }
-        switchnum[0]=-1;switchnum[1]=-1;
     }
 
     //自动拼图相关
@@ -511,7 +531,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         uritempFile = Uri.parse("file://" + "/" + Environment.getExternalStorageDirectory().getPath() + "/temp/" + "small.jpg");
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uritempFile);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        startActivityForResult(intent, CROP_PHOTO);
+         startActivityForResult(intent, CROP_PHOTO);
     }
 
 
@@ -615,14 +635,78 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private void Rdm(int rows,int cols) {
         int a;
         r = new int[rows * cols];
-        for (int i = 0; i < rows * cols - 1; i++) {
-            Random random = new Random();
-            a = random.nextInt(rows * cols);
-            if (NExist(r, a)) {
-                r[i] = a;
-            } else i -= 1;
+        if(rows*cols>10){
+            positions=new int[rows*cols*2];
+            int zi = rows-1, zj = cols-1;//空白块的位置
+            int[][] tmp=new int[rows][cols];
+            String code="";
+            steps.clear();
+            for(int m=0;m<rows;m++){
+                for(int n=0;n<cols;n++){
+                    code=code+(m*cols+n)+",";//去掉new String()
+                }
+            }
+            //添加正确拼图的状态入栈
+            steps.add(code);
+            for(int i=0;i<rows;i++){
+                for(int j=0;j<cols;j++){
+                    tmp[i][j]=i*cols+j;
+                }
+            }
+            int[] offseti = new int[]{-1, 0, 1, 0};//左下右上
+            int[] offsetj = new int[]{0, 1, 0, -1};
+            for(int s=0;s<rows*cols*2;s++){
+                int ti,tj,t;
+                String hashcode="";
+                //获得一个随机数
+                do{
+                    a=new Random().nextInt(4);
+                    ti = zi + offseti[a];
+                    tj = zj + offsetj[a];
+                    if (ti < 0 || ti > rows - 1 || tj < 0 || tj > cols - 1)
+                        continue;
+                    t = tmp[ti][tj];
+                    tmp[ti][tj] = tmp[zi][zj];
+                    tmp[zi][zj] = t;
+                    hashcode="";
+                    for(int m=0;m<rows;m++){
+                        for(int n=0;n<cols;n++){
+                            hashcode=hashcode+tmp[m][n]+",";//去掉new String()
+                        }
+                    }
+                    t = tmp[ti][tj];
+                    tmp[ti][tj] = tmp[zi][zj];
+                    tmp[zi][zj] = t;
+                   } while (!(ti > 0 && ti < rows && tj > 0 && tj < cols)||steps.contains(hashcode));
+                   steps.add(hashcode);
+                   positions[s]=zi*cols+zj;
+                   //交换了空白块的位置
+                   t = tmp[ti][tj];
+                   tmp[ti][tj] = tmp[zi][zj];
+                   tmp[zi][zj] = t;
+                   zi=ti;//空白块行数
+                   zj=tj;//空白块列数
+
+
+            }
+           for(int i=0;i<rows;i++){
+               for(int j=0;j<cols;j++){
+                   r[i*cols+j]=tmp[i][j];
+               }
+           }
         }
-        r[rows * cols - 1] = 0;
+        else{
+            for (int i = 0; i < rows * cols - 1; i++) {
+                Random random = new Random();
+                a = random.nextInt(rows * cols);
+                if (NExist(r, a)) {
+                    r[i] = a;
+                } else i -= 1;
+            }
+            r[rows * cols - 1] = 0;
+        }
+
+
     }
     //判断在数列中有无所给元素，保证上面的Rdm（）函数生成的数列没有重复数字
     public static boolean NExist(int[] arr, int targetValue) {
