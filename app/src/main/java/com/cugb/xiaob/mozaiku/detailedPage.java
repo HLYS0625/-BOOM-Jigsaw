@@ -677,7 +677,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                     t = tmp[ti][tj];
                     tmp[ti][tj] = tmp[zi][zj];
                     tmp[zi][zj] = t;
-                   } while (!(ti > 0 && ti < rows && tj > 0 && tj < cols)||steps.contains(hashcode));
+                   } while (!(ti >= 0 && ti < rows && tj >= 0 && tj < cols)||steps.contains(hashcode));
                    steps.add(hashcode);
                    positions[s]=zi*cols+zj;
                    //交换了空白块的位置
