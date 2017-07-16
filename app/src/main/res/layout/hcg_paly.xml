@@ -10,16 +10,16 @@
     android:orientation="horizontal"
     >
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_weight="1"
+        android:orientation="vertical"
         android:layout_gravity="center"
         android:gravity="center">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="剩余时间"
+            android:text="剩余时间300秒"
             android:layout_marginLeft="10dp"
             android:id="@+id/hcg_time"
             android:layout_weight="1"/>
@@ -30,22 +30,16 @@
                 android:id="@+id/hcg_begin"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 style="?android:attr/buttonBarButtonStyle"/>
     </LinearLayout>
-
-    <TextView
-        android:layout_width="20dp"
-        android:layout_height="10dp" />
 
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:id="@+id/hcg_example"
+        android:layout_marginLeft="50dp"
         android:layout_weight="1"
-        android:layout_gravity="right"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="2dp"
         />
 
 </LinearLayout>
