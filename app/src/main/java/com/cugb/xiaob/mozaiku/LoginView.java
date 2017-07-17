@@ -1,7 +1,6 @@
 package com.cugb.xiaob.mozaiku;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,8 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +22,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,10 +35,7 @@ public class LoginView extends Activity {
     public DBOpenHelper newuserDBHelper=new DBOpenHelper(LoginView.this,2);
     //创建播放视频的控件对象
     private CustomVideoView videoview;
-    //
 
-
-    //_____________________________
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +61,7 @@ public class LoginView extends Activity {
             }
 
         });
-
+        //忘记密码按钮
         forget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +86,7 @@ public class LoginView extends Activity {
                                 ETaddress.setFocusable(false);
                                 ETaddress.setFocusableInTouchMode(false);
                                 sendVerification(mail);
+                                timeListener(mail);
                                 Toast.makeText(LoginView.this,getStr(R.string.mail_success),Toast.LENGTH_SHORT).show();
                             }else Toast.makeText(LoginView.this,getStr(R.string.no_such_mail),Toast.LENGTH_SHORT).show();
                         }else Toast.makeText(LoginView.this,getStr(R.string.wrong_address),Toast.LENGTH_SHORT).show();
@@ -109,6 +105,7 @@ public class LoginView extends Activity {
                             if (searchByDB(mail, ver_code)) {
                                 resetPW(mail, password);
                                 deleteVerification(mail);//使用完成后删除数据库中的验证码，防止验证码被再次使用
+                                alert.dismiss();//重置密码完成后关闭此对话框
                             } else
                                 Toast.makeText(LoginView.this, getStr(R.string.verification_wrong), Toast.LENGTH_SHORT).show();
                         }else Toast.makeText(LoginView.this, getStr(R.string.fill_problem), Toast.LENGTH_SHORT).show();
@@ -263,18 +260,34 @@ public class LoginView extends Activity {
         db.execSQL("UPDATE userInfo SET verification = ? WHERE address = ?",new String[]{verification,mail});
         db.close();
     }
+    //5分钟后删除验证码，防止验证码被暴力破解
+    private void timeListener(final String mail){
+        CountDownTimer cdt = new CountDownTimer(300000,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                Log.d("CountDownTimer","正在计时，距离删除验证码还有"+millisUntilFinished/1000+"秒");
+            }
+
+            @Override//5分钟已过，删除验证码
+            public void onFinish() {
+                deleteVerification(mail);
+                Log.d("CountDownTimer","已删除数据库中的验证码");
+            }
+        };
+        cdt.start();
+    }
 
 
 
-private  void initView(){
-    //加载视频资源控件
-    videoview = (CustomVideoView) findViewById(R.id.videoView);
-    //设置播放加载路径
-    videoview.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.video));
-    //播放
-    videoview.start();
-    //循环播放
-    videoview.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+    private  void initView(){
+        //加载视频资源控件
+        videoview = (CustomVideoView) findViewById(R.id.videoView);
+        //设置播放加载路径
+        videoview.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.video));
+        //播放
+        videoview.start();
+        //循环播放
+        videoview.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
             videoview.start();
