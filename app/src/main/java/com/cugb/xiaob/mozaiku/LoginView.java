@@ -142,7 +142,9 @@ public class LoginView extends Activity {
                     } else if (state == 1)//正确登录
                     {
                         Intent it = new Intent(LoginView.this, MainActivity.class);
-                        it.putExtra("username", username);
+                        if(!isEmail(username)) {
+                            it.putExtra("username", username);
+                        }else it.putExtra("username",searchByDB(username));
                         startActivity(it);
                         finish();
                     } else if (state == 2)//密码错误
@@ -237,6 +239,16 @@ public class LoginView extends Activity {
             db.close();
             return false;//账号或验证码不正确
         }
+    }
+    //重载，在数据库中搜索邮箱所对应的账号名
+    private String searchByDB(String mail) {
+        SQLiteDatabase db = newuserDBHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM userInfo WHERE address = ?", new String[]{mail});
+        cursor.moveToFirst();
+        String username = cursor.getString(cursor.getColumnIndex("userName"));
+        cursor.close();
+        db.close();
+        return username;
     }
     //检测登录使用的是用户名还是邮箱
     private boolean isEmail(String address){
