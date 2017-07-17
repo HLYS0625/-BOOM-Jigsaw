@@ -154,5 +154,4 @@ public class NewuserView extends Activity {
         Matcher m = p.matcher(address);
         return m.matches();
     }
-
 }

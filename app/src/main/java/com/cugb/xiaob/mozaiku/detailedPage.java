@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -439,8 +440,12 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 //请求权限
                 ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_REQUEST_PERMISSION);
             }
-            //权限申请被用户永久关闭，弹出提示，并关闭该页面
+            //权限申请被用户永久关闭，弹出提示，并关闭该页面,开启本程序的设定页面，引导用户开启权限
             else {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getApplicationContext().getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
                 Toast.makeText(this,R.string.permission_no_notice,Toast.LENGTH_SHORT).show();
                 finish();
             }
