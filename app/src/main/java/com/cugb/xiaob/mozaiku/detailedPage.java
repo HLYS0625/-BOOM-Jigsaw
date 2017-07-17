@@ -12,7 +12,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.provider.Settings;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -26,25 +26,31 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Random;
 import android.os.Handler;
 import java.util.Stack;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class detailedPage extends AppCompatActivity implements View.OnClickListener {
+public class detailedPage extends AppCompatActivity implements View.OnClickListener,RadioGroup.OnCheckedChangeListener {
     private static final String TAG ="detailPage" ;
     //黑色方块
     int blbl =404;
     //从页面一传入i的值，用以确定调取哪张图片
     private int i;
-    //状态值：false = 非游戏中，true = 游戏中
-    private boolean state=false;
+    //状态值：0=初始状态，1=已选择难度，游戏中，2=游戏胜利
+    private int state=0;
     //游戏难度类型
     private int type=3;
     //图片数组，用来保存分割后的小拼图
@@ -97,6 +103,8 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     //装存自动拼图步骤的栈
     Stack<openListEle> stack;
     //自动拼图矩阵所需数组
+    int[]step=new int[300];//在点击帮助前已经走过的步子
+    int stepcount=0;
     int[][] pt;
     int[][] correct;
     int[][] ptnext;
@@ -107,6 +115,22 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     HashSet<String> steps=new HashSet();
     //打乱步骤，即拼图步骤倒序
     int positions[];
+    // 步数显示
+    public static int countIndex = 0;
+    // 计时显示
+    public static int timerIndex = 0;
+    // 计时器类
+    private Timer timer;
+    //计时器线程
+    private TimerTask timerTask;
+    //显示信息的textview
+    private TextView tv;
+    //底部菜单
+    private RadioGroup rg;
+    //菜单中的帮助按钮
+    private RadioButton help;
+    //菜单中的音乐按钮
+    private RadioButton music;
 
     //____________________________以上为变量部分，以下为函数部分______________________________________
 
@@ -120,6 +144,8 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             switch (msg.what) {
                 case 1:
                     // 更新计时器
+                    timerIndex++;
+                    tv.setText(getResources().getString(R.string.time) + timerIndex+getResources().getString(R.string.stepcount)+countIndex);
                     break;
                 case 2:
                     if(position>-1){
@@ -143,43 +169,48 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         setPic();
         player = MediaPlayer.create(this,R.raw.hatukoi);
         player.setLooping(true);
-        Button besy = (Button) findViewById(R.id.easy);
-        Button bnml = (Button) findViewById(R.id.noomaru);
-        Button bhrd = (Button) findViewById(R.id.hard);
-        Button bbck = (Button) findViewById(R.id.help);
-        Button bmsc = (Button) findViewById(R.id.music);
+        Arrays.fill(step,-1);
+//        Button besy = (Button) findViewById(R.id.easy);
+//        Button bnml = (Button) findViewById(R.id.noomaru);
+//        Button bhrd = (Button) findViewById(R.id.hard);
+//        Button bbck = (Button) findViewById(R.id.help);
+//        Button bmsc = (Button) findViewById(R.id.music);
         ImageView rei_pic = (ImageView)findViewById(R.id.rei);
-        bbck.setOnClickListener(this);
-        bhrd.setOnClickListener(this);
-        bnml.setOnClickListener(this);
-        besy.setOnClickListener(this);
-        bmsc.setOnClickListener(this);
+//        bbck.setOnClickListener(this);
+//        bhrd.setOnClickListener(this);
+//        bnml.setOnClickListener(this);
+//        besy.setOnClickListener(this);
+//        bmsc.setOnClickListener(this);
         rei_pic.setOnClickListener(this);
+        rg=(RadioGroup)findViewById(R.id.main_tab);
+        rg.setOnCheckedChangeListener(this);
+        help=(RadioButton)rg.getChildAt(4);
+        music=(RadioButton)rg.getChildAt(3);
+        tv=(TextView)findViewById(R.id.textviewinfo);
+        tv.setText(getResources().getString(R.string.time) + timerIndex+getResources().getString(R.string.stepcount)+countIndex);
     }
     @Override
     //按钮监测器
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.help:
-                if(state) {
-                    autoJigsaw();
-                }
-                break;
-            case R.id.easy:
-                hint(state,3,3);
-                type=3;
-                break;
-            case R.id.noomaru:
-                hint(state,4,4);
-                type=4;
-                break;
-            case R.id.hard:
-                hint(state,5,5);
-                type=5;
-                break;
-            case R.id.music:
-                music();
-                break;
+//            case R.id.help:
+//                autoJigsaw();
+//                break;
+//            case R.id.easy:
+//                hint(state,3,3);
+//                type=3;
+//                break;
+//            case R.id.noomaru:
+//                hint(state,4,4);
+//                type=4;
+//                break;
+//            case R.id.hard:
+//                hint(state,5,5);
+//                type=5;
+//                break;
+//            case R.id.music:
+//                music();
+//                break;
             case R.id.rei:
                 //作弊次数增加
                 CheatCount++;
@@ -218,6 +249,18 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             @Override
             public void run() {
 //                if(type>3){
+                   for(int i=stepcount-1;i>0;i--){
+                       position=step[i-1];
+                       Message msg = new Message();
+                       msg.what = 2;
+                       handler.sendMessage(msg);
+                       Log.i(TAG, "thread start run");//test
+                       try {
+                           thread.sleep(200);
+                       } catch (InterruptedException e) {
+                           e.printStackTrace();
+                       }
+                   }
                    for(int i=type*type*2;i>0;i--){
                        position=positions[i-1];
                        Message msg = new Message();
@@ -256,6 +299,11 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         String thisTag=(String) imageView.getTag();
         String[] thisImageIndex=thisTag.split("_");
         return mData.get(Integer.parseInt(thisImageIndex[1]));
+    }
+    private int getno(ImageView imageView) {
+        String thisTag=(String) imageView.getTag();
+        String[] thisImageIndex=thisTag.split("_");
+        return Integer.parseInt(thisImageIndex[0]);
     }
 
     private void switchstep() {
@@ -460,12 +508,8 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 //请求权限
                 ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_REQUEST_PERMISSION);
             }
-            //权限申请被用户永久关闭，弹出提示，并关闭该页面,开启本程序的设定页面，引导用户开启权限
+            //权限申请被用户永久关闭，弹出提示，并关闭该页面
             else {
-                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri = Uri.fromParts("package", getApplicationContext().getPackageName(), null);
-                intent.setData(uri);
-                startActivity(intent);
                 Toast.makeText(this,R.string.permission_no_notice,Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -696,6 +740,8 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
 
 
             }
+            step[stepcount]=zi*cols+zj;
+            stepcount++;
            for(int i=0;i<rows;i++){
                for(int j=0;j<cols;j++){
                    r[i*cols+j]=tmp[i][j];
@@ -801,9 +847,9 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
 
 //游戏过程相关
     //按照state的状态决定选择难度后执行的操作
-    //state=0，开始一盘新游戏；state=1，选择重新开始游戏或继续游戏；state=3，返回主选单或重新开始游戏。
-    private void hint(boolean s, final int rows, final int cols){
-        if(s){
+    //state=0，开始一盘新游戏；state=1，选择重新开始游戏或继续游戏；state=2，返回主选单或重新开始游戏。
+    private void hint(int s, final int rows, final int cols){
+        if(s==1){
             AlertDialog alt ;
             AlertDialog.Builder alb = new AlertDialog.Builder(detailedPage.this);
             alt = alb.setIcon(R.drawable.konosuba_h_01)
@@ -812,7 +858,27 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                     .setPositiveButton(R.string.newGame, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            timer.cancel();
+                            Log.i("timer", "cancel");
+                            timerTask.cancel();
+                            Log.i("timerTask", "handleMessage: cancel");
                             newgame(rows,cols);
+                            //初始化index
+                            timerIndex=0;countIndex=0;
+                            // 启用计时器
+                            timer = new Timer(true);
+                            // 计时器线程
+                            timerTask = new TimerTask() {
+
+                                @Override
+                                public void run() {
+                                    Message msg = new Message();
+                                    msg.what = 1;
+                                    handler.sendMessage(msg);
+                                }
+                            };
+                            // 每1000ms执行 延迟0s
+                            timer.schedule(timerTask, 0, 1000);
                         }
                     })
                     .setNegativeButton(R.string.conti, new DialogInterface.OnClickListener() {
@@ -823,15 +889,71 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                     })
                     .create();
             alt.show();
-        }else {
+        }else if(s==2){
+            AlertDialog alt ;
+            AlertDialog.Builder alb = new AlertDialog.Builder(detailedPage.this);
+            alt = alb.setIcon(R.drawable.konosuba_h_01)
+                    .setTitle(R.string.congra_title)
+                    .setMessage(getString(R.string.congratulation)+getString(R.string.coder))
+                    .setPositiveButton(R.string.replay, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            newgame(rows,cols);
+                            //初始化index
+                            timerIndex=0;countIndex=0;
+                            // 启用计时器
+                            timer = new Timer(true);
+                            // 计时器线程
+                            timerTask = new TimerTask() {
+
+                                @Override
+                                public void run() {
+                                    Message msg = new Message();
+                                    msg.what = 1;
+                                    handler.sendMessage(msg);
+                                }
+                            };
+                            // 每1000ms执行 延迟0s
+                            timer.schedule(timerTask, 0, 1000);
+                        }
+                    })
+                    .setNegativeButton(R.string.other_pic, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent i = new Intent(detailedPage.this,MainActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
+                    })
+                    .create();
+            alt.show();
+        }else if(state==0){
             newgame(rows,cols);
+            //初始化index
+            timerIndex=0;countIndex=0;
+            // 启用计时器
+            timer = new Timer(true);
+            // 计时器线程
+            timerTask = new TimerTask() {
+
+                @Override
+                public void run() {
+                    Message msg = new Message();
+                    msg.what = 1;
+                    handler.sendMessage(msg);
+                }
+            };
+            // 每1000ms执行 延迟0s
+            timer.schedule(timerTask, 0, 1000);
         }
     }
     //按照所选难度开始一盘新游戏，初始化全局变量，然后调用一遍初始化相关的全部函数
     private void newgame(int rows,int cols){
-        state=false;
+        state=0;
         blbl=404;
         costTime=0;
+        Arrays.fill(step,-1);
+        stepcount=0;
         mData.clear();
         if(r!=null) {
             for (int i = 0; i < r.length; i++) {
@@ -846,7 +968,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         while(!cansolve(rows)) {
             newgame(rows,cols);
         }
-        state = true;
+        state = 1;
         costTime = getTime();
     }
 
@@ -857,6 +979,8 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         Fst = (ImageView) v;
         Sec = (ImageView)findViewById(R.id.nblock);
         if (moveable()) {
+            step[stepcount]=getno(Fst);
+            stepcount++;
             exchange();
         } else {
             Fst = null;
@@ -869,7 +993,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     //判断图片能否移动，若能移动，则通过exchange移动图片到空白位置
     private boolean moveable() {
         //增加是否在游戏中的检测
-        if (state) {
+        if (state == 1) {
             //增加有没有作弊次数的判断
             if (CheatCount > 0) {
                 CheatCount--;
@@ -914,6 +1038,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         Fst.setId(R.id.nblock);
         Sec = Fst;
         Fst = null;
+        countIndex++;
         judge();
     }
     //如果调用过作弊方法，移动后检测游戏按照正常方式游玩是否有解，不可解的话弹出提示
@@ -941,12 +1066,22 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private void judge(){
         if (isSuccess())
         {
-            state=false;
+            //计步计时数据初始化
+            Arrays.fill(step,-1);
+            stepcount=0;
+            state=2;
+            timerIndex=0;countIndex=0;
             costTime = getTime()-costTime;
             int minute,second;
             minute = costTime/60;
             second = costTime%60;
             Sec.setImageBitmap(bitmap);
+            //结束时间线程
+            timer.cancel();
+            Log.i("timer", "cancel");
+            timerTask.cancel();
+            Log.i("timerTask", "handleMessage: cancel");
+
             AlertDialog alt ;
             AlertDialog.Builder alb = new AlertDialog.Builder(detailedPage.this);
             String tmMsg = getResources().getString(R.string.costTime);
@@ -959,7 +1094,8 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                         public void onClick(DialogInterface dialog, int which) {
                             record(1);
                             //更新游戏状态
-                            state=false;
+                            state=0;
+
                             Toast.makeText(detailedPage.this,R.string.chooseDiffcult,Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -994,6 +1130,37 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         startActivity(it);
         if(noStay==0){
             finish();
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
+        switch (i) {
+            case R.id.help:
+                help.setClickable(false);
+                autoJigsaw();
+                break;
+            case R.id.easy:
+                hint(state,3,3);
+                type=3;
+                help.setClickable(true);
+                break;
+            case R.id.noomaru:
+                hint(state,4,4);
+                type=4;
+                help.setClickable(true);
+                break;
+            case R.id.hard:
+                hint(state,5,5);
+                type=5;
+                help.setClickable(true);
+                break;
+            case R.id.music:
+                music();
+                music.setChecked(false);
+                break;
+            default:
+                break;
         }
     }
 }

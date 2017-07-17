@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="drawable" name="transparent">#00000000</item>
+    <item type="drawable" name="home_btn_bg_d">#90FF1493</item>
+    <item type="drawable" name="home_btn_bg_s">#FFDDA0DD</item>
+    <item type="drawable" name="maintab_toolbar_bg">#FFFFC0CB</item>
+</resources>

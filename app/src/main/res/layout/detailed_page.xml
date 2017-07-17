@@ -1,67 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/lightpink"
+    android:gravity="center_horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
+    <!--android:orientation="vertical"-->
 
 
+    <!--<ImageView-->
+        <!--android:id="@+id/rei"-->
+        <!--android:layout_width="80dp"-->
+        <!--android:layout_height="120dp"-->
+        <!--android:contentDescription="@string/sml_pic" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/textviewinfo"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_toRightOf="@+id/rei"-->
+        <!--android:layout_marginLeft="@dimen/textview_padding_up"-->
+        <!--android:layout_marginTop="@dimen/textview_padding_up"-->
+        <!--android:background="@drawable/border_write"-->
+        <!--android:textColor="@color/colorAccent"-->
+        <!--android:gravity="center"/>-->
+
+
+    <!--<TableLayout-->
+        <!--android:id="@+id/tbl"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/rei"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:background="@color/black"/>-->
+
+
+
+    <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_gravity="bottom">-->
+            <!--<Button-->
+                <!--android:id="@+id/easy"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/easy"-->
+                <!--style="?android:attr/buttonBarButtonStyle"/>-->
+            <!--<Button-->
+                <!--android:id="@+id/noomaru"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/normal"-->
+                <!--style="?android:attr/buttonBarButtonStyle"/>-->
+            <!--<Button-->
+                <!--android:id="@+id/hard"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/hard"-->
+                <!--style="?android:attr/buttonBarButtonStyle"/>-->
+            <!--<Button-->
+                <!--android:id="@+id/music"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/music"-->
+                <!--style="?android:attr/buttonBarButtonStyle"/>-->
+            <!--<Button-->
+                <!--android:id="@+id/help"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/help"-->
+                <!--style="?android:attr/buttonBarButtonStyle"/>-->
+        <!---->
+        <!--</LinearLayout>-->
+    <!--<TabHost xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--android:id="@android:id/tabhost"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--&gt;-->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center">
-            <Button
-                android:id="@+id/easy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/easy"
-                style="?android:attr/buttonBarButtonStyle"/>
-            <Button
-                android:id="@+id/noomaru"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/normal"
-                style="?android:attr/buttonBarButtonStyle"/>
-            <Button
-                android:id="@+id/hard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/hard"
-                style="?android:attr/buttonBarButtonStyle"/>
-            <Button
-                android:id="@+id/music"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/music"
-                style="?android:attr/buttonBarButtonStyle"/>
-            <Button
-                android:id="@+id/help"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/help"
-                style="?android:attr/buttonBarButtonStyle"/>
+            android:id="@+id/Buttom_menubutton"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="fill_parent"
+                android:layout_height="0.0dip"
+                android:layout_weight="1.0" >
+                <RelativeLayout
+                    android:background="@color/lightpink"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/rei"
+                        android:layout_width="85dp"
+                        android:layout_height="100dp"
+                        android:contentDescription="@string/sml_pic" />
+
+                    <TextView
+                        android:id="@+id/textviewinfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/rei"
+                        android:layout_marginLeft="@dimen/textview_padding_up"
+                        android:layout_marginTop="@dimen/textview_padding_up"
+                        android:background="@drawable/border_write"
+                        android:textColor="@color/colorAccent"
+                        android:gravity="center"/>
 
 
+                    <TableLayout
+                        android:id="@+id/tbl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/rei"
+                        android:layout_gravity="center"
+                        android:background="@color/black"/>
+                </RelativeLayout>
+
+            </FrameLayout>
+            <!--<TabWidget-->
+                <!--android:id="@android:id/tabs"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="0.0"-->
+                <!--android:visibility="gone"/>-->
+            <RadioGroup
+                android:id="@+id/main_tab"
+                android:background="@drawable/maintab_toolbar_bg"
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_gravity="bottom">
+
+                <RadioButton
+                    android:id="@+id/easy"
+                    style="@style/main_tab_bottom"
+                    android:layout_marginTop="2.0dip"
+                    android:drawableTop="@drawable/icon_1_n"
+                    android:text="@string/easy" />
+
+                <RadioButton
+                    android:id="@+id/noomaru"
+                    style="@style/main_tab_bottom"
+                    android:layout_marginTop="2.0dip"
+                    android:drawableTop="@drawable/icon_1_n"
+                    android:text="@string/normal" />
+                <RadioButton
+                    android:layout_marginTop="2.0dip"
+                    android:text="@string/hard"
+                    android:drawableTop="@drawable/icon_1_n"
+                    android:id="@+id/hard"
+                    style="@style/main_tab_bottom"/>
+                <RadioButton
+                    android:layout_marginTop="2.0dip"
+                    android:text="@string/music"
+                    android:drawableTop="@drawable/icon_1_n"
+                    android:id="@+id/music"
+                    style="@style/main_tab_bottom"/>
+                <RadioButton
+                    android:layout_marginTop="2.0dip"
+                    android:text="@string/help"
+                    android:drawableTop="@drawable/icon_1_n"
+                    android:clickable="false"
+                    android:id="@+id/help"
+                    style="@style/main_tab_bottom"/>
+            </RadioGroup>
         </LinearLayout>
+    <!--</TabHost>-->
 
-
-
-        <ImageView
-            android:id="@+id/rei"
-            android:layout_width="60dp"
-            android:layout_height="90dp"
-            android:layout_gravity="center"
-            android:contentDescription="@string/sml_pic" />
-
-
-
-        <TableLayout
-            android:id="@+id/tbl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/black"/>
-
-
-</LinearLayout>
+</RelativeLayout>
