@@ -30,9 +30,4 @@ class Block {
     void setiBm(Bitmap iBm) {
         this.iBm = iBm;
     }
-
-    /*设置图片的序号，并没有用到，考虑精简
-    void setino(int inum) {
-        this.ino = inum;
-    }*/
 }
