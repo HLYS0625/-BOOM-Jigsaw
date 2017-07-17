@@ -157,7 +157,9 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.help:
-                autoJigsaw();
+                if(state) {
+                    autoJigsaw();
+                }
                 break;
             case R.id.easy:
                 hint(state,3,3);
