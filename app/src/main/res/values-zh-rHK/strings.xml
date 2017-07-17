@@ -80,7 +80,7 @@
     <string name="fill_problem">您填的項目有誤，請進行勘正</string>
     <string name="find_password">找回密碼</string>
     <string name="mail">電子郵件</string>
-    <string name="mail_content_ed">請務必保證本驗證不為他人所知，否則本司將無法保證您的賬號安全</string>
+    <string name="mail_content_ed">請務必保證本驗證不為他人所知，否則本司將無法保證您的賬號安全。 \n\n 又及：本驗證碼將在5分以後失效，請盡速使用。</string>
     <string name="mail_content_op">本郵件為《拼圖遊戲》的密碼找回郵件。如果您錯誤的接收到本郵件，本司深表歉意。此次的驗證碼為：</string>
     <string name="mail_hint">請輸入您的電子郵件地址</string>
     <string name="mail_success">已經向您的郵箱發送了郵件，請注意查收（如果沒有收到，請檢查您的垃圾箱）</string>

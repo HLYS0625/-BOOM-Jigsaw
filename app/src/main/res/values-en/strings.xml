@@ -80,7 +80,7 @@
     <string name="fill_problem">Something you filled is wrong,Please check again.</string>
     <string name="find_password">Reset Password</string>
     <string name="mail">mail address</string>
-    <string name="mail_content_ed">\"PLEASE DONOT TELL ANYONE ELSE.</string>
+    <string name="mail_content_ed">\"PLEASE DONOT TELL ANYONE ELSE. \n \n PS:This verification will be invalidated in five minutes.</string>
     <string name="mail_content_op">This mail is for resetting password in \"Puzzle\".If you have not kown about this,I think the reason is  who input a wrong E-mail address.Please ignore this mail if you receiving it  Inadvertently.Your verification code is</string>
     <string name="mail_hint">Input your e-mail address here</string>
     <string name="mail_success">A mail was sent to your address,Please check it.</string>

@@ -79,7 +79,7 @@
     <string name="fill_problem">您填的项目有误，请进行查验</string>
     <string name="find_password">找回密码</string>
     <string name="mail">邮箱</string>
-    <string name="mail_content_ed">请务必不能告诉其他人，否则我司将不能保证您的账号安全</string>
+    <string name="mail_content_ed">请务必不能告诉其他人，否则我司将不能保证您的账号安全。 \n \n 另：本验证码将在5分钟后失效，请尽速填写。</string>
     <string name="mail_content_op">您会收到该邮件是因为有人在本司出品的《拼图游戏》的密码找回功能中填写了本邮箱。如果您错误的接收到此封邮件，我司感到衷心的抱歉，请无视此封邮件。本次用于密码找回的验证码是：</string>
     <string name="mail_hint">请输入您的邮箱</string>
     <string name="mail_success">已经向您的邮箱发送了邮件，请查收（请务必检查是否被归类到了垃圾邮件中）。</string>
