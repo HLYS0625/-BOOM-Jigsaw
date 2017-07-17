@@ -104,10 +104,11 @@ public class LoginView extends Activity {
                         String verification = ETverification.getText().toString();
                         String password = ETnewPW.getText().toString();
                         //非空校验
-                        if (!(mail.equals("") || verification.equals("") || password.equals(""))) {
+                        if (!(mail.equals("") || verification.equals("") || password.equals("")||verification.equals("0"))) {
                             int ver_code = Integer.decode(verification);
                             if (searchByDB(mail, ver_code)) {
                                 resetPW(mail, password);
+                                deleteVerification(mail);//使用完成后删除数据库中的验证码，防止验证码被再次使用
                             } else
                                 Toast.makeText(LoginView.this, getStr(R.string.verification_wrong), Toast.LENGTH_SHORT).show();
                         }else Toast.makeText(LoginView.this, getStr(R.string.fill_problem), Toast.LENGTH_SHORT).show();
@@ -255,7 +256,13 @@ public class LoginView extends Activity {
         db.close();
         SendMailUtil.send(mail,getStr(R.string.mail_content_op)+"\n\n"+verification+"\n\n"+getStr(R.string.mail_content_ed));
     }
-
+    //重置数据库中的验证码为0，防止验证码在没有申请重置密码时暴力破解
+    private void deleteVerification(String mail){
+        String verification = "0";
+        SQLiteDatabase db = newuserDBHelper.getWritableDatabase();
+        db.execSQL("UPDATE userInfo SET verification = ? WHERE address = ?",new String[]{verification,mail});
+        db.close();
+    }
 
 
 
