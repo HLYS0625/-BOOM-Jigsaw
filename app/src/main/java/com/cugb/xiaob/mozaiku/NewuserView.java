@@ -82,18 +82,22 @@ public class NewuserView extends Activity {
                 address=ETmail.getText().toString();
                 //添加非空检测，以及邮箱的正则检测
                 if(!(username.equals("")||password.equals("")||!isEmail(address))) {
-                    if (searchByDB(username, password) == 1) {
-//                    Toast.makeText(NewuserView.this,username,Toast.LENGTH_SHORT).show();
-                        toast002.setText("ヾ(ﾟ∀ﾟゞ):\n"+getStr(R.string.user_exists));
-                    } else {
-                        saveuserByDB(username, password, address);
-                        if (searchByDB(username, password) == 1) {
-                            toast002.setText("_(:зゝ∠)_:\n" + getStr(R.string.userinfo_saved));
-                            finish();
-                        } else toast002.setText("︿(￣︶￣)︿:\n" + getStr(R.string.fill_problem));
+                    switch (searchByDB(username, address)) {
+                        case 1:
+                            toast002.setText("ヾ(ﾟ∀ﾟゞ):\n"+getStr(R.string.user_exists));
+                            break;
+                        case 2:
+                            saveuserByDB(username, password, address);
+                            if (searchByDB(username, password) == 1) {
+                                toast002.setText("_(:зゝ∠)_:\n" + getStr(R.string.userinfo_saved));
+                                finish();
+                            } else toast002.setText("︿(￣︶￣)︿:\n" + getStr(R.string.fill_problem));
+                            break;
+                        case 0:
+                            toast002.setText("∠( °ω°)／ :\n" + getStr(R.string.mail_exist));
+                            break;
                     }
-                }
-                else toast002.setText("Σ(ﾟдﾟlll)/：\n " + getStr(R.string.fill_problem));
+                }else toast002.setText("Σ(ﾟдﾟlll)/：\n " + getStr(R.string.fill_problem));
             }
         });
     }
@@ -118,19 +122,27 @@ public class NewuserView extends Activity {
         db.close();
         Toast.makeText(NewuserView.this,R.string.userinfo_saved,Toast.LENGTH_SHORT).show();
     }
-    //在数据库中搜索用户信息 用户已存在返回 1  创建成功返回2  ???
-    private int searchByDB(String userName,String password){
-
+    //在数据库中搜索用户信息 用户已存在返回 1  创建成功返回2  邮箱已注册返回0
+    private int searchByDB(String userName,String mail){
         SQLiteDatabase db=newuserDBHelper.getReadableDatabase();
 //        //参数依次是:数据库查询语句  查询数据库中是否有 该用户名
-        Cursor cursor = db.rawQuery("SELECT * FROM userInfo WHERE userName = ?",new String[]{userName});
+        Cursor cursor1 = db.rawQuery("SELECT * FROM userInfo WHERE userName = ?",new String[]{userName});
+        //参数依次是:数据库查询语句  查询数据库中是否有 该邮箱
+        Cursor cursor2 = db.rawQuery("SELECT * FROM userInfo WHERE address = ?",new String[]{mail});
         //存在数据才返回true  存在该用户名 返回1
-        if(cursor.moveToFirst()) {
-            cursor.close();
+        if(cursor1.moveToFirst()) {
+            cursor1.close();
+            cursor2.close();
             db.close();
             return 1;
-         }else {
-            cursor.close();
+         }else if(cursor2.moveToFirst()) {
+            cursor1.close();
+            cursor2.close();
+            db.close();
+            return 0;
+        }else {
+            cursor1.close();
+            cursor2.close();
             db.close();
             return 2;
         }

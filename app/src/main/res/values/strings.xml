@@ -44,7 +44,7 @@
     <string name="HCG">地獄モード</string>
     <string name="cancel">キャンセル</string>
     <string name="costTime">\n\n時間は %1$d 分 %2$d 秒です</string>
-    <string name="name_hint">ユーザー名を入力</string>
+    <string name="name_hint">ユーザー名/メールアドレスを入力</string>
     <string name="pw_hint">パスワードを入力</string>
     <string name="username">ユーザー名</string>
     <string name="password">パスワード</string>
@@ -92,6 +92,7 @@
     <string name="mail_content_ed">です…絶対に他の者を伝えないてください!!! \n \n まだ、この検証コードは五分後に失効になります</string>
     <string name="reset_success">パスワードをリセットした、新たなパスワードてログインしてください</string>
     <string name="verification_wrong">検証コードは違います、もう一度チェックしてください</string>
+    <string name="mail_exist">このメールはもうサインアップした…</string>
 </resources>
 
 
