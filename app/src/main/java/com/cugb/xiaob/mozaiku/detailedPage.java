@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -42,8 +43,8 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     int blbl =404;
     //从页面一传入i的值，用以确定调取哪张图片
     private int i;
-    //状态值：0=初始状态，1=已选择难度，游戏中，2=游戏胜利
-    private int state=0;
+    //状态值：false = 非游戏中，true = 游戏中
+    private boolean state=false;
     //游戏难度类型
     private int type=3;
     //图片数组，用来保存分割后的小拼图
@@ -160,7 +161,9 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.help:
-                autoJigsaw();
+                if(state) {
+                    autoJigsaw();
+                }
                 break;
             case R.id.easy:
                 hint(state,3,3);
@@ -457,8 +460,12 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 //请求权限
                 ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_REQUEST_PERMISSION);
             }
-            //权限申请被用户永久关闭，弹出提示，并关闭该页面
+            //权限申请被用户永久关闭，弹出提示，并关闭该页面,开启本程序的设定页面，引导用户开启权限
             else {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getApplicationContext().getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
                 Toast.makeText(this,R.string.permission_no_notice,Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -795,8 +802,8 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
 //游戏过程相关
     //按照state的状态决定选择难度后执行的操作
     //state=0，开始一盘新游戏；state=1，选择重新开始游戏或继续游戏；state=3，返回主选单或重新开始游戏。
-    private void hint(int s, final int rows, final int cols){
-        if(s==1){
+    private void hint(boolean s, final int rows, final int cols){
+        if(s){
             AlertDialog alt ;
             AlertDialog.Builder alb = new AlertDialog.Builder(detailedPage.this);
             alt = alb.setIcon(R.drawable.konosuba_h_01)
@@ -816,35 +823,13 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                     })
                     .create();
             alt.show();
-        }else if(s==2){
-            AlertDialog alt ;
-            AlertDialog.Builder alb = new AlertDialog.Builder(detailedPage.this);
-            alt = alb.setIcon(R.drawable.konosuba_h_01)
-                    .setTitle(R.string.congra_title)
-                    .setMessage(getString(R.string.congratulation)+getString(R.string.coder))
-                    .setPositiveButton(R.string.replay, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            newgame(rows,cols);
-                        }
-                    })
-                    .setNegativeButton(R.string.other_pic, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent i = new Intent(detailedPage.this,MainActivity.class);
-                            startActivity(i);
-                            finish();
-                        }
-                    })
-                    .create();
-            alt.show();
-        }else if(state==0){
+        }else {
             newgame(rows,cols);
         }
     }
     //按照所选难度开始一盘新游戏，初始化全局变量，然后调用一遍初始化相关的全部函数
     private void newgame(int rows,int cols){
-        state=0;
+        state=false;
         blbl=404;
         costTime=0;
         mData.clear();
@@ -861,7 +846,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         while(!cansolve(rows)) {
             newgame(rows,cols);
         }
-        state = 1;
+        state = true;
         costTime = getTime();
     }
 
@@ -884,7 +869,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     //判断图片能否移动，若能移动，则通过exchange移动图片到空白位置
     private boolean moveable() {
         //增加是否在游戏中的检测
-        if (state == 1) {
+        if (state) {
             //增加有没有作弊次数的判断
             if (CheatCount > 0) {
                 CheatCount--;
@@ -956,7 +941,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private void judge(){
         if (isSuccess())
         {
-            state=2;
+            state=false;
             costTime = getTime()-costTime;
             int minute,second;
             minute = costTime/60;
@@ -974,8 +959,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                         public void onClick(DialogInterface dialog, int which) {
                             record(1);
                             //更新游戏状态
-                            state=0;
-
+                            state=false;
                             Toast.makeText(detailedPage.this,R.string.chooseDiffcult,Toast.LENGTH_SHORT).show();
                         }
                     })

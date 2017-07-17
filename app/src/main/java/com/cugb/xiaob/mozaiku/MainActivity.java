@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     //数据库存取用到的变量
     private DBOpenHelper myDBHelper = new DBOpenHelper(MainActivity.this,2);
     //侧边菜单需要用到的变量
-    private DrawerLayout drawer_layout;
     private ListView list_left_drawer;
     private MyAdapter<Icon> myAdapter2 = null;
 
@@ -60,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
         initGrid_pic(mData);
 
         //声明并初始化侧边菜单
-        drawer_layout = (DrawerLayout) findViewById(R.id.drawer_Layout);
         list_left_drawer = (ListView) findViewById(R.id.left_drawer);
         ArrayList<Icon> menuLists = new ArrayList<>();
         initMenuList(menuLists);
@@ -225,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 3:
                         startActivity(new Intent(mContext,LoginView.class));
+                        finish();
                         break;
                 }
             }
