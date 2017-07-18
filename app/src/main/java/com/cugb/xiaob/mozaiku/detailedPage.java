@@ -868,6 +868,12 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+    @Override
+    protected void onStop(){
+        player.stop();
+        super.onStop();
+    }
 }
 
 
