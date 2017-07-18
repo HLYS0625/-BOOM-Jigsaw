@@ -1179,7 +1179,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 help.setClickable(true);
                 break;
             case R.id.hard:
-                hint(state,5,5);
+                 hint(state,5,5);
                 type=5;
                 help.setClickable(true);
                 break;
@@ -1190,14 +1190,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             default:
                 break;
         }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event){
-        if(keyCode==KeyEvent.KEYCODE_BACK){
-            timerIndex=0;stepcount=0;
-        }
-        return false;
     }
 }
 

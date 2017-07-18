@@ -1,46 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:background="@color/lightpink"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 <LinearLayout
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
     android:orientation="horizontal"
     >
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
         android:layout_gravity="center"
         android:gravity="center">
         <TextView
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_height="wrap_content"
             android:text="剩余时间300秒"
-            android:layout_marginLeft="10dp"
             android:id="@+id/hcg_time"
             android:layout_weight="1"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="GO"
-                android:id="@+id/hcg_begin"
-                android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
+                android:text="GO"
+                android:background="@drawable/border_circlebtn"
+                android:id="@+id/hcg_begin"
+                android:layout_gravity="center_horizontal"
                 style="?android:attr/buttonBarButtonStyle"/>
     </LinearLayout>
-
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/hcg_example"
-        android:layout_marginLeft="50dp"
+    <RelativeLayout
         android:layout_weight="1"
-        />
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/hcg_example"
+            />
+    </RelativeLayout>
 
 </LinearLayout>
 
