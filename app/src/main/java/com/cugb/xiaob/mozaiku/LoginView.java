@@ -295,7 +295,7 @@ public class LoginView extends Activity {
         //加载视频资源控件
         videoview = (CustomVideoView) findViewById(R.id.videoView);
         //设置播放加载路径
-        videoview.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.video));
+        videoview.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.longvideo));
         //播放
         videoview.start();
         //循环播放

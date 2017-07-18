@@ -6,9 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.MediaCodec;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,6 +27,8 @@ import java.util.regex.Pattern;
 
 public class NewuserView extends Activity {
     public DBOpenHelper newuserDBHelper=new DBOpenHelper(NewuserView.this,2);
+    //创建播放视频的控件对象
+    private CustomVideoView videoview;
 
     //账号,密码,邮箱字符串
     String username;
@@ -41,6 +43,7 @@ public class NewuserView extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.newuser_page);
         //
+        initView();
         //点击editText以外的地方键盘消失
 
         findViewById(R.id.newuser).setOnClickListener(new View.OnClickListener(){
@@ -153,5 +156,36 @@ public class NewuserView extends Activity {
         Pattern p = Pattern.compile(str);
         Matcher m = p.matcher(address);
         return m.matches();
+    }
+
+    private  void initView(){
+        //加载视频资源控件
+        videoview = (CustomVideoView) findViewById(R.id.videoView);
+        //设置播放加载路径
+        videoview.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.flowervideo));
+        //播放
+        videoview.start();
+        //循环播放
+        videoview.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                videoview.start();
+            }
+        });
+
+
+    }
+    //返回重启加载
+    @Override
+    protected void onRestart() {
+        initView();
+        super.onRestart();
+    }
+
+    //防止锁屏或者切出的时候，音乐在播放
+    @Override
+    protected void onStop() {
+        videoview.stopPlayback();
+        super.onStop();
     }
 }
