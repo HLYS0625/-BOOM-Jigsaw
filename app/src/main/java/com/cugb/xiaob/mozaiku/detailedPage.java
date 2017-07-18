@@ -19,6 +19,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,6 +132,10 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
     private RadioButton help;
     //菜单中的音乐按钮
     private RadioButton music;
+//    //控制菜单显示的按钮
+//    private Button menubtn;
+//    //菜单显示的状态
+//    boolean menuClick=true;
 
     //____________________________以上为变量部分，以下为函数部分______________________________________
 
@@ -145,7 +150,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 case 1:
                     // 更新计时器
                     timerIndex++;
-                    tv.setText(getResources().getString(R.string.time) + timerIndex+getResources().getString(R.string.stepcount)+countIndex);
+                    tv.setText(Html.fromHtml("<u>"+getResources().getString(R.string.time) + timerIndex+"<br/>"+getResources().getString(R.string.stepcount)+countIndex+"</u>"));
                     break;
                 case 2:
                     if(position>-1){
@@ -187,7 +192,10 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         help=(RadioButton)rg.getChildAt(4);
         music=(RadioButton)rg.getChildAt(3);
         tv=(TextView)findViewById(R.id.textviewinfo);
-        tv.setText(getResources().getString(R.string.time) + timerIndex+getResources().getString(R.string.stepcount)+countIndex);
+        tv.setText(Html.fromHtml("<u>"+getResources().getString(R.string.time) + timerIndex+"<br/>"+getResources().getString(R.string.stepcount)+countIndex+"</u>"));
+//        menubtn=(Button)findViewById(R.id.menu_button);
+//        menubtn.bringToFront();
+//        menubtn.setOnClickListener(this);
     }
     @Override
     //按钮监测器
@@ -215,11 +223,29 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                 //作弊次数增加
                 CheatCount++;
                 break;
+//            case R.id.menu_button:
+//                if(menuClick){
+//                    menuClick=false;
+//                }
+//                else {
+//                    menuClick=true;
+//                }
+//                menuControl();
             default:
                 click(v);
                 break;
         }
     }
+//    //控制菜单显示
+//    private void menuControl() {
+//        if(menuClick){
+//            rg.setVisibility(View.VISIBLE);
+//        }
+//        else{
+//            rg.setVisibility(View.GONE);
+//        }
+//        menuClick=!menuClick;
+//    }
 
     private void autoJigsaw() {
 //        if(type*type>10){
@@ -249,8 +275,8 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             @Override
             public void run() {
 //                if(type>3){
-                   for(int i=stepcount-1;i>0;i--){
-                       position=step[i-1];
+                   for(int i=stepcount-2 ;i>=0;i--){
+                       position=step[i];
                        Message msg = new Message();
                        msg.what = 2;
                        handler.sendMessage(msg);
@@ -258,7 +284,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
                        try {
                            thread.sleep(200);
                        } catch (InterruptedException e) {
-                           e.printStackTrace();
+                            e.printStackTrace();
                        }
                    }
                    for(int i=type*type*2;i>0;i--){
@@ -952,6 +978,7 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
         state=0;
         blbl=404;
         costTime=0;
+        //存步初始化
         Arrays.fill(step,-1);
         stepcount=0;
         mData.clear();

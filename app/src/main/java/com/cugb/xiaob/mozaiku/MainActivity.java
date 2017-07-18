@@ -5,6 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,10 +21,13 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     private Context mContext;
@@ -35,11 +41,47 @@ public class MainActivity extends AppCompatActivity {
     //侧边菜单需要用到的变量
     private ListView list_left_drawer;
     private MyAdapter<Icon> myAdapter2 = null;
+    //背景容器
+    LinearLayout temp;
+    //图片轮次
+    int turn=0;
+    //图片数组，用于调取图片
+    private int[] backgd_list = {
+            R.drawable.girl01,
+            R.drawable.girl02,
+            R.drawable.girl03,
+            R.drawable.girl04,
+            R.drawable.girl05,
+            R.drawable.girl06,
+            R.drawable.girl07,
+    };
+    // 计时器类
+    private Timer timer;
+    //计时器线程
+    private TimerTask timerTask;
 
 
 
 
 //______________________________________变量和方法的分割线__________________________________\\
+    /**
+     * UI更新Handler
+     */
+    private Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    // 更新背景
+                    temp.setBackground(getResources().getDrawable(backgd_list[turn]));
+                    turn++;
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +130,34 @@ public class MainActivity extends AppCompatActivity {
 
         //为侧滑框中的头像图片建立点击监听(设置头像事件）
         setHeadImg();
+
+        //背景循环播放
+        temp=(LinearLayout)findViewById(R.id.main_selectscreen);
+        looping();
+    }
+    //背景循环播放
+    private void looping() {
+        // 启用计时器
+        timer = new Timer(true);
+        // 计时器线程
+        timerTask = new TimerTask() {
+
+            @Override
+            public void run() {
+                if(turn==7){
+                    turn=0;
+                }
+                Message msg = new Message();
+                msg.what = 1;
+                handler.sendMessage(msg);
+
+            }
+        };
+        // 每2000ms执行 延迟0s
+        timer.schedule(timerTask, 0, 2000);
     }
 
-//工具函数
+    //工具函数
     //获取存储在string资源文件中的字符串
     private String getStr(int i){
         return getResources().getString(i);
