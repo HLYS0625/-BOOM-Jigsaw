@@ -1181,7 +1181,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             case R.id.hard:
                  hint(state,5,5);
                 type=5;
-                help.setClickable(true);
                 break;
             case R.id.music:
                 music();
