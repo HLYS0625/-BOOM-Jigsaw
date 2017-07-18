@@ -136,7 +136,8 @@ public class LoginView extends Activity {
                     int state = searchByDB(username, password);
                     if (state == 0)//未注册
                     {
-                    toasttext.setText("!!!∑(ﾟДﾟノ)ノ:\n"+getStr(R.string.wrong_nm));
+                        Toast.makeText(LoginView.this,"!!!∑(ﾟДﾟノ)ノ:\n"+getStr(R.string.wrong_nm),Toast.LENGTH_SHORT).show();
+                   // toasttext.setText("!!!∑(ﾟДﾟノ)ノ:\n"+getStr(R.string.wrong_nm));
                         userName.setText("");
                         passwordtext.setText("");
                     } else if (state == 1)//正确登录
@@ -146,15 +147,20 @@ public class LoginView extends Activity {
                             it.putExtra("username", username);
                         }else it.putExtra("username",searchByDB(username));
                         startActivity(it);
+                        Toast.makeText(LoginView.this,getStr(R.string.welcome),Toast.LENGTH_SHORT).show();
                         finish();
                     } else if (state == 2)//密码错误
                     {
-                        toasttext.setText("Σ(っ°Д°;)っ:\n"+getStr(R.string.wrong_pw));
+                        Toast.makeText(LoginView.this,"Σ(っ°Д°;)っ:\n"+getStr(R.string.wrong_pw),Toast.LENGTH_SHORT).show();
+
+                       // toasttext.setText("Σ(っ°Д°;)っ:\n"+getStr(R.string.wrong_pw));
                         userName.setText("");
                         passwordtext.setText("");
                     }
                 } else{
-                    toasttext.setText("(｀・ω・´)：\n"+getStr(R.string.null_nm));
+                    Toast.makeText(LoginView.this,"(｀・ω・´)：\n"+getStr(R.string.null_nm),Toast.LENGTH_SHORT).show();
+
+                  //  toasttext.setText("(｀・ω・´)：\n"+getStr(R.string.null_nm));
                     passwordtext.setText("");
                 }
             }

@@ -87,17 +87,23 @@ public class NewuserView extends Activity {
                 if(!(username.equals("")||password.equals("")||!isEmail(address))) {
                     switch (searchByDB(username, address)) {
                         case 1:
-                            toast002.setText("ヾ(ﾟ∀ﾟゞ):\n"+getStr(R.string.user_exists));
+                            Toast.makeText(NewuserView.this,"ヾ(ﾟ∀ﾟゞ):\n"+getStr(R.string.user_exists),Toast.LENGTH_SHORT).show();
+
+                          //  toast002.setText("ヾ(ﾟ∀ﾟゞ):\n"+getStr(R.string.user_exists));
                             break;
                         case 2:
                             saveuserByDB(username, password, address);
                             if (searchByDB(username, password) == 1) {
-                                toast002.setText("_(:зゝ∠)_:\n" + getStr(R.string.userinfo_saved));
+                                Toast.makeText(NewuserView.this,"_(:зゝ∠)_:\n" + getStr(R.string.userinfo_saved),Toast.LENGTH_SHORT).show();
+
+                              //  toast002.setText("_(:зゝ∠)_:\n" + getStr(R.string.userinfo_saved));
                                 finish();
                             } else toast002.setText("︿(￣︶￣)︿:\n" + getStr(R.string.fill_problem));
                             break;
                         case 0:
-                            toast002.setText("∠( °ω°)／ :\n" + getStr(R.string.mail_exist));
+                            Toast.makeText(NewuserView.this,"∠( °ω°)／ :\n" + getStr(R.string.mail_exist),Toast.LENGTH_SHORT).show();
+
+                            //toast002.setText("∠( °ω°)／ :\n" + getStr(R.string.mail_exist));
                             break;
                     }
                 }else toast002.setText("Σ(ﾟдﾟlll)/：\n " + getStr(R.string.fill_problem));
