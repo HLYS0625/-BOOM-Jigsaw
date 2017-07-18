@@ -433,6 +433,7 @@ public class HCGPlay extends Activity implements View.OnClickListener{
         return isSuccess;
     }
     //若isSuccess返回true，则进行弹框
+
     private void judge(){
         if (isSuccess())
         {
