@@ -952,7 +952,6 @@ public class detailedPage extends AppCompatActivity implements View.OnClickListe
             step[stepcount]=getno(Fst);
             stepcount++;
             exchange();
-
         } else {
             Fst = null;
             Toast.makeText(detailedPage.this, R.string.cant_move, Toast.LENGTH_SHORT).show();
