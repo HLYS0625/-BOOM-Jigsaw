@@ -22,7 +22,6 @@
         android:layout_centerInParent="true"/>
     <TextView
         android:id="@+id/toast02"
-        android:text="(￣▽￣)~*:\n请输入新的用户名与密码~~"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:textColor="@color/pink"
@@ -44,6 +43,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/username"
+                android:textColor="@color/pink"
+
                 android:gravity="right"
                 android:layout_gravity="center"
                 android:layout_weight="1"/>
@@ -52,6 +53,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
+                android:textColor="@color/pink"
+
                 android:layout_marginRight="60dp"
                 android:gravity="center"
                 android:layout_weight="2"
@@ -65,6 +68,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/password"
+                android:textColor="@color/pink"
+
                 android:gravity="right"
                 android:layout_gravity="center"
                 android:layout_weight="1"/>
@@ -73,6 +78,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
+                android:textColor="@color/pink"
+
                 android:layout_marginRight="60dp"
                 android:gravity="center"
                 android:layout_weight="2"
@@ -88,6 +95,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/mail"
+                android:textColor="@color/pink"
+
                 android:gravity="right"
                 android:layout_gravity="center"
                 android:layout_weight="1"/>
@@ -96,6 +105,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
+                android:textColor="@color/pink"
+
                 android:layout_marginRight="60dp"
                 android:gravity="center"
                 android:layout_weight="2"
@@ -106,14 +117,16 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content" />
             <Button
                 android:id="@+id/cancel"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="cancel" />
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/cancel" />
 
             <Button
                 android:id="@+id/ok"
@@ -121,8 +134,10 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="OK" />
-
+                android:text="@string/OK" />
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
 

@@ -17,16 +17,19 @@
         android:layout_width="300dp"
         android:layout_height="350dp"
             android:background="#7fFFFFFF"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:id="@+id/imageView" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_centerInParent="true">
+        android:layout_alignBottom="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        android:weightSum="1">
+
 
         <TextView
             android:id="@+id/toast"
-            android:text="@string/shoukai"
             android:layout_width="210dp"
             android:layout_height="60dp"
             android:ems="10"
@@ -36,7 +39,7 @@
 
         <EditText
             android:id="@+id/userName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
             android:ems="10"
             android:textColor="@color/pink"
@@ -44,25 +47,27 @@
             android:hint="@string/name_hint"
             android:textColorHint="@color/gray"
             android:background="@drawable/text_view_border"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:layout_weight="0.25" />
 
         <EditText
             android:id="@+id/passwordText"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:ems="10"
-            android:textColor="@color/pink"
-            android:inputType="textPassword"
-            android:hint="@string/pw_hint"
-            android:textColorHint="@color/gray"
+            android:layout_alignStart="@+id/userName"
+            android:layout_below="@+id/userName"
             android:layout_marginTop="28dp"
             android:background="@drawable/text_view_border"
-            android:layout_below="@+id/userName"
-            android:layout_alignStart="@+id/userName" />
+            android:ems="10"
+            android:hint="@string/pw_hint"
+            android:inputType="textPassword"
+            android:textColor="@color/pink"
+            android:textColorHint="@color/gray"
+            android:layout_weight="0.25" />
 
         <Button
             android:id="@+id/signin"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/pink"
             android:layout_marginTop="27dp"
@@ -71,36 +76,50 @@
             android:layout_alignTop="@+id/passwordText"
             android:layout_alignStart="@+id/passwordText"
             android:layout_alignEnd="@+id/passwordText" />
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:orientation="horizontal"
+            >
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="224dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="8dp"
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/forget"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/pink"
+                android:layout_alignParentBottom="true"
+                android:layout_alignStart="@+id/signin"
                 android:layout_marginBottom="74dp"
+                android:layout_marginRight="20dp"
                 android:layout_marginStart="26dp"
                 android:text="@string/forget_pw"
-                android:layout_marginRight="20dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignStart="@+id/signin" />
-        <TextView
-            android:layout_width="20dp"
-            android:layout_height="wrap_content" />
+                android:textColor="@color/pink" />
+
+            <TextView
+                android:layout_width="44dp"
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/signout"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/sign_up"
-                android:textColor="@color/pink"
-                android:layout_marginLeft="10dp"
                 android:layout_alignBaseline="@+id/forget"
                 android:layout_alignBottom="@+id/forget"
                 android:layout_alignEnd="@+id/signin"
-                android:layout_marginEnd="29dp" />
-    </LinearLayout>
+                android:layout_marginEnd="29dp"
+                android:layout_marginLeft="10dp"
+                android:text="@string/sign_up"
+                android:textColor="@color/pink" />
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
