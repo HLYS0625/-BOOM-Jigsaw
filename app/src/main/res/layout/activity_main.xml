@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:id="@+id/main_selectscreen"
-        android:background="@drawable/sakura01"
+        android:background="@color/lightpink"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"

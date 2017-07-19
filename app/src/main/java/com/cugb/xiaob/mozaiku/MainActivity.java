@@ -45,16 +45,16 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout temp;
     //图片轮次
     int turn=0;
-    //图片数组，用于调取图片
-    private int[] backgd_list = {
-            R.drawable.girl01,
-            R.drawable.girl02,
-            R.drawable.girl03,
-            R.drawable.girl04,
-            R.drawable.girl05,
-            R.drawable.girl06,
-            R.drawable.girl07,
-    };
+//    //图片数组，用于调取图片
+//    private int[] backgd_list = {
+//            R.drawable.girl01,
+//            R.drawable.girl02,
+//            R.drawable.girl03,
+//            R.drawable.girl04,
+//            R.drawable.girl05,
+//            R.drawable.girl06,
+//            R.drawable.girl07,
+//    };
     // 计时器类
     private Timer timer;
     //计时器线程
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             switch (msg.what) {
                 case 1:
                     // 更新背景
-                    temp.setBackground(getResources().getDrawable(backgd_list[turn]));
+//                    temp.setBackground(getResources().getDrawable(backgd_list[turn]));
                     turn++;
                     break;
                 default:
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
         //背景循环播放
         temp=(LinearLayout)findViewById(R.id.main_selectscreen);
-        looping();
+//        looping();
     }
     //背景循环播放
     private void looping() {

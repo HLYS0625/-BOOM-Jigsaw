@@ -13,7 +13,7 @@
     <!-- 渐变 -->
     <gradient
         android:angle="270"
-        android:endColor="#909400D3"
+        android:endColor="@color/pink"
         android:centerColor="#90FFC0CB"
         android:startColor="@color/pink" />
 </shape>
