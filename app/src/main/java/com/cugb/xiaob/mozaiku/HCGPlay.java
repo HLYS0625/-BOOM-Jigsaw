@@ -441,6 +441,7 @@ public class HCGPlay extends Activity implements View.OnClickListener{
             if(IsSave()){
                 upDateChallengeinfo();
             }else {
+
                 saveChallengeInfo();
             }
             state=2;
