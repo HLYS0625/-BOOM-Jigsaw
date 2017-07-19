@@ -9,7 +9,7 @@
     <ImageView
         android:layout_width="180dp"
         android:layout_height="230dp"
-        android:src="@drawable/test"
+        android:src="@drawable/white_test"
         android:scaleType="fitXY"
         android:layout_centerInParent="true"/>
     <ImageView
