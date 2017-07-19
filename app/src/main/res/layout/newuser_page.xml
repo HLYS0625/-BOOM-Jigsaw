@@ -18,7 +18,8 @@
     <ImageView
         android:layout_width="300dp"
         android:layout_height="350dp"
-        android:background="#7fFFFFFF"
+        android:src="@drawable/white_test"
+        android:scaleType="fitXY"
         android:layout_centerInParent="true"/>
     <TextView
         android:id="@+id/toast02"
@@ -42,10 +43,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:textColor="@color/pink"
-
-                android:gravity="right"
                 android:layout_gravity="center"
                 android:layout_weight="1"/>
             <EditText
@@ -64,6 +61,11 @@
                 android:layout_marginRight="60dp"
                 android:maxLines="1"
                 android:layout_weight="0.17" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"/>
         </LinearLayout>
         <TextView
                  android:layout_width="match_parent"
@@ -74,9 +76,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/pink"
-
-                android:gravity="right"
                 android:layout_gravity="center"
                 android:layout_weight="1"/>
             <EditText
@@ -94,8 +93,12 @@
                 android:textColor="@color/pink"
                 android:layout_marginRight="60dp"
                 android:maxLines="1"
-                android:layout_weight="0.17"
-                />
+                android:layout_weight="0.17" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"/>
         </LinearLayout>
 <TextView
     android:layout_width="match_parent"
@@ -126,6 +129,11 @@
                 android:maxLines="1"
                 android:textColor="@color/pink"
                 android:textColorHint="@color/gray" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"/>
         </LinearLayout>
 <LinearLayout
     android:layout_width="match_parent"
@@ -136,12 +144,13 @@
             android:orientation="horizontal">
             <TextView
                 android:layout_width="50dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"/>
             <Button
                 android:id="@+id/cancel"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_weight="1"
                 android:textColor="@color/white"
                 android:background="@drawable/log_btn"
@@ -155,13 +164,14 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_weight="1"
                 android:textColor="@color/white"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_width="wrap_content"
                 android:background="@drawable/log_btn"
                 android:text="@string/OK" />
             <TextView
                 android:layout_width="50dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"/>
         </LinearLayout>
 
 
