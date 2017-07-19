@@ -23,7 +23,7 @@
     <TextView
         android:id="@+id/toast02"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_height="20dp"
         android:textColor="@color/pink"
         android:layout_above="@+id/linearLayout"
         android:layout_centerHorizontal="true"
@@ -42,7 +42,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/username"
+
                 android:textColor="@color/pink"
 
                 android:gravity="right"
@@ -50,24 +50,30 @@
                 android:layout_weight="1"/>
             <EditText
                 android:id="@+id/nameText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="249dp"
+                android:layout_height="40dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:hint="@string/name_hint"
+                android:gravity="center"
+                android:textColorHint="@color/gray"
+                android:background="@drawable/text_view_border"
+                android:layout_centerInParent="true"
                 android:layout_gravity="left"
                 android:textColor="@color/pink"
-
                 android:layout_marginRight="60dp"
-                android:gravity="center"
-                android:layout_weight="2"
-                android:maxLines="1"/>
+                android:maxLines="1"
+                android:layout_weight="0.17" />
         </LinearLayout>
-
+        <TextView
+                 android:layout_width="match_parent"
+                 android:layout_height="20dp"></TextView>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/password"
                 android:textColor="@color/pink"
 
                 android:gravity="right"
@@ -75,50 +81,61 @@
                 android:layout_weight="1"/>
             <EditText
                 android:id="@+id/passwordText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="249dp"
+                android:layout_height="40dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:hint="@string/pw_hint"
+                android:gravity="center"
+                android:textColorHint="@color/gray"
+                android:background="@drawable/text_view_border"
+                android:layout_centerInParent="true"
                 android:layout_gravity="left"
                 android:textColor="@color/pink"
-
                 android:layout_marginRight="60dp"
-                android:gravity="center"
-                android:layout_weight="2"
-                android:inputType="textPassword"
                 android:maxLines="1"
+                android:layout_weight="0.17"
                 />
         </LinearLayout>
-
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="20dp"></TextView>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/mail"
-                android:textColor="@color/pink"
-
                 android:gravity="right"
                 android:layout_gravity="center"
                 android:layout_weight="1"/>
+
             <EditText
                 android:id="@+id/mailText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="249dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
                 android:layout_gravity="left"
-                android:textColor="@color/pink"
-
                 android:layout_marginRight="60dp"
+                android:layout_weight="0.17"
+                android:background="@drawable/text_view_border"
+                android:ems="10"
                 android:gravity="center"
-                android:layout_weight="2"
-                android:maxLines="1"/>
+                android:hint="@string/mail_hint"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:textColor="@color/pink"
+                android:textColorHint="@color/gray" />
         </LinearLayout>
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="20dp"></LinearLayout>
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="40dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content" />
             <Button
                 android:id="@+id/cancel"
@@ -126,17 +143,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textColor="@color/white"
+                android:background="@drawable/log_btn"
                 android:text="@string/cancel" />
 
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content" />
             <Button
                 android:id="@+id/ok"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_weight="1"
+                android:textColor="@color/white"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:background="@drawable/log_btn"
                 android:text="@string/OK" />
             <TextView
-                android:layout_width="40dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 

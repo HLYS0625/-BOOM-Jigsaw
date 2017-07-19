@@ -73,12 +73,33 @@
     <string name="good_eve">こんばんは、</string>
     <string name="good_ngh">もう夜です、おやすみ、</string>
     <string name="log_in">ログイン</string>
-    <string name="forget_pw">パスワードを忘れた方</string>
+    <string name="forget_pw">登録不能</string>
     <string name="sign_up">新規登録</string>
     <string name="shoukai">QwQ:\nこちらはモザイクです、ようこそ！</string>
-    <string name="time">じかん:&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</string>
-    <string name="stepcount">ステップのすうりょう:&#160;&#160;&#160;&#160;&#160;&#160;&#160;</string>
-    <string name="menu">メニュー</string>
+    <string name="find_password">パスワードを取り戻す</string>
+    <string name="mail_success">メールはちゃんと君のメールアドレスへ発信した</string>
+    <string name="mail">メールアドレス</string>
+    <string name="user_exists">このネームは既に存在します</string>
+    <string name="fill_problem">何かおかしいです、もう一度チェックしてください</string>
+
+    <string name="reset_password">パスワードをリセット</string>
+    <string name="send_verification">検証コードを発信する</string>
+    <string name="newPw">新たなパスワード</string>
+    <string name="verification">検証コード</string>
+    <string name="mail_hint">入力郵便箱</string>
+    <string name="wrong_address">先に正確なメールアドレスを書きなさい</string>
+    <string name="no_such_mail">このメールはまだサインアップしない</string>
+    <string name="mail_content_op">このメールは、《モザイク》のパスワードをリセットために発信した。
+        もし君はこの事を知らないなら、きっと誰かメールアドレスを勘違いしました。
+        そうならば、このメールを無視してください、申し訳ありません…今度の検証コードは</string>
+    <string name="mail_content_ed">です…絶対に他の者を伝えないてください!!! \n \n まだ、この検証コードは五分後に失効になります</string>
+    <string name="reset_success">パスワードをリセットした、新たなパスワードてログインしてください</string>
+    <string name="verification_wrong">検証コードは違います、もう一度チェックしてください</string>
+    <string name="mail_exist">このメールはもうサインアップした…</string>
+
+    <string name="time">時間:&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</string>
+    <string name="stepcount">\nステップ:&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</string>
+    <string name="fight">FIGHT</string>
 </resources>
 
 
