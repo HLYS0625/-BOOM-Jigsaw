@@ -106,7 +106,7 @@
                 android:layout_marginBottom="74dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="26dp"
-                android:text="忘记密码"
+                android:text="@string/forget_pw"
                 android:textColor="@color/pink" />
 
             <TextView
@@ -122,7 +122,7 @@
                 android:layout_alignEnd="@+id/signin"
                 android:layout_marginEnd="29dp"
                 android:layout_marginLeft="10dp"
-                android:text="注册账户"
+                android:text="@string/sign_up"
                 android:textColor="@color/pink" />
         </LinearLayout>
     </LinearLayout>

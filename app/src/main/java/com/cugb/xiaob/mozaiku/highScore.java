@@ -82,6 +82,7 @@ public class highScore extends AppCompatActivity {
         if(noStay==0) {
             //刷新UI显示
             if(difficult!=5) {
+                freshButton(difficult);
                 loadHSByDatabase(difficult);
             }else loadHSByDatabase(0);
             loadPHSByDatabase(curUsername);
@@ -183,16 +184,58 @@ public class highScore extends AppCompatActivity {
 //对选择按钮弹出的单选框进行响应
     //根据传进的状态值选择读取的文件，提供给切换按钮刷新数据之用。
     private void cutover(int x){
+        resetTv();
         switch (x){
             case 0:
                 loadHSByDatabase(0);
+                //刷新右上角按钮的显示
+                freshButton(0);
                 break;
             case 1:
                 loadHSByDatabase(1);
+                freshButton(1);
                 break;
             case 2:
                 loadHSByDatabase(2);
+                freshButton(2);
                 break;
+        }
+    }
+    //刷新右上角按钮的显示，作为当前显示难度的指示
+    void freshButton(int x){
+        Button b = (Button)findViewById(R.id.change);
+        String[] s = {
+                getString(R.string.change_easy),
+                getString(R.string.change_normal),
+                getString(R.string.change_hard)
+        };
+        b.setText(s[x]);
+    }
+    //重置积分榜的TextView，以做显示刷新之用
+    void resetTv(){
+        TextView[] username = new TextView[]{
+                (TextView)findViewById(R.id.HS_name1),
+                (TextView)findViewById(R.id.HS_name2),
+                (TextView)findViewById(R.id.HS_name3),
+                (TextView)findViewById(R.id.HS_name4),
+                (TextView)findViewById(R.id.HS_name5),
+                (TextView)findViewById(R.id.HS_name6),
+                (TextView)findViewById(R.id.HS_name7),
+                (TextView)findViewById(R.id.HS_name8),
+        };
+        TextView[] userscore = new TextView[]{
+                (TextView)findViewById(R.id.HS_score1) ,
+                (TextView)findViewById(R.id.HS_score2) ,
+                (TextView)findViewById(R.id.HS_score3) ,
+                (TextView)findViewById(R.id.HS_score4) ,
+                (TextView)findViewById(R.id.HS_score5) ,
+                (TextView)findViewById(R.id.HS_score6) ,
+                (TextView)findViewById(R.id.HS_score7) ,
+                (TextView)findViewById(R.id.HS_score8) ,
+        };
+        for(int i=0;i<8;i++){
+            username[i].setText(getString(R.string.nobody));
+            userscore[i].setText("0");
         }
     }
 

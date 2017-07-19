@@ -142,12 +142,16 @@ public class LoginView extends Activity {
                         passwordtext.setText("");
                     } else if (state == 1)//正确登录
                     {
+                        String name4intent;
                         Intent it = new Intent(LoginView.this, MainActivity.class);
                         if(!isEmail(username)) {
-                            it.putExtra("username", username);
-                        }else it.putExtra("username",searchByDB(username));
+                            name4intent = username;
+                        }else name4intent = searchByDB(username);
+                            it.putExtra("username",name4intent);
                         startActivity(it);
-                        Toast.makeText(LoginView.this,getStr(R.string.welcome),Toast.LENGTH_SHORT).show();
+                        String wcMsg = getResources().getString(R.string.welcome);
+                        wcMsg = String.format(wcMsg,name4intent);
+                        Toast.makeText(LoginView.this,wcMsg,Toast.LENGTH_SHORT).show();
                         finish();
                     } else if (state == 2)//密码错误
                     {
