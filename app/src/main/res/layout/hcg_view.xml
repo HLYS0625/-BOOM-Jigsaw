@@ -7,7 +7,7 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="327dp" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/challenge"
-        android:text="FIGHT"
+        android:text="@string/fight"
         android:background="@drawable/t2"
         android:textSize="20sp"
         android:padding="20dp"
